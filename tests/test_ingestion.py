@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 
-import pandas as pd
-
 from src.data_ingestion import TABLES, _validate_frame
 from src.common import OUTPUTS_DIR
 

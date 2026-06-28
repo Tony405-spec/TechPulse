@@ -7,6 +7,8 @@ __pycache__/
 *.py[cod]
 *.pyo
 .pytest_cache/
+.coverage
+coverage.xml
 .pylint.d/
 
 # Logs (never commit)

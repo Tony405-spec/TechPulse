@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 import joblib
 from sklearn.metrics import accuracy_score
 
-from src.common import MODELS_DIR, OUTPUTS_DIR
+from src.common import OUTPUTS_DIR
 from src.evaluation import compare_and_select_best_model
 from src.model_training import train_all_models
 
