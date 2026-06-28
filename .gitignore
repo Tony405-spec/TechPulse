@@ -1,23 +1,36 @@
-# PostgreSQL connection and client artifacts
-.pgpass
-.pg_service.conf
-.pg_service.conf.json
-.psql_history
-.psqlrc
-pg_service.conf
-
-# Environment and local tooling
+# Environment
 .env
-.env.*
-.DS_Store
-*.log
+*.env
 
 # Python
-.venv/
-venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
 .pytest_cache/
-.ruff_cache/
-.mypy_cache/
-artifacts/
+.pylint.d/
+
+# Logs (never commit)
+logs/
+
+# Models (large binary files)
+models/*.joblib
+models/*.pkl
+
+# Data (may be large)
+data/feature_matrix.csv
+
+# Outputs (generated)
+outputs/*.png
+outputs/*.csv
+outputs/*.json
+outputs/*.html
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/secrets.toml
