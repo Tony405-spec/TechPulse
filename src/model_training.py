@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import inspect
 import warnings
 from dataclasses import dataclass
 from datetime import datetime
@@ -138,19 +139,28 @@ def _fit_logistic(X_train: pd.DataFrame, y_train: np.ndarray, logger: logging.Lo
     Returns:
         Trained LogisticRegression estimator.
     """
-    model = LogisticRegression(C=1.0, max_iter=300, multi_class="ovr", random_state=RANDOM_STATE)
+    base_params = {
+        "C": 1.0,
+        "max_iter": 300,
+        "random_state": RANDOM_STATE,
+    }
+    if "multi_class" in inspect.signature(LogisticRegression).parameters:
+        base_params["multi_class"] = "ovr"
+    model = LogisticRegression(**base_params)
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always", ConvergenceWarning)
         model.fit(X_train, y_train)
     if any(issubclass(warning.category, ConvergenceWarning) for warning in caught):
         logger.warning("LogisticRegression convergence warning; retrying with saga.")
-        model = LogisticRegression(
-            C=1.0,
-            max_iter=1000,
-            multi_class="ovr",
-            solver="saga",
-            random_state=RANDOM_STATE,
-        )
+        retry_params = {
+            "C": 1.0,
+            "max_iter": 1000,
+            "solver": "saga",
+            "random_state": RANDOM_STATE,
+        }
+        if "multi_class" in inspect.signature(LogisticRegression).parameters:
+            retry_params["multi_class"] = "ovr"
+        model = LogisticRegression(**retry_params)
         model.fit(X_train, y_train)
     logger.info("Logistic regression coefficients: %s", model.coef_.tolist())
     return model
