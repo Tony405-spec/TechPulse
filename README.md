@@ -1,4 +1,4 @@
-# TechPulse ⚡
+# TechPulse 
 
 > **Predicting Developer Technology Decline Using Community Signals and Enterprise Adoption Patterns**
 > A Machine Learning Platform · KCA University BSc. Data Science · Final Year Project 2026
@@ -30,6 +30,42 @@ Technology adoption decisions carry measurable financial and career risk. When a
 TechPulse extends the existing [`developer-ecosystem-analytics`](https://gist.github.com/Tony405-spec/82bbd137d85ada850acdffc90c192486) repository — which already aggregates six real-world datasets and twelve descriptive SQL analytics queries — by adding a supervised predictive layer, SHAP explainability, and a publicly deployed interactive dashboard.
 
 > The existing SQL pipeline remains fully intact. TechPulse adds prediction capability on top of it — it does not replace it.
+
+---
+
+## Live Demo
+
+The interactive Streamlit dashboard is currently under active development. Below is a preview demonstrating one of the core descriptive SQL queries that powers TechPulse's analytics foundation: identifying which technologies generate the most developer questions on Stack Overflow.
+
+![Live Demo](https://github.com/skynet-datagrid-labs/TechPulse/blob/main/assets/query.gif)
+
+**What this query reveals:**
+
+The demo runs the following SQL query against the Stack Overflow dataset:
+
+```sql
+SELECT 
+    tag,
+    SUM(question_count) AS total_questions,
+    SUM(unanswered_count) AS total_unanswered,
+    (AVG(unanswered_pct))::numeric(10,2) AS avg_unanswered_pct,
+    COUNT(DISTINCT date) AS days_with_activity
+FROM stackoverflow
+GROUP BY tag
+ORDER BY total_questions DESC
+LIMIT 10;
+```
+
+**Results interpretation:**
+
+This query returns the top 10 technologies ranked by total question volume on Stack Overflow. These findings provide critical community signal inputs for TechPulse's predictive layer:
+
+- **JavaScript**, **Python**, and **Java** consistently dominate total question volume, reflecting their large active developer communities.
+- The `avg_unanswered_pct` column reveals which technologies have the highest proportion of unanswered questions — a potential early indicator of community fragmentation or declining expert availability.
+- Technologies with high total questions but a rising unanswered percentage may be entering a "community fatigue" phase, a signal that TechPulse's machine learning models incorporate as part of the `community_decay_rate` and `technology_health_score` features.
+- The `days_with_activity` metric provides a measure of sustained engagement consistency; technologies with fewer active days relative to their total volume may experience seasonal or event-driven interest rather than steady community health.
+
+These descriptive insights form the foundation upon which TechPulse's predictive features are engineered. The dashboard will eventually display not only these descriptive statistics but also forward-looking trajectory classifications for each technology.
 
 ---
 
@@ -300,3 +336,5 @@ If you use TechPulse in your research, please cite:
 ---
 
 *TechPulse · Skynet DataGrid Labs · KCA University · 2026*
+```
+
