@@ -6,9 +6,6 @@ import json
 from pathlib import Path
 
 import joblib
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -25,6 +22,8 @@ from sklearn.metrics import (
 from sklearn.preprocessing import label_binarize
 
 from src.common import DATA_DIR, FEATURE_COLUMNS, LABELS, MODELS_DIR, OUTPUTS_DIR, TECH_COLUMN, ensure_directories
+
+plt.switch_backend("Agg")
 
 
 def _to_markdown_table(frame: pd.DataFrame) -> str:

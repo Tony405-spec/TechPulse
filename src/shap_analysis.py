@@ -7,9 +7,6 @@ import logging
 from datetime import datetime
 
 import joblib
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -17,6 +14,7 @@ import pandas as pd
 from src.common import FEATURE_COLUMNS, MODELS_DIR, OUTPUTS_DIR, RANDOM_STATE, TECH_COLUMN, ensure_directories
 
 LOGGER = logging.getLogger(__name__)
+plt.switch_backend("Agg")
 
 
 def _load_selection() -> dict[str, str]:

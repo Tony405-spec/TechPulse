@@ -162,7 +162,7 @@ def load_local_development_datasets() -> dict[str, pd.DataFrame]:
 
     stack_rows: list[dict[str, object]] = []
     for index, technology in enumerate(techs):
-        sector_sample = sectors.iloc[index % len(sectors) : index % len(sectors) + 5]
+        sector_sample = sectors.iloc[index % len(sectors): index % len(sectors) + 5]
         if sector_sample.empty:
             sector_sample = sectors.head(5)
         for offset, row in sector_sample.reset_index(drop=True).iterrows():

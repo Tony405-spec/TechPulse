@@ -5,13 +5,12 @@ from __future__ import annotations
 import json
 from typing import Any
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
 from src.common import OUTPUTS_DIR, ensure_directories
+
+plt.switch_backend("Agg")
 
 
 def generate_eda_report(datasets: dict[str, pd.DataFrame]) -> dict[str, Any]:
