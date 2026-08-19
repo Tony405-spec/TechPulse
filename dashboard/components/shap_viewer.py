@@ -64,5 +64,15 @@ def shap_summary_sentence(values: dict[str, float], label: str, technology: str)
     Returns:
         Summary sentence.
     """
-    strongest = max(values, key=lambda key: abs(values[key])) if values else "No feature"
-    return f"{strongest} is the strongest indicator driving the {label} prediction for {technology}."
+    if not values:
+        return "No local SHAP explanation is available for this technology."
+    ranked = sorted(values.items(), key=lambda item: abs(item[1]), reverse=True)[:3]
+    clauses = []
+    for feature, value in ranked:
+        direction = "pushes the model score upward" if value > 0 else "pushes the model score downward"
+        clauses.append(f"{feature.replace('_', ' ')} ({direction})")
+    return (
+        f"For {technology}, the model estimates a {label} trajectory. The strongest local "
+        f"SHAP signals are: {', '.join(clauses)}. These are associations learned by the "
+        "model, not causal proof."
+    )

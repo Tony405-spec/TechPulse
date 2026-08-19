@@ -6,13 +6,25 @@ import json
 from pathlib import Path
 
 import joblib
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, confusion_matrix, f1_score, roc_auc_score, roc_curve
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
+)
 from sklearn.preprocessing import label_binarize
 
-from src.common import FEATURE_COLUMNS, LABELS, MODELS_DIR, OUTPUTS_DIR, ensure_directories
+from src.common import DATA_DIR, FEATURE_COLUMNS, LABELS, MODELS_DIR, OUTPUTS_DIR, TECH_COLUMN, ensure_directories
 
 
 def _to_markdown_table(frame: pd.DataFrame) -> str:
@@ -58,7 +70,14 @@ def _predict_proba(model: object, X: pd.DataFrame) -> np.ndarray:
         Probability matrix.
     """
     if hasattr(model, "predict_proba"):
-        return model.predict_proba(X)
+        probabilities = model.predict_proba(X)
+        if probabilities.shape[1] == len(LABELS):
+            return probabilities
+        model_classes = getattr(model, "classes_", np.arange(probabilities.shape[1]))
+        expanded = np.zeros((len(probabilities), len(LABELS)))
+        for source_index, class_id in enumerate(model_classes):
+            expanded[:, int(class_id)] = probabilities[:, source_index]
+        return expanded
     predictions = model.predict(X)
     proba = np.zeros((len(predictions), len(LABELS)))
     proba[np.arange(len(predictions)), predictions] = 1
@@ -93,6 +112,8 @@ def _plot_roc(name: str, y_test: np.ndarray, probabilities: np.ndarray) -> None:
     y_bin = label_binarize(y_test, classes=[0, 1, 2])
     plt.figure(figsize=(7, 5))
     for index, label in enumerate(LABELS):
+        if y_bin[:, index].sum() == 0:
+            continue
         fpr, tpr, _ = roc_curve(y_bin[:, index], probabilities[:, index])
         plt.plot(fpr, tpr, label=label)
     plt.plot([0, 1], [0, 1], linestyle="--", color="#555555")
@@ -148,6 +169,8 @@ def compare_and_select_best_model(model_paths: dict[str, Path] | None = None) ->
                 "Model": name,
                 "Accuracy": accuracy_score(y_test, predictions),
                 "Weighted_F1": f1_score(y_test, predictions, average="weighted"),
+                "Precision": precision_score(y_test, predictions, average="weighted", zero_division=0),
+                "Recall": recall_score(y_test, predictions, average="weighted", zero_division=0),
                 "Macro_ROC_AUC": roc_auc,
                 "Status": "Candidate",
                 "Path": str(path),
@@ -174,4 +197,35 @@ def compare_and_select_best_model(model_paths: dict[str, Path] | None = None) ->
         ),
         encoding="utf-8",
     )
+    joblib.dump(artifacts[str(best["Model"])], MODELS_DIR / "best_model.joblib")
+    _write_dashboard_predictions(artifacts[str(best["Model"])], str(best["Model"]))
     return public
+
+
+def _write_dashboard_predictions(artifact: dict, model_name: str) -> None:
+    """Persist technology-level predictions used by Streamlit pages."""
+    feature_path = DATA_DIR / "feature_matrix.csv"
+    if not feature_path.exists():
+        return
+    frame = pd.read_csv(feature_path)
+    if not set(FEATURE_COLUMNS).issubset(frame.columns):
+        return
+    X = pd.DataFrame(artifact["imputer"].transform(frame[FEATURE_COLUMNS]), columns=FEATURE_COLUMNS)
+    if model_name == "xgboost":
+        X = X.astype("float32")
+    model = artifact["model"]
+    probabilities = _predict_proba(model, X)
+    encoded_predictions = model.predict(X)
+    labels = artifact["label_encoder"].inverse_transform(encoded_predictions)
+    output = frame.copy()
+    output["predicted_label"] = labels
+    for index, label in enumerate(LABELS):
+        output[f"prob_{label}"] = probabilities[:, index]
+    output["risk_score"] = ((1 - output["prob_Growing"]) * 100).round(2)
+    output["confidence"] = probabilities.max(axis=1).round(4)
+    output["confidence_level"] = output["confidence"].map(
+        lambda value: "Low" if value < 0.60 else "Medium" if value <= 0.80 else "High"
+    )
+    if TECH_COLUMN not in output:
+        output[TECH_COLUMN] = output.index.astype(str)
+    output.to_csv(OUTPUTS_DIR / "technology_predictions.csv", index=False)

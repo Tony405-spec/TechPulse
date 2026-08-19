@@ -66,6 +66,37 @@ class OrderedLabelEncoder:
         return np.array([self.classes_[int(value)] for value in encoded])
 
 
+class ContiguousLabelClassifier:
+    """Adapter for estimators that require contiguous labels in small folds."""
+
+    def __init__(self, model: Any, all_classes: list[int] | None = None) -> None:
+        self.model = model
+        self.all_classes = all_classes or [0, 1, 2]
+        self.classes_: np.ndarray | None = None
+
+    def fit(self, X: pd.DataFrame, y: np.ndarray) -> "ContiguousLabelClassifier":
+        self.classes_ = np.array(sorted(np.unique(y).tolist()), dtype=int)
+        remap = {original: index for index, original in enumerate(self.classes_)}
+        y_internal = np.array([remap[int(value)] for value in y], dtype=int)
+        self.model.fit(X, y_internal)
+        return self
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        if self.classes_ is None:
+            raise RuntimeError("Model has not been fitted.")
+        internal = self.model.predict(X)
+        return np.array([self.classes_[int(value)] for value in internal], dtype=int)
+
+    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
+        if self.classes_ is None:
+            raise RuntimeError("Model has not been fitted.")
+        internal_proba = self.model.predict_proba(X)
+        full = np.zeros((len(internal_proba), len(self.all_classes)))
+        for internal_index, original_class in enumerate(self.classes_):
+            full[:, int(original_class)] = internal_proba[:, internal_index]
+        return full
+
+
 def _configure_logger() -> logging.Logger:
     """Configure the model training logger.
 
@@ -182,7 +213,7 @@ def _fit_knn(X_train: pd.DataFrame, y_train: np.ndarray, cv: StratifiedKFold, lo
         KNeighborsClassifier(),
         {"n_neighbors": [3, 5, 7, 9, 11]},
         cv=cv,
-        scoring="accuracy",
+        scoring="f1_weighted",
     )
     grid.fit(X_train, y_train)
     means = grid.cv_results_["mean_test_score"]
@@ -195,7 +226,35 @@ def _fit_knn(X_train: pd.DataFrame, y_train: np.ndarray, cv: StratifiedKFold, lo
     return grid.best_estimator_
 
 
-def _artifact(model: Any, imputer: SimpleImputer, encoder: OrderedLabelEncoder, X_train: pd.DataFrame, y_train: np.ndarray, X_test: pd.DataFrame, y_test: np.ndarray) -> dict[str, Any]:
+def _cv_splitter(y_train: np.ndarray, logger: logging.Logger) -> StratifiedKFold:
+    """Create a stratified CV splitter that respects small local datasets."""
+    _, counts = np.unique(y_train, return_counts=True)
+    min_class_count = int(counts.min())
+    if min_class_count < 2:
+        raise ValueError(
+            "At least two training records per class are required for stratified cross-validation."
+        )
+    n_splits = min(5, min_class_count)
+    if n_splits < 5:
+        logger.warning(
+            "Using %s-fold stratified CV because the least-populated class has only %s training rows.",
+            n_splits,
+            min_class_count,
+        )
+    return StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=RANDOM_STATE)
+
+
+def _artifact(
+    model: Any,
+    imputer: SimpleImputer,
+    encoder: OrderedLabelEncoder,
+    X_train: pd.DataFrame,
+    y_train: np.ndarray,
+    X_test: pd.DataFrame,
+    y_test: np.ndarray,
+    train_technologies: list[str],
+    test_technologies: list[str],
+) -> dict[str, Any]:
     """Bundle a fitted model with preprocessing and evaluation split metadata.
 
     Args:
@@ -219,6 +278,8 @@ def _artifact(model: Any, imputer: SimpleImputer, encoder: OrderedLabelEncoder, 
         "y_train": y_train,
         "X_test": X_test,
         "y_test": y_test,
+        "train_technologies": train_technologies,
+        "test_technologies": test_technologies,
     }
 
 
@@ -235,10 +296,16 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
     production_run = feature_path is None
     frame = load_feature_matrix(feature_path)
     X_train, X_test, y_train, y_test, encoder = _split(frame)
+    if "technology_name" in frame:
+        train_technologies = frame.loc[X_train.index, "technology_name"].astype(str).tolist()
+        test_technologies = frame.loc[X_test.index, "technology_name"].astype(str).tolist()
+    else:
+        train_technologies = X_train.index.astype(str).tolist()
+        test_technologies = X_test.index.astype(str).tolist()
     imputer = SimpleImputer(strategy="median")
     X_train_imp = pd.DataFrame(imputer.fit_transform(X_train), columns=FEATURE_COLUMNS, index=X_train.index)
     X_test_imp = pd.DataFrame(imputer.transform(X_test), columns=FEATURE_COLUMNS, index=X_test.index)
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+    cv = _cv_splitter(y_train, logger)
     date_stamp = datetime.now().strftime("%Y%m%d")
     artifacts: dict[str, Path] = {}
 
@@ -263,28 +330,61 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
     models["random_forest"] = rf_search.best_estimator_
     logger.info("RF feature importances: %s", models["random_forest"].feature_importances_.tolist())
 
-    xgb_search = RandomizedSearchCV(
-        XGBClassifier(random_state=RANDOM_STATE, eval_metric="mlogloss", n_jobs=1),
-        {
-            "n_estimators": [100, 200, 500],
-            "max_depth": [3, 5, 7],
-            "learning_rate": [0.01, 0.05, 0.1, 0.2],
-            "subsample": [0.6, 0.8, 1.0],
-            "colsample_bytree": [0.6, 0.8, 1.0],
-            "min_child_weight": [1, 3, 5],
-        },
-        n_iter=30 if production_run else 2,
-        scoring="f1_weighted",
-        cv=cv,
-        random_state=RANDOM_STATE,
-    )
-    xgb_search.fit(X_train_imp.astype("float32"), y_train)
-    models["xgboost"] = xgb_search.best_estimator_
+    _, train_class_counts = np.unique(y_train, return_counts=True)
+    if int(train_class_counts.min()) >= 5:
+        xgb_search = RandomizedSearchCV(
+            XGBClassifier(random_state=RANDOM_STATE, eval_metric="mlogloss", n_jobs=1),
+            {
+                "n_estimators": [100, 200, 500],
+                "max_depth": [3, 5, 7],
+                "learning_rate": [0.01, 0.05, 0.1, 0.2],
+                "subsample": [0.6, 0.8, 1.0],
+                "colsample_bytree": [0.6, 0.8, 1.0],
+                "min_child_weight": [1, 3, 5],
+            },
+            n_iter=30 if production_run else 2,
+            scoring="f1_weighted",
+            cv=cv,
+            random_state=RANDOM_STATE,
+            error_score="raise",
+        )
+        xgb_search.fit(X_train_imp.astype("float32"), y_train)
+        models["xgboost"] = xgb_search.best_estimator_
+    else:
+        logger.warning(
+            "Skipping XGBoost CV tuning because the least-populated training class has fewer than 5 rows."
+        )
+        models["xgboost"] = ContiguousLabelClassifier(
+            XGBClassifier(
+                n_estimators=100,
+                max_depth=3,
+                learning_rate=0.1,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                random_state=RANDOM_STATE,
+                eval_metric="mlogloss",
+                n_jobs=1,
+            )
+        )
+        models["xgboost"].fit(X_train_imp.astype("float32"), y_train)
 
     for name, model in models.items():
         preds = model.predict(X_test_imp.astype("float32") if name == "xgboost" else X_test_imp)
         logger.info("%s held-out accuracy: %.4f", name, accuracy_score(y_test, preds))
         path = MODELS_DIR / f"techpulse_{name}_{date_stamp}.joblib"
-        joblib.dump(_artifact(model, imputer, encoder, X_train, y_train, X_test, y_test), path)
+        joblib.dump(
+            _artifact(
+                model,
+                imputer,
+                encoder,
+                X_train,
+                y_train,
+                X_test,
+                y_test,
+                train_technologies,
+                test_technologies,
+            ),
+            path,
+        )
         artifacts[name] = path
     return artifacts

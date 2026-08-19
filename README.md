@@ -383,6 +383,12 @@ python pipeline/run_pipeline.py
 
 This executes all stages end-to-end: data ingestion → EDA → feature engineering → labelling → model training (LR, KNN, RF, XGBoost) → evaluation → SHAP analysis. A timestamped execution log is written to `logs/`.
 
+If `DATABASE_URL` is not set, the pipeline uses the repository's local `data/stackexchange.csv`
+and `data/fortune.csv` files for development. Missing sentiment, adoption-stack, metadata, and
+question-company mapping tables are deterministically derived and recorded in
+`outputs/data_sources.json` as development/demo data. These local fallback artifacts are suitable
+for smoke testing and dashboard development, not for final research claims.
+
 ### Launch the Dashboard Locally
 
 ```bash

@@ -11,25 +11,16 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.common import DISCLAIMER  # noqa: E402
+from dashboard.components.ui import apply_theme  # noqa: E402
 
-st.set_page_config(page_title="TechPulse", page_icon="⚡", layout="wide")
-st.markdown(
-    """
-    <style>
-    .stApp { background: #F8FAFC; color: #111827; }
-    div[data-testid="stDataFrame"] { border: 1px solid #D1D5DB; border-radius: 6px; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-st.info(DISCLAIMER)
+st.set_page_config(page_title="TechPulse", page_icon="TP", layout="wide")
+apply_theme()
 
 pages = [
-    st.Page("pages/1_Home.py", title="Home", icon=":material/search:"),
-    st.Page("pages/2_Rankings.py", title="Rankings", icon=":material/leaderboard:"),
-    st.Page("pages/3_Model_Performance.py", title="Model Performance", icon=":material/analytics:"),
-    st.Page("pages/4_About.py", title="About", icon=":material/info:"),
+    st.Page("views/1_Home.py", title="Command Center", icon=":material/search:"),
+    st.Page("views/2_Rankings.py", title="Global Rankings", icon=":material/leaderboard:"),
+    st.Page("views/3_Model_Performance.py", title="Model Laboratory", icon=":material/analytics:"),
+    st.Page("views/4_About.py", title="About / Methodology", icon=":material/info:"),
 ]
 navigation = st.navigation(pages)
 navigation.run()

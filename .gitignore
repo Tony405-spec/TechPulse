@@ -26,6 +26,7 @@ outputs/*.png
 outputs/*.csv
 outputs/*.json
 outputs/*.html
+outputs/*.npy
 
 # OS
 .DS_Store

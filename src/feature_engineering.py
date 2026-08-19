@@ -157,13 +157,28 @@ def _so_features(so_questions: pd.DataFrame, logger: logging.Logger) -> pd.DataF
     logger.info("SO REFERENCE_DATE=%s from %s.%s", reference_date, "so_questions", date)
     answer_col = _column(frame, ["answer_count", "answers", "num_answers"])
     closed_col = _column(frame, ["is_closed", "closed", "closed_date"])
+    volume_col = _column(frame, ["question_count", "questions", "count"])
+    unanswered_col = _column(frame, ["unanswered_count", "unanswered"])
+    unanswered_pct_col = _column(frame, ["unanswered_pct", "unanswered_percentage"])
+    frame["_volume"] = (
+        pd.to_numeric(frame[volume_col], errors="coerce").fillna(0).clip(lower=0)
+        if volume_col
+        else 1.0
+    )
     frame["_answers"] = pd.to_numeric(frame[answer_col], errors="coerce") if answer_col else np.nan
+    if answer_col is None and unanswered_col:
+        frame["_answers"] = (
+            frame["_volume"] - pd.to_numeric(frame[unanswered_col], errors="coerce").fillna(0)
+        ).clip(lower=0)
     if closed_col:
         frame["_closed"] = frame[closed_col].notna()
         if frame[closed_col].dropna().isin([0, 1, True, False]).all():
             frame["_closed"] = frame[closed_col].astype(bool)
+    elif unanswered_pct_col:
+        raw_rate = pd.to_numeric(frame[unanswered_pct_col], errors="coerce").fillna(0)
+        frame["_closed"] = raw_rate.clip(lower=0, upper=100) / 100
     else:
-        frame["_closed"] = False
+        frame["_closed"] = 0.0
 
     rows: list[dict[str, float | str]] = []
     for technology, group in frame.dropna(subset=[tech, date]).groupby(tech):
@@ -174,20 +189,24 @@ def _so_features(so_questions: pd.DataFrame, logger: logging.Logger) -> pd.DataF
             & (group[date] >= reference_date - pd.DateOffset(months=12))
         ]
         recent_6 = group[group[date] >= reference_date - pd.DateOffset(months=6)]
-        monthly = group.set_index(date).resample("MS").size()
+        monthly = group.set_index(date)["_volume"].resample("MS").sum()
+        recent_3_volume = float(recent_3["_volume"].sum())
+        recent_12_volume = float(recent_12["_volume"].sum())
+        prev_6_volume = float(prev_6["_volume"].sum())
+        recent_6_volume = float(recent_6["_volume"].sum())
         rows.append(
             {
                 TECH_COLUMN: str(technology),
-                "growth_momentum_index": len(recent_3) / max(len(recent_12), 1),
+                "growth_momentum_index": recent_3_volume / max(recent_12_volume, 1),
                 "question_quality_score": group["_answers"].mean()
                 * (1 - group["_closed"].mean()),
                 "community_decay_rate": max(
-                    (len(prev_6) - len(recent_6)) / max(len(prev_6), 1), 0
+                    (prev_6_volume - recent_6_volume) / max(prev_6_volume, 1), 0
                 ),
                 "so_volume_trend_slope": _trend_slope(monthly),
                 "r_squared": _trend_r_squared(monthly),
                 "so_months_observed": int(monthly.shape[0]),
-                "so_question_volume": int(len(group)),
+                "so_question_volume": int(group["_volume"].sum()),
             }
         )
     return pd.DataFrame(rows)

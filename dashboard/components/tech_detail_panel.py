@@ -9,9 +9,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from dashboard.components.enterprise_heatmap import enterprise_heatmap
 from dashboard.components.shap_viewer import load_prediction_shap, shap_bar, shap_summary_sentence
-from dashboard.components.trend_charts import adoption_chart, sentiment_chart, so_volume_chart
 from src.common import BASE_DIR, DISCLAIMER, FEATURE_COLUMNS, LABELS, OUTPUTS_DIR
 
 LABEL_COLOURS = {"Growing": "#2E9E6B", "Stable": "#F4B942", "Declining": "#D94F3D"}
@@ -71,6 +69,8 @@ def _model_probabilities(row: pd.Series) -> dict[str, float]:
     Returns:
         Label probability mapping.
     """
+    if all(f"prob_{label}" in row for label in LABELS):
+        return {label: float(row[f"prob_{label}"]) for label in LABELS}
     selection_path = OUTPUTS_DIR / "best_model_selection.json"
     if not selection_path.exists():
         label = row.get("trajectory_label", "Stable")
@@ -85,27 +85,6 @@ def _model_probabilities(row: pd.Series) -> dict[str, float]:
     return dict(zip(LABELS, probabilities))
 
 
-def _placeholder_trend(row: pd.Series) -> pd.DataFrame:
-    """Build placeholder trend data when raw time series are unavailable.
-
-    Args:
-        row: Selected feature row.
-
-    Returns:
-        Trend DataFrame.
-    """
-    return pd.DataFrame(
-        {
-            "date": pd.date_range("2025-01-01", periods=3, freq="MS").strftime("%Y-%m-%d"),
-            "value": [
-                max(float(row.get("growth_momentum_index", 0.5)) * 60, 0),
-                max(float(row.get("technology_health_score", 0.5)) * 80, 0),
-                max((1 - float(row.get("community_decay_rate", 0.5))) * 100, 0),
-            ],
-        }
-    )
-
-
 def render_detail_panel(row: pd.Series) -> None:
     """Render detail tabs for a selected technology.
 
@@ -117,7 +96,7 @@ def render_detail_panel(row: pd.Series) -> None:
     """
     st.info(DISCLAIMER)
     technology = str(row.get("technology_name", "Unknown"))
-    label = str(row.get("trajectory_label", "Stable"))
+    label = str(row.get("predicted_label", row.get("trajectory_label", "Stable")))
     probabilities = _model_probabilities(row)
     score = risk_score(probabilities)
     confidence = confidence_level(probabilities)
@@ -135,31 +114,32 @@ def render_detail_panel(row: pd.Series) -> None:
         )
         st.plotly_chart(gauge, use_container_width=True)
         st.metric("Confidence", confidence)
+        st.dataframe(
+            pd.DataFrame(
+                {
+                    "Class": list(probabilities.keys()),
+                    "Probability": [round(float(value), 4) for value in probabilities.values()],
+                }
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
         st.dataframe(row[FEATURE_COLUMNS].to_frame("Value"), use_container_width=True)
         st.caption("Data recency follows the latest date available in the source tables.")
     with tabs[1]:
-        trend = _placeholder_trend(row)
-        for title, chart_fn in [
-            ("Monthly SO question volume", so_volume_chart),
-            ("Developer sentiment score", sentiment_chart),
-            ("Company adoption count", adoption_chart),
-        ]:
-            st.markdown(f"**{title}**")
-            fig = chart_fn(trend)
-            if fig is None:
-                st.info("Insufficient data to plot trend for this signal")
-            else:
-                st.plotly_chart(fig, use_container_width=True)
+        st.info(
+            "HISTORICAL DATA UNAVAILABLE. This visualization requires raw historical "
+            "observations for the selected technology. Missing historical data is not "
+            "interpreted as zero activity."
+        )
     with tabs[2]:
         values = load_prediction_shap(OUTPUTS_DIR / "shap_per_prediction.json", technology)
         st.plotly_chart(shap_bar(values), use_container_width=True)
         st.write(shap_summary_sentence(values, label, technology))
     with tabs[3]:
-        heatmap_data = pd.DataFrame({"sector": ["Technology"], "adoption_count": [row.get("company_diversity_score", 0)]})
-        fig = enterprise_heatmap(heatmap_data)
-        if fig is None:
-            st.info("No Fortune 500 adoption data available for this technology")
-        elif heatmap_data["adoption_count"].sum() < 3:
-            st.write("Fewer than 3 adopting companies are available for this technology.")
-        else:
-            st.plotly_chart(fig, use_container_width=True)
+        st.metric("Adoption Velocity", f"{float(row.get('adoption_velocity', 0) or 0):.3f}")
+        st.metric("Company Diversity Score", f"{float(row.get('company_diversity_score', 0) or 0):.3f}")
+        st.info(
+            "Sector-level company details are unavailable in the current dashboard artifact. "
+            "Run against the full PostgreSQL warehouse to enable richer enterprise heatmaps."
+        )
