@@ -1,13 +1,4 @@
--- This query needs recent data. If you don't have 6 months, adjust the timeframe
-
--- Version 1: Check your actual date range first
-SELECT 
-    MIN(date) AS oldest_date,
-    MAX(date) AS newest_date,
-    (MAX(date) - MIN(date)) AS date_span_days
-FROM stackoverflow;
-
--- Version 2: Use relative percentages based on available data
+-- Growth momentum using the latest 30-day window versus the previous 30-day window.
 WITH date_range AS (
     SELECT 
         MIN(date) as earliest,

@@ -1,0 +1,16 @@
+.git
+.github
+.env
+*.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+logs/
+models/*.joblib
+models/*.pkl
+outputs/*.png
+outputs/*.csv
+outputs/*.json
+outputs/*.html
+.streamlit/secrets.toml

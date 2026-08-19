@@ -7,10 +7,12 @@ import logging
 from datetime import datetime
 
 import joblib
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import shap
 
 from src.common import FEATURE_COLUMNS, MODELS_DIR, OUTPUTS_DIR, RANDOM_STATE, TECH_COLUMN, ensure_directories
 
@@ -50,6 +52,13 @@ def run_shap_analysis() -> pd.DataFrame:
         Global feature importance DataFrame.
     """
     ensure_directories()
+    try:
+        import shap
+    except Exception as exc:  # noqa: BLE001
+        raise RuntimeError(
+            "SHAP could not be imported in this Python environment. Reinstall shap/IPython "
+            "dependencies or use a clean virtual environment, then rerun the pipeline."
+        ) from exc
     selection = _load_selection()
     model_name = selection["selected_model"]
     artifact = joblib.load(selection["file_path"])
@@ -62,7 +71,7 @@ def run_shap_analysis() -> pd.DataFrame:
         X_train = X_train.sample(500, random_state=RANDOM_STATE)
     model = artifact["model"]
     if model_name in {"random_forest", "xgboost"}:
-        explainer = shap.TreeExplainer(model)
+        explainer = shap.TreeExplainer(getattr(model, "model", model))
     elif model_name == "logistic_regression":
         explainer = shap.LinearExplainer(model, X_train)
     else:
@@ -83,11 +92,12 @@ def run_shap_analysis() -> pd.DataFrame:
 
     representative = []
     raw_train = artifact["X_train"].copy()
-    for index in list(raw_train.index[:20]):
+    train_technologies = artifact.get("train_technologies", raw_train.index.astype(str).tolist())
+    for position, index in enumerate(list(raw_train.index[:20])):
         values_for_row = shap_values[list(raw_train.index).index(index)].tolist()
         representative.append(
             {
-                TECH_COLUMN: str(index),
+                TECH_COLUMN: str(train_technologies[position]),
                 "feature_shap_values": dict(zip(FEATURE_COLUMNS, values_for_row)),
             }
         )

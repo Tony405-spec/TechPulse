@@ -19,4 +19,11 @@ jobs:
       - name: Run tests
         env:
           MPLBACKEND: Agg
-        run: pytest
+        run: pytest tests/ -v
+      - name: Run pipeline smoke test
+        env:
+          MPLBACKEND: Agg
+          DATABASE_URL: ""
+        run: python pipeline/run_pipeline.py
+      - name: Build Docker image
+        run: docker build -t techpulse:ci .
