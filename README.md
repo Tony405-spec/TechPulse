@@ -62,6 +62,54 @@ Streamlit page execution was also checked with `streamlit.testing.v1.AppTest`: t
 
 ---
 
+## Live Streamlit Evidence
+
+The screenshots below were captured from the real TechPulse Streamlit application running locally with:
+
+```text
+python -m streamlit run dashboard/app.py --server.headless=true --server.port=8501
+```
+
+They document the actual dashboard state generated from the repository's current model, prediction, ranking, and explanation artifacts.
+
+### Command Center Overview
+
+![TechPulse Command Center overview](assets/screenshots/01-command-center-overview.png)
+
+The live command center shows the TechPulse system status, research disclaimer, 53 analyzed technologies, trajectory distribution, average decline-risk KPI, technology search controls, and the selected `actionscript` prediction with its trajectory, risk, and confidence outputs.
+
+### Technology Search Interaction
+
+![TechPulse technology search for amazon](assets/screenshots/02-technology-search-amazon.png)
+
+The search field has been filled with `amazon`, and the application filters the technology explorer to a matching prediction. The selected `amazon` record is classified as `Declining` with a displayed decline risk of `97.5/100` and `High` confidence.
+
+### Global Risk Rankings
+
+![TechPulse global risk rankings](assets/screenshots/03-global-rankings.png)
+
+The rankings page displays interactive filters, the highest-risk technology bar chart, and the risk-index table generated from `outputs/technology_predictions.csv`.
+
+### Model Laboratory
+
+![TechPulse model laboratory](assets/screenshots/04-model-laboratory.png)
+
+The model laboratory shows the selected champion model (`XGBoost`), weighted F1, accuracy, four evaluated classifiers, the model-comparison table, and the best-model confusion matrix artifact.
+
+### About And Methodology
+
+![TechPulse about and methodology page](assets/screenshots/05-about-methodology.png)
+
+The methodology page documents the project overview, research design, data sources, feature engineering, modelling, explainability, limitations, licences, and academic context inside the running dashboard.
+
+To refresh these screenshots after a dashboard change, start Streamlit and run:
+
+```text
+node scripts/capture_live_evidence.js
+```
+
+---
+
 ## Important Data Note
 
 When `DATABASE_URL` is not set, TechPulse runs in local development mode.
