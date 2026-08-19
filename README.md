@@ -81,45 +81,290 @@ For research-grade output, configure PostgreSQL with the full expected warehouse
 
 ## System Architecture
 
-```text
-EXTERNAL DATA SOURCES
-        |
-        v
-DATA INGESTION
-        |
-        v
-POSTGRESQL DATA LAYER / LOCAL DEVELOPMENT CSV FALLBACK
-        |
-        v
-12 SQL ANALYTICS QUERIES
-        |
-        v
-FEATURE ENGINEERING
-        |
-        v
-7 PREDICTIVE FEATURES
-        |
-        v
-TARGET LABELLING
-        |
-        v
-TRAIN / TEST SPLIT
-        |
-        v
-4 ML CLASSIFIERS
-        |
-        v
-MODEL EVALUATION + BEST MODEL SELECTION
-        |
-        v
-SHAP EXPLAINABILITY
-        |
-        v
-MODEL + OUTPUT ARTIFACTS
-        |
-        v
-STREAMLIT DASHBOARD
+Simple recruiter-friendly view:
+
+```mermaid
+flowchart LR
+    classDef source fill:#06222b,stroke:#00d9ff,color:#e8fbff,stroke-width:1.5px
+    classDef analytics fill:#09241f,stroke:#00c896,color:#eafff8,stroke-width:1.5px
+    classDef feature fill:#0b2514,stroke:#00ff66,color:#effff3,stroke-width:1.5px
+    classDef ml fill:#2b1807,stroke:#ff9f1c,color:#fff3e0,stroke-width:1.5px
+    classDef explain fill:#2b0f2f,stroke:#ff3d9a,color:#ffeafa,stroke-width:1.5px
+    classDef app fill:#082333,stroke:#00d9ff,color:#e8fbff,stroke-width:1.5px
+    classDef user fill:#f2f5f4,stroke:#9aa7a0,color:#101418,stroke-width:1.5px
+    classDef devops fill:#0d1b35,stroke:#6ea8ff,color:#edf5ff,stroke-width:1.5px
+
+    DATA["Raw Ecosystem Data<br/>Stack Exchange, sentiment,<br/>Fortune 500, metadata"]:::source
+    INGEST["Ingestion and Validation<br/>PostgreSQL or local CSV fallback"]:::analytics
+    SQL["12 SQL Analytics Queries<br/>descriptive foundation"]:::analytics
+    SIGNALS["7 Predictive Signals<br/>health, momentum, quality,<br/>diversity, sentiment, adoption, decay"]:::feature
+    LABELS["Target Labels<br/>Growing, Stable, Declining"]:::feature
+    MODELS["Model Competition<br/>LR, KNN, Random Forest, XGBoost"]:::ml
+    SELECT["Champion Model<br/>selected by Weighted F1"]:::ml
+    SHAP["SHAP Explainability<br/>global and local reasons"]:::explain
+    PREDICT["Prediction Engine<br/>trajectory, risk, confidence"]:::app
+    DASH["Streamlit Intelligence Platform<br/>Command Center, Rankings,<br/>Model Laboratory, Methodology"]:::app
+    USERS["Decision Support<br/>developers, researchers,<br/>engineering and technology leaders"]:::user
+    DEVOPS["Reproducibility<br/>pytest, flake8, CI, Docker"]:::devops
+
+    DATA -->|raw records| INGEST -->|validated data| SQL -->|aggregated signals| SIGNALS
+    SIGNALS --> LABELS --> MODELS --> SELECT --> SHAP
+    SELECT --> PREDICT
+    SHAP --> PREDICT
+    PREDICT --> DASH --> USERS
+    DEVOPS -. validates and packages .-> INGEST
+    DEVOPS -. tests pipeline and app .-> DASH
 ```
+
+Detailed implementation architecture:
+
+```mermaid
+flowchart TB
+    classDef source fill:#06222b,stroke:#00d9ff,color:#e8fbff,stroke-width:1.5px
+    classDef ingest fill:#071c18,stroke:#21d19f,color:#eafff8,stroke-width:1.5px
+    classDef storage fill:#211032,stroke:#bf66ff,color:#f5eaff,stroke-width:1.5px
+    classDef sql fill:#09241f,stroke:#00c896,color:#eafff8,stroke-width:1.5px
+    classDef feature fill:#0b2514,stroke:#00ff66,color:#effff3,stroke-width:1.5px
+    classDef target fill:#2a2308,stroke:#ffc857,color:#fff8db,stroke-width:1.5px
+    classDef ml fill:#2b1807,stroke:#ff9f1c,color:#fff3e0,stroke-width:1.5px
+    classDef eval fill:#2d2706,stroke:#ffd43b,color:#fffbd1,stroke-width:1.5px
+    classDef explain fill:#2b0f2f,stroke:#ff3d9a,color:#ffeafa,stroke-width:1.5px
+    classDef app fill:#082333,stroke:#00d9ff,color:#e8fbff,stroke-width:1.5px
+    classDef artifact fill:#161b22,stroke:#8fb7a1,color:#e6fff1,stroke-width:1.5px
+    classDef user fill:#f2f5f4,stroke:#9aa7a0,color:#101418,stroke-width:1.5px
+    classDef devops fill:#0d1b35,stroke:#6ea8ff,color:#edf5ff,stroke-width:1.5px
+    classDef caution fill:#301d05,stroke:#ffc857,color:#fff8db,stroke-width:1.5px,stroke-dasharray: 5 3
+
+    subgraph SOURCES["DATA SOURCES AND RESEARCH SIGNALS"]
+        SO["Stack Overflow / Stack Exchange<br/>questions, tags, unanswered pressure,<br/>historical activity"]:::source
+        SENT["Developer Sentiment Signal<br/>satisfaction, adoption intent,<br/>learning difficulty, sentiment trends"]:::source
+        ENT["Enterprise Adoption<br/>Fortune 500 technology usage,<br/>companies, industries, sectors"]:::source
+        COMP["Company Metadata<br/>company profiles, sectors,<br/>parent-company relationships"]:::source
+        TECH["Technology Metadata<br/>technology names, categories,<br/>aliases and relationships"]:::source
+        LOCAL["Local Development CSVs<br/>data/stackexchange.csv<br/>data/fortune.csv"]:::caution
+    end
+
+    subgraph INGEST["DATA INGESTION AND QUALITY CONTROL"]
+        ENV["Environment Configuration<br/>DATABASE_URL, APP_ENV,<br/>MODEL_PATH, JWT_SECRET placeholder"]:::ingest
+        ING["src/data_ingestion.py<br/>PostgreSQL-first loader"]:::ingest
+        FALLBACK["CSV Development Fallback<br/>deterministic derived demo tables<br/>clearly marked as development data"]:::caution
+        SCHEMA["Schema Validation<br/>required tables and columns"]:::ingest
+        QUALITY["Data Quality Diagnostics<br/>missing values, invalid types,<br/>low row counts, malformed records"]:::ingest
+        CLEAN["Cleaning and Normalization<br/>date parsing, numeric coercion,<br/>technology-name standardization"]:::ingest
+        PROVENANCE["Data Provenance Report<br/>outputs/data_sources.json<br/>outputs/data_quality_report.json"]:::artifact
+    end
+
+    subgraph STORAGE["POSTGRESQL DATA LAYER / LOCAL DEVELOPMENT FRAMES"]
+        PG["PostgreSQL 14+ Warehouse<br/>used when DATABASE_URL is configured"]:::storage
+        T1["so_questions"]:::storage
+        T2["dev_sentiment"]:::storage
+        T3["fortune500_stacks"]:::storage
+        T4["company_profiles"]:::storage
+        T5["tech_metadata"]:::storage
+        T6["question_company_mapping"]:::storage
+        DEVFRAMES["Development DataFrames<br/>same six-table contract<br/>derived where source tables are absent"]:::caution
+    end
+
+    subgraph SQL["SQL ANALYTICS FOUNDATION - 12 QUERIES"]
+        subgraph BASIC["Basic Analytics"]
+            Q1["Q1 Trending Technologies"]:::sql
+            Q2["Q2 Learning Difficulty"]:::sql
+            Q3["Q3 Monthly Trends"]:::sql
+        end
+        subgraph INTERMEDIATE["Intermediate Analytics"]
+            Q4["Q4 Company Tag Volume"]:::sql
+            Q5["Q5 Category Rollups"]:::sql
+            Q6["Q6 Hardest Tech per Company"]:::sql
+            Q7["Q7 Growth Momentum"]:::sql
+        end
+        subgraph ADVANCED["Advanced Analytics"]
+            Q8["Q8 Parent-Company Portfolio"]:::sql
+            Q9["Q9 Technology Health Score"]:::sql
+            Q10["Q10 Question Quality"]:::sql
+            Q11["Q11 Intraday Patterns"]:::sql
+            Q12["Q12 Stack Diversity"]:::sql
+        end
+        RESULTS["results/ and SQL outputs<br/>descriptive analytics foundation"]:::artifact
+    end
+
+    subgraph FEATURES["FEATURE ENGINEERING ENGINE"]
+        FE["src/feature_engineering.py<br/>aggregation, historical windows,<br/>missing-value handling, outlier-safe ratios"]:::feature
+        F1["Technology Health Score"]:::feature
+        F2["Growth Momentum Index"]:::feature
+        F3["Question Quality Score"]:::feature
+        F4["Company Diversity Score"]:::feature
+        F5["Sentiment Delta"]:::feature
+        F6["Adoption Velocity"]:::feature
+        F7["Community Decay Rate"]:::feature
+        NORM["Feature Validation<br/>min-max normalization to 0..1<br/>feature_schema.json"]:::feature
+        MATRIX["data/feature_matrix.csv<br/>one technology per row"]:::artifact
+    end
+
+    subgraph TARGETS["TARGET ENGINEERING"]
+        LAB["src/labelling.py<br/>deterministic reproducible rules"]:::target
+        GROW["Growing"]:::target
+        STABLE["Stable"]:::target
+        DECLINE["Declining"]:::target
+        DIST["outputs/labelling_summary.json<br/>class distribution"]:::artifact
+    end
+
+    subgraph ML["MACHINE LEARNING EXPERIMENTATION"]
+        TRAIN["src/model_training.py<br/>RANDOM_STATE = 42"]:::ml
+        SPLIT["80/20 Stratified Train-Test Split"]:::ml
+        CV["Stratified Cross-Validation<br/>5-fold when class counts support it"]:::ml
+        TUNE["Hyperparameter Tuning<br/>reasonable grids/random search"]:::ml
+        LR["Logistic Regression<br/>interpretable baseline"]:::ml
+        KNN["K-Nearest Neighbours<br/>non-parametric baseline"]:::ml
+        RF["Random Forest<br/>ensemble classifier"]:::ml
+        XGB["XGBoost<br/>gradient boosting classifier"]:::ml
+        PROBA["Class Probability Estimation<br/>P(Growing), P(Stable), P(Declining)"]:::ml
+    end
+
+    subgraph EVALUATION["MODEL EVALUATION AND SELECTION"]
+        EVAL["src/evaluation.py<br/>held-out metrics and comparison"]:::eval
+        M1["Accuracy"]:::eval
+        M2["Precision"]:::eval
+        M3["Recall"]:::eval
+        M4["Weighted F1<br/>primary selection metric"]:::eval
+        M5["ROC-AUC<br/>where calculable"]:::eval
+        M6["Confusion Matrix"]:::eval
+        COMPARE["Model Comparison<br/>outputs/model_comparison.csv"]:::artifact
+        BEST["Best Model / Champion<br/>selected by Weighted F1"]:::eval
+    end
+
+    subgraph ARTIFACTS["MODEL AND ANALYTICS ARTIFACTS"]
+        MODELFILE["models/best_model.joblib<br/>selected estimator and preprocessing metadata"]:::artifact
+        MODELMETA["Feature columns, class labels,<br/>train/test split metadata"]:::artifact
+        PREDCSV["outputs/technology_predictions.csv<br/>technology-level predictions"]:::artifact
+        EDA["outputs/eda_report.json<br/>EDA plots and data summaries"]:::artifact
+    end
+
+    subgraph SHAP["EXPLAINABILITY LAYER"]
+        SHAPRUN["src/shap_analysis.py<br/>explains champion model"]:::explain
+        GLOBAL["Global Explanation<br/>feature importance, summary plot,<br/>SHAP bar chart"]:::explain
+        LOCALX["Local Explanation<br/>technology-specific feature contributions"]:::explain
+        SHAPOUT["SHAP Artifacts<br/>global_feature_importance.csv<br/>shap_per_prediction.json<br/>shap_summary_beeswarm.png"]:::artifact
+    end
+
+    subgraph PREDICT["PREDICTION ENGINE"]
+        SELECTTECH["Selected Technology"]:::app
+        VECTOR["Seven-Signal Feature Vector"]:::app
+        PREP["Preprocessing Metadata<br/>imputation and feature ordering"]:::app
+        CHAMP["Champion Model Inference"]:::app
+        CLASSES["Predicted Trajectory<br/>Growing / Stable / Declining"]:::app
+        RISK["Decline Risk Score<br/>(1 - P(Growing)) x 100"]:::app
+        CONF["Confidence<br/>max(class probability)"]:::app
+        WHY["SHAP Explanation<br/>why the model estimated this"]:::app
+    end
+
+    subgraph DASH["TECHPULSE INTELLIGENCE PLATFORM - STREAMLIT"]
+        APP["dashboard/app.py<br/>custom navigation and terminal UI shell"]:::app
+        UI["dashboard/components/ui.py<br/>status badges, metric cards,<br/>shared theme and sidebar"]:::app
+        HOME["Command Center<br/>KPIs, search, trajectory,<br/>probabilities, signal matrix"]:::app
+        RANK["Global Rankings<br/>risk filters, category filters,<br/>top-risk chart, CSV export"]:::app
+        LABVIEW["Model Laboratory<br/>champion model, metrics,<br/>confusion matrix, metric explainers"]:::app
+        ABOUT["About / Methodology<br/>research context, limitations,<br/>data licences, academic context"]:::app
+        EMPTY["Honest Empty States<br/>missing history and enterprise detail<br/>shown as unavailable, not zero"]:::caution
+    end
+
+    subgraph USERS["USER DECISION SUPPORT"]
+        DS["Data Scientist"]:::user
+        LEAD["Technology Leader"]:::user
+        MANAGER["Engineering Manager"]:::user
+        RECRUITER["Recruiter"]:::user
+        RESEARCHER["Researcher"]:::user
+        DEV["Developer"]:::user
+        SUPPORT["Analytical Decision Support<br/>not automated decision making"]:::user
+    end
+
+    subgraph DEVOPS["REPRODUCIBILITY, TESTING, AND DELIVERY"]
+        GIT["GitHub Repository"]:::devops
+        ACTIONS["GitHub Actions"]:::devops
+        TESTS["pytest tests/<br/>ingestion, features, labelling, models"]:::devops
+        LINT["flake8 src tests"]:::devops
+        PIPECI["Pipeline Smoke Test<br/>python pipeline/run_pipeline.py"]:::devops
+        DOCKER["Dockerfile<br/>containerized Streamlit app"]:::devops
+        ENVSEC["Secrets and Config<br/>.env excluded, .env.example safe"]:::devops
+    end
+
+    SO -->|raw community signal| ING
+    SENT -->|sentiment signal| ING
+    ENT -->|adoption signal| ING
+    COMP -->|company context| ING
+    TECH -->|technology context| ING
+    LOCAL -->|when DATABASE_URL is empty| FALLBACK
+    ENV --> ING
+    ING --> SCHEMA --> QUALITY --> CLEAN --> PROVENANCE
+    ING -->|validated records| PG
+    FALLBACK -->|development records| DEVFRAMES
+    PG --> T1 & T2 & T3 & T4 & T5 & T6
+    DEVFRAMES --> T1 & T2 & T3 & T4 & T5 & T6
+
+    T1 & T2 & T3 & T4 & T5 & T6 -->|analytical SQL| BASIC
+    BASIC --> INTERMEDIATE --> ADVANCED --> RESULTS
+    RESULTS -->|aggregated signals| FE
+    T1 -->|volume, quality, decay| FE
+    T2 -->|sentiment trend| FE
+    T3 -->|adoption velocity| FE
+    T4 -->|sector diversity| FE
+    T5 -->|categories| FE
+
+    FE --> F1 & F2 & F3 & F4 & F5 & F6 & F7
+    F1 & F2 & F3 & F4 & F5 & F6 & F7 --> NORM --> MATRIX
+    MATRIX --> LAB
+    LAB --> GROW & STABLE & DECLINE
+    LAB --> DIST
+    MATRIX --> TRAIN
+    DIST --> TRAIN
+
+    TRAIN --> SPLIT --> CV --> TUNE
+    TUNE --> LR & KNN & RF & XGB
+    LR & KNN & RF & XGB --> PROBA --> EVAL
+    EVAL --> M1 & M2 & M3 & M4 & M5 & M6
+    M1 & M2 & M3 & M4 & M5 & M6 --> COMPARE --> BEST
+    BEST --> MODELFILE
+    BEST --> SHAPRUN
+    TRAIN --> MODELMETA
+    EVAL --> PREDCSV
+    MATRIX --> EDA
+
+    SHAPRUN --> GLOBAL & LOCALX --> SHAPOUT
+    MODELFILE --> CHAMP
+    MODELMETA --> PREP
+    PREDCSV --> CLASSES
+    SELECTTECH --> VECTOR --> PREP --> CHAMP --> PROBA
+    PROBA --> CLASSES
+    PROBA --> RISK
+    PROBA --> CONF
+    SHAPOUT --> WHY
+
+    CLASSES & RISK & CONF & WHY --> APP
+    PREDCSV --> HOME & RANK
+    COMPARE --> LABVIEW
+    SHAPOUT --> HOME
+    PROVENANCE --> UI
+    APP --> UI --> HOME & RANK & LABVIEW & ABOUT & EMPTY
+    HOME & RANK & LABVIEW & ABOUT --> SUPPORT
+    SUPPORT --> DS & LEAD & MANAGER & RECRUITER & RESEARCHER & DEV
+
+    GIT --> ACTIONS
+    ACTIONS --> TESTS & LINT & PIPECI
+    ACTIONS --> DOCKER
+    ENVSEC --> ING
+    TESTS -. validates .-> ING
+    TESTS -. validates .-> FE
+    TESTS -. validates .-> LAB
+    TESTS -. validates .-> TRAIN
+    PIPECI -. regenerates .-> MATRIX
+    PIPECI -. verifies .-> SHAPRUN
+    DOCKER -. packages .-> APP
+    EVAL -. iterative improvement .-> FE
+```
+
+Diagram source files:
+
+- `docs/architecture-simple.mmd`
+- `docs/architecture.mmd`
 
 ---
 

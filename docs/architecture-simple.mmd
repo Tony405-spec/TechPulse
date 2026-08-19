@@ -1,0 +1,30 @@
+flowchart LR
+    classDef source fill:#06222b,stroke:#00d9ff,color:#e8fbff,stroke-width:1.5px
+    classDef analytics fill:#09241f,stroke:#00c896,color:#eafff8,stroke-width:1.5px
+    classDef feature fill:#0b2514,stroke:#00ff66,color:#effff3,stroke-width:1.5px
+    classDef ml fill:#2b1807,stroke:#ff9f1c,color:#fff3e0,stroke-width:1.5px
+    classDef explain fill:#2b0f2f,stroke:#ff3d9a,color:#ffeafa,stroke-width:1.5px
+    classDef app fill:#082333,stroke:#00d9ff,color:#e8fbff,stroke-width:1.5px
+    classDef user fill:#f2f5f4,stroke:#9aa7a0,color:#101418,stroke-width:1.5px
+    classDef devops fill:#0d1b35,stroke:#6ea8ff,color:#edf5ff,stroke-width:1.5px
+
+    DATA["Raw Ecosystem Data<br/>Stack Exchange, sentiment,<br/>Fortune 500, metadata"]:::source
+    INGEST["Ingestion and Validation<br/>PostgreSQL or local CSV fallback"]:::analytics
+    SQL["12 SQL Analytics Queries<br/>descriptive foundation"]:::analytics
+    SIGNALS["7 Predictive Signals<br/>health, momentum, quality,<br/>diversity, sentiment, adoption, decay"]:::feature
+    LABELS["Target Labels<br/>Growing, Stable, Declining"]:::feature
+    MODELS["Model Competition<br/>LR, KNN, Random Forest, XGBoost"]:::ml
+    SELECT["Champion Model<br/>selected by Weighted F1"]:::ml
+    SHAP["SHAP Explainability<br/>global and local reasons"]:::explain
+    PREDICT["Prediction Engine<br/>trajectory, risk, confidence"]:::app
+    DASH["Streamlit Intelligence Platform<br/>Command Center, Rankings,<br/>Model Laboratory, Methodology"]:::app
+    USERS["Decision Support<br/>developers, researchers,<br/>engineering and technology leaders"]:::user
+    DEVOPS["Reproducibility<br/>pytest, flake8, CI, Docker"]:::devops
+
+    DATA -->|raw records| INGEST -->|validated data| SQL -->|aggregated signals| SIGNALS
+    SIGNALS --> LABELS --> MODELS --> SELECT --> SHAP
+    SELECT --> PREDICT
+    SHAP --> PREDICT
+    PREDICT --> DASH --> USERS
+    DEVOPS -. validates and packages .-> INGEST
+    DEVOPS -. tests pipeline and app .-> DASH
