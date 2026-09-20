@@ -71,11 +71,18 @@ def _probability_chart(row: pd.Series) -> go.Figure:
         y="Trajectory",
         orientation="h",
         color="Trajectory",
-        color_discrete_map={"Growing": "#00ff66", "Stable": "#ffc857", "Declining": "#ff5c7a"},
+        color_discrete_map={"Growing": "#7FB394", "Stable": "#D8C08A", "Declining": "#C76D63"},
         range_x=[0, 1],
         title="Class Probability Distribution",
     )
-    fig.update_layout(template="plotly_dark", height=260, margin=dict(l=10, r=10, t=50, b=10))
+    fig.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="#171a20",
+        plot_bgcolor="#171a20",
+        font_color="#f4efe5",
+        height=260,
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
     return fig
 
 
@@ -85,9 +92,9 @@ def _trajectory_position(label: str) -> None:
     st.markdown(
         f"""
         <div style="position:relative;margin:1rem 0 1.4rem;padding-top:1.2rem">
-          <div style="height:3px;background:linear-gradient(90deg,#00ff66,#ffc857,#ff5c7a);border-radius:99px"></div>
-          <div style="position:absolute;left:{left}%;top:0;transform:translateX(-50%);color:#e6fff1;font-weight:800">▲</div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.35rem;color:#8fb7a1;font-size:0.84rem">
+          <div style="height:3px;background:linear-gradient(90deg,#7FB394,#D8C08A,#C76D63);border-radius:99px"></div>
+          <div style="position:absolute;left:{left}%;top:0;transform:translateX(-50%);color:#f4efe5;font-weight:800">▲</div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.35rem;color:#b8b0a2;font-size:0.84rem">
             <span>GROWING</span><span>STABLE</span><span>DECLINING</span>
           </div>
         </div>
@@ -140,7 +147,7 @@ def _ai_interpretation(row: pd.Series, label: str, risk: float, confidence: str)
 
 render_shell(
     "Technology Intelligence",
-    "Detecting growth, stability, and decline before technology risk becomes expensive.",
+    "Temporal evidence, model diagnostics, and technology trajectory intelligence.",
     "COMMAND CENTER",
 )
 disclaimer_panel()

@@ -10,6 +10,10 @@ import pandas as pd
 
 from src.common import DATA_DIR, LABEL_COLUMN, LOGS_DIR, OUTPUTS_DIR, ensure_directories
 
+GROWTH_RATIO_THRESHOLD = 1.20
+DECLINE_RATIO_THRESHOLD = 0.80
+MIN_RECENT_AVG_VOLUME = 1.0
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -30,7 +34,7 @@ def _configure_logger() -> logging.Logger:
 
 
 def _label_row(row: pd.Series, logger: logging.Logger) -> str:
-    """Assign one trajectory label from rule inputs.
+    """Assign one trajectory label from future activity.
 
     Args:
         row: Feature matrix row.
@@ -39,20 +43,26 @@ def _label_row(row: pd.Series, logger: logging.Logger) -> str:
     Returns:
         One of Growing, Stable, or Declining.
     """
-    momentum = row.get("growth_momentum_index")
-    slope = row.get("so_volume_trend_slope", 0)
-    r_squared = row.get("r_squared", 0)
-    months = row.get("so_months_observed", 12)
-    if pd.notna(months) and months < 12:
-        logger.info("%s has <12 months of SO data; using Momentum Index only.", row.get("technology_name"))
-        if momentum > 0.70:
+    if {"future_avg_monthly_volume", "recent_avg_monthly_volume"}.issubset(row.index):
+        recent = pd.to_numeric(row.get("recent_avg_monthly_volume"), errors="coerce")
+        future = pd.to_numeric(row.get("future_avg_monthly_volume"), errors="coerce")
+        if pd.isna(recent) or pd.isna(future):
+            return "Stable"
+        ratio = future / max(float(recent), MIN_RECENT_AVG_VOLUME)
+        if ratio >= GROWTH_RATIO_THRESHOLD:
             return "Growing"
-        if momentum < 0.40:
+        if ratio <= DECLINE_RATIO_THRESHOLD:
             return "Declining"
         return "Stable"
-    if momentum > 0.70 and slope > 0 and r_squared > 0.6:
+
+    logger.warning(
+        "Future-window target columns are absent; falling back to legacy labels for %s.",
+        row.get("technology_name"),
+    )
+    momentum = row.get("growth_momentum_index")
+    if momentum > 0.70:
         return "Growing"
-    if momentum < 0.40 or (slope < 0 and r_squared > 0.6):
+    if momentum < 0.40:
         return "Declining"
     return "Stable"
 
@@ -86,6 +96,15 @@ def assign_trajectory_labels(
     summary = {
         label: {"count": int(count), "percentage": float(count / max(len(frame), 1) * 100)}
         for label, count in counts.items()
+    }
+    summary["_method"] = {
+        "target": "future_window_activity",
+        "growth_ratio_threshold": GROWTH_RATIO_THRESHOLD,
+        "decline_ratio_threshold": DECLINE_RATIO_THRESHOLD,
+        "note": (
+            "Labels compare future average monthly question volume with recent observed "
+            "average volume. Future target columns are excluded from model features."
+        ),
     }
     logger.info("Class distribution: %s", summary)
     (OUTPUTS_DIR / "labelling_summary.json").write_text(

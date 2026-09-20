@@ -29,7 +29,7 @@ def main() -> None:
             "Model training skipped. Run the pipeline first so "
             f"data/feature_matrix.csv exists. Reason: {exc}"
         )
-        return
+        raise SystemExit(1) from exc
     for name, path in artifacts.items():
         print(f"{name}: {path}")
 

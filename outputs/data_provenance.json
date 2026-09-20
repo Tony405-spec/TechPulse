@@ -1,0 +1,112 @@
+{
+  "access_date": "2026-09-20",
+  "sources": [
+    {
+      "source_name": "Stack Overflow Developer Survey",
+      "source_url": "https://survey.stackoverflow.co/",
+      "repository_url": "https://github.com/StackExchange/Survey",
+      "license": "Open Database License (ODbL) 1.0 for data; Database Contents License (DbCL) 1.0 for contents",
+      "description": "Official annual survey responses aggregated into technology-year usage, interest, and admiration shares.",
+      "publication_update_date": "Yearly survey releases; exact release dates are maintained by Stack Exchange in the source repository.",
+      "fields_used": [
+        "DatabaseAdmired",
+        "DatabaseHaveWorkedWith",
+        "DatabaseWantToWorkWith",
+        "LanguageAdmired",
+        "LanguageHaveWorkedWith",
+        "LanguageWantToWorkWith",
+        "MiscTechAdmired",
+        "MiscTechHaveWorkedWith",
+        "MiscTechWantToWorkWith",
+        "PlatformAdmired",
+        "PlatformHaveWorkedWith",
+        "PlatformWantToWorkWith",
+        "ToolsTechAdmired",
+        "ToolsTechHaveWorkedWith",
+        "ToolsTechWantToWorkWith",
+        "WebframeAdmired",
+        "WebframeHaveWorkedWith",
+        "WebframeWantToWorkWith"
+      ],
+      "transformations": [
+        "Downloaded official results.csv/schema.csv files from StackExchange/Survey via GitHub media URLs.",
+        "Split semicolon-delimited multi-select technology columns.",
+        "Applied conservative technology alias normalization.",
+        "Aggregated respondent counts to technology-year shares."
+      ],
+      "limitations": [
+        "Survey respondents are self-selected and not a census of all developers.",
+        "Question names and available technology columns differ by year.",
+        "Usage/share is a developer-survey signal, not direct enterprise adoption."
+      ],
+      "data_type": "observed public survey responses aggregated to derived yearly shares"
+    }
+  ],
+  "downloaded_files": [
+    {
+      "year": 2021,
+      "kind": "results",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2021/results.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2021\\results.csv",
+      "bytes": 81101949
+    },
+    {
+      "year": 2021,
+      "kind": "schema",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2021/schema.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2021\\schema.csv",
+      "bytes": 10358
+    },
+    {
+      "year": 2022,
+      "kind": "results",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2022/results.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2022\\results.csv",
+      "bytes": 108829270
+    },
+    {
+      "year": 2022,
+      "kind": "schema",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2022/schema.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2022\\schema.csv",
+      "bytes": 14471
+    },
+    {
+      "year": 2023,
+      "kind": "results",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2023/results.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2023\\results.csv",
+      "bytes": 158626799
+    },
+    {
+      "year": 2023,
+      "kind": "schema",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2023/schema.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2023\\schema.csv",
+      "bytes": 16442
+    },
+    {
+      "year": 2024,
+      "kind": "results",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2024/results.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2024\\results.csv",
+      "bytes": 159525875
+    },
+    {
+      "year": 2024,
+      "kind": "schema",
+      "url": "https://media.githubusercontent.com/media/StackExchange/Survey/main/packages/archive/2024/schema.csv",
+      "path": "data\\raw_external\\stackoverflow_survey\\2024\\schema.csv",
+      "bytes": 12503
+    }
+  ],
+  "derived_outputs": [
+    {
+      "path": "data\\developer_survey_usage.csv",
+      "rows": 685,
+      "technologies": 267,
+      "earliest_year": 2021,
+      "latest_year": 2024
+    }
+  ]
+}

@@ -12,7 +12,7 @@ import streamlit as st
 from dashboard.components.shap_viewer import load_prediction_shap, shap_bar, shap_summary_sentence
 from src.common import BASE_DIR, DISCLAIMER, FEATURE_COLUMNS, LABELS, OUTPUTS_DIR
 
-LABEL_COLOURS = {"Growing": "#2E9E6B", "Stable": "#F4B942", "Declining": "#D94F3D"}
+LABEL_COLOURS = {"Growing": "#7FB394", "Stable": "#D8C08A", "Declining": "#C76D63"}
 
 
 def risk_score(probabilities: dict[str, float]) -> int:
@@ -55,8 +55,8 @@ def trajectory_badge(label: str) -> str:
     """
     colour = LABEL_COLOURS.get(label, "#444444")
     return (
-        f"<span style='background:{colour};color:#111;padding:0.25rem 0.5rem;"
-        f"border-radius:4px;font-weight:700'>{label}</span>"
+        f"<span style='background:rgba(216,192,138,0.10);color:{colour};padding:0.28rem 0.62rem;"
+        f"border:1px solid {colour};border-radius:999px;font-weight:700'>{label}</span>"
     )
 
 

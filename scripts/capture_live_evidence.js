@@ -7,7 +7,7 @@ const screenshotPath = (...parts) => path.join(root, "assets", "screenshots", ..
 async function waitForApp(page) {
   await page.waitForLoadState("domcontentloaded").catch(() => {});
   await page.waitForFunction(
-    () => document.body && document.body.innerText.includes("TECHPULSE"),
+    () => document.body && /TechPulse/i.test(document.body.innerText),
     null,
     { timeout: 60000 },
   );

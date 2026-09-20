@@ -84,12 +84,19 @@ else:
             y=TECH_COLUMN,
             orientation="h",
             color="Risk Score",
-            color_continuous_scale=["#00ff66", "#ffc857", "#ff5c7a"],
+            color_continuous_scale=["#7FB394", "#D8C08A", "#C76D63"],
             title="Highest Risk Technologies",
             hover_data=[CATEGORY_COLUMN, LABEL_COLUMN, "Confidence Level"],
             range_x=[0, 100],
         )
-        fig.update_layout(template="plotly_dark", height=420, margin=dict(l=10, r=10, t=50, b=20))
+        fig.update_layout(
+            template="plotly_dark",
+            paper_bgcolor="#171a20",
+            plot_bgcolor="#171a20",
+            font_color="#f4efe5",
+            height=420,
+            margin=dict(l=10, r=10, t=50, b=20),
+        )
         st.plotly_chart(fig, use_container_width=True)
     table = filtered[[TECH_COLUMN, CATEGORY_COLUMN, LABEL_COLUMN, "Risk Score", "Confidence Level"]].copy()
     table.insert(0, "Rank", range(1, len(table) + 1))

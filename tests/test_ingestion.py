@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from src.data_ingestion import TABLES, _validate_frame
+from src.data_ingestion import TABLES, _validate_frame, load_local_development_datasets
 from src.common import OUTPUTS_DIR
 
 
@@ -26,3 +26,13 @@ def test_data_quality_report_written(sample_datasets):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report), encoding="utf-8")
     assert path.exists()
+
+
+def test_local_manifest_marks_proxy_tables():
+    """Assert local fallback provenance distinguishes proxy tables."""
+    load_local_development_datasets()
+    manifest = json.loads((OUTPUTS_DIR / "data_sources.json").read_text(encoding="utf-8"))
+    assert manifest["source_mode"] == "local_development_csv"
+    assert manifest["research_grade"] is False
+    assert manifest["tables"]["fortune500_stacks"]["is_proxy"] is True
+    assert "is_proxy" in manifest["tables"]["dev_sentiment"]

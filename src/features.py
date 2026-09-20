@@ -33,6 +33,7 @@ def main() -> None:
             "Feature generation skipped. Configure DATABASE_URL and install "
             f"dependencies to run against PostgreSQL. Reason: {exc}"
         )
+        raise SystemExit(1) from exc
 
 
 if __name__ == "__main__":

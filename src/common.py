@@ -11,8 +11,15 @@ MODELS_DIR = BASE_DIR / "models"
 OUTPUTS_DIR = BASE_DIR / "outputs"
 
 RANDOM_STATE = 42
+OBSERVATION_MONTH_COLUMN = "observation_month"
 LABELS = ["Growing", "Stable", "Declining"]
 LABEL_ENCODING = {"Growing": 0, "Stable": 1, "Declining": 2}
+TARGET_LEAKAGE_COLUMNS = [
+    "future_volume",
+    "future_avg_monthly_volume",
+    "recent_avg_monthly_volume",
+    "future_growth_ratio",
+]
 FEATURE_COLUMNS = [
     "technology_health_score",
     "growth_momentum_index",

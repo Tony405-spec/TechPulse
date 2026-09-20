@@ -22,8 +22,8 @@ disclaimer_panel()
 
 sections = {
     "Project Overview": """
-    TechPulse predicts whether software technologies are Growing, Stable, or Declining
-    by combining community activity, enterprise adoption, and developer sentiment signals.
+    TechPulse assesses whether technology-month observations are Growing, Stable, or
+    Declining by combining community activity with clearly marked development proxies.
     """,
     "Research Problem": """
     Organisations and developers often make technology adoption decisions using trend
@@ -31,24 +31,30 @@ sections = {
     into a reproducible supervised machine-learning workflow.
     """,
     "Objectives": """
-    Engineer predictive features, train four classifiers, select the strongest model using
-    weighted F1, explain predictions with SHAP, and present the results through a Streamlit
-    technology intelligence dashboard.
+    Engineer leakage-aware temporal features, construct future-window labels, compare
+    machine-learning models against transparent baselines, explain selected model
+    associations with SHAP, and present results through a Streamlit dashboard.
     """,
     "Data Sources": """
-    Stack Overflow community signals, developer sentiment survey signals, Fortune 500
-    adoption data, company profiles, technology metadata, and question-company mappings.
-    Local development mode uses repository CSVs and clearly marks derived demo tables.
+    Stack Overflow community signals, official Stack Overflow Developer Survey usage
+    aggregates, company profiles, and optional warehouse tables. Local development mode
+    clearly marks adoption-stack, metadata, and mapping tables as proxies.
     """,
     "Feature Engineering": """
     Seven normalized signals are used: technology health score, growth momentum index,
-    question quality score, company diversity score, sentiment delta, adoption velocity,
-    and community decay rate.
+    question quality score, company diversity score, survey usage delta, adoption velocity,
+    and community decay rate. External signals are used only when available by the
+    observation month.
     """,
     "Modelling": """
     Logistic Regression, K-Nearest Neighbours, Random Forest, and XGBoost are trained
-    with an 80/20 stratified split and stratified cross-validation where the dataset
-    supports it.
+    with chronological validation when observation months are available. Majority-class
+    and momentum-rule baselines are reported alongside ML models.
+    """,
+    "Methodological Validity": """
+    Target labels are constructed from future community activity windows. Future target
+    fields are excluded from model features, and ROC-AUC is not reported when the held-out
+    split lacks all required classes.
     """,
     "Explainability": """
     SHAP is used to generate global feature importance and local per-technology
@@ -56,13 +62,14 @@ sections = {
     """,
     "Limitations": """
     Predictions depend on data coverage, recency, schema quality, and class balance.
-    Demo-derived development data is suitable for smoke testing and presentation flow,
-    not for final empirical claims.
+    Local Stack Exchange observations currently predate the acquired 2021-2024 survey
+    window, and local enterprise adoption remains proxy-only. These outputs are useful
+    for engineering validation, not final empirical claims.
     """,
     "Data Licences": """
-    Stack Exchange and Stack Overflow data are attributed under CC BY-SA 4.0 where
-    applicable. Fortune 500 and technology metadata are aggregated from public/open sources
-    for academic research.
+    Stack Exchange activity is attributed under CC BY-SA where applicable. Stack Overflow
+    Developer Survey data is used under ODbL 1.0 / DbCL 1.0. Fortune profile data is
+    company context, not direct evidence of technology adoption.
     """,
     "Academic Context": """
     Institution: KCA University, School of Technology. Programme: BSc Data Science.

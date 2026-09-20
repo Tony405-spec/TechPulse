@@ -48,6 +48,19 @@ def _validate_frame(table: str, frame: pd.DataFrame) -> dict[str, Any]:
         LOGGER.warning(message)
         issues.append({"type": "minimum_rows", "message": message})
 
+    missingness = frame.isna().mean().mul(100).round(2).to_dict()
+    date_ranges: dict[str, dict[str, str | None]] = {}
+    for candidate in ["creation_date", "date", "adoption_date", "survey_year"]:
+        if candidate in frame.columns:
+            values = pd.to_datetime(frame[candidate], errors="coerce")
+            if values.notna().any():
+                date_ranges[candidate] = {
+                    "earliest": values.min().date().isoformat(),
+                    "latest": values.max().date().isoformat(),
+                }
+    technology_columns = [column for column in ["technology", "technology_name", "tag"] if column in frame.columns]
+    technology_count = int(frame[technology_columns[0]].nunique()) if technology_columns else None
+
     for column in KEY_COLUMNS.get(table, []):
         if column not in frame.columns:
             continue
@@ -58,7 +71,14 @@ def _validate_frame(table: str, frame: pd.DataFrame) -> dict[str, Any]:
                 {"type": "null_threshold", "column": column, "null_pct": null_pct}
             )
 
-    return {"row_count": row_count, "issues": issues}
+    return {
+        "row_count": row_count,
+        "column_count": int(len(frame.columns)),
+        "technology_count": technology_count,
+        "missingness_pct": missingness,
+        "date_ranges": date_ranges,
+        "issues": issues,
+    }
 
 
 def load_and_validate_datasets() -> dict[str, pd.DataFrame]:
@@ -115,7 +135,19 @@ def load_and_validate_datasets() -> dict[str, pd.DataFrame]:
 
     report_path = OUTPUTS_DIR / "data_quality_report.json"
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    _write_source_manifest("postgresql", "Loaded required TechPulse tables from DATABASE_URL.")
+    _write_source_manifest(
+        "postgresql",
+        "Loaded required TechPulse tables from DATABASE_URL.",
+        {
+            table: {
+                "source": "postgresql",
+                "is_proxy": False,
+                "derived_from": None,
+                "rows": int(len(datasets[table])),
+            }
+            for table in TABLES
+        },
+    )
     return datasets
 
 
@@ -135,6 +167,7 @@ def load_local_development_datasets() -> dict[str, pd.DataFrame]:
     ensure_directories()
     stack_path = DATA_DIR / "stackexchange.csv"
     fortune_path = DATA_DIR / "fortune.csv"
+    survey_usage_path = DATA_DIR / "developer_survey_usage.csv"
     missing = [str(path) for path in (stack_path, fortune_path) if not path.exists()]
     if missing:
         raise FileNotFoundError(
@@ -176,19 +209,33 @@ def load_local_development_datasets() -> dict[str, pd.DataFrame]:
             )
     fortune500_stacks = pd.DataFrame(stack_rows)
 
-    yearly = (
-        so_questions.assign(year=so_questions["creation_date"].dt.year)
-        .groupby(["technology", "year"], as_index=False)
-        .agg(question_count=("question_count", "sum"), unanswered_count=("unanswered_count", "sum"))
-    )
-    yearly["satisfaction_score"] = (
-        100
-        * (1 - yearly["unanswered_count"] / yearly["question_count"].replace(0, pd.NA))
-    ).clip(lower=0, upper=100)
-    dev_sentiment = yearly.rename(columns={"year": "survey_year"})[
-        ["technology", "survey_year", "satisfaction_score"]
-    ]
-    dev_sentiment["source_type"] = "demo_proxy_from_unanswered_rate"
+    using_real_survey = survey_usage_path.exists()
+    if using_real_survey:
+        survey_usage = pd.read_csv(survey_usage_path)
+        dev_sentiment = survey_usage[
+            [
+                "technology_name",
+                "survey_year",
+                "developer_usage_share",
+                "developer_interest_share",
+                "developer_admiration_share",
+                "source_type",
+            ]
+        ].rename(columns={"technology_name": "technology"})
+        dev_sentiment["source_type"] = "official_stackoverflow_developer_survey"
+    else:
+        yearly = (
+            so_questions.assign(year=so_questions["creation_date"].dt.year)
+            .groupby(["technology", "year"], as_index=False)
+            .agg(question_count=("question_count", "sum"), unanswered_count=("unanswered_count", "sum"))
+        )
+        yearly["developer_usage_share"] = (
+            1 - yearly["unanswered_count"] / yearly["question_count"].replace(0, pd.NA)
+        ).clip(lower=0, upper=1)
+        dev_sentiment = yearly.rename(columns={"year": "survey_year"})[
+            ["technology", "survey_year", "developer_usage_share"]
+        ]
+        dev_sentiment["source_type"] = "demo_proxy_from_unanswered_rate"
 
     tech_metadata = pd.DataFrame(
         {
@@ -214,8 +261,56 @@ def load_local_development_datasets() -> dict[str, pd.DataFrame]:
     _write_source_manifest(
         "local_development_csv",
         "PostgreSQL DATABASE_URL was not set. Stack Exchange and Fortune CSVs were loaded; "
-        "missing sentiment, adoption-stack, metadata, and mapping tables were deterministically "
-        "derived for development only.",
+        "developer survey usage is loaded when `data/developer_survey_usage.csv` is present; "
+        "adoption-stack, metadata, and mapping tables remain deterministic development proxies.",
+        {
+            "so_questions": {
+                "source": str(stack_path),
+                "is_proxy": False,
+                "derived_from": None,
+                "rows": int(len(so_questions)),
+                "use_limit": "Real local CSV input for community activity; extraction provenance must be verified before research claims.",
+            },
+            "company_profiles": {
+                "source": str(fortune_path),
+                "is_proxy": False,
+                "derived_from": None,
+                "rows": int(len(company_profiles)),
+                "use_limit": "Real local CSV input for company metadata; not evidence of technology adoption by itself.",
+            },
+            "fortune500_stacks": {
+                "source": "generated_local_proxy",
+                "is_proxy": True,
+                "derived_from": ["so_questions", "company_profiles"],
+                "rows": int(len(fortune500_stacks)),
+                "use_limit": "Synthetic development proxy only; must not be cited as real enterprise adoption evidence.",
+            },
+            "dev_sentiment": {
+                "source": str(survey_usage_path) if using_real_survey else "generated_local_proxy",
+                "is_proxy": not using_real_survey,
+                "derived_from": None if using_real_survey else ["so_questions.unanswered_rate"],
+                "rows": int(len(dev_sentiment)),
+                "use_limit": (
+                    "Observed public Stack Overflow Developer Survey technology usage shares; not direct sentiment."
+                    if using_real_survey
+                    else "Proxy from unanswered rate only; not a real developer sentiment survey."
+                ),
+            },
+            "tech_metadata": {
+                "source": "generated_local_proxy",
+                "is_proxy": True,
+                "derived_from": ["technology_name_rules"],
+                "rows": int(len(tech_metadata)),
+                "use_limit": "Rule-inferred category metadata for dashboard grouping only.",
+            },
+            "question_company_mapping": {
+                "source": "generated_local_proxy",
+                "is_proxy": True,
+                "derived_from": ["fortune500_stacks"],
+                "rows": int(len(question_company_mapping)),
+                "use_limit": "Synthetic mapping for development tests only.",
+            },
+        },
     )
     return datasets
 
@@ -234,11 +329,19 @@ def infer_category(technology: str) -> str:
     return "Tools"
 
 
-def _write_source_manifest(source_mode: str, note: str) -> None:
+def _write_source_manifest(source_mode: str, note: str, tables: dict[str, Any] | None = None) -> None:
     """Write data-source provenance for dashboards and reports."""
     manifest = {
         "source_mode": source_mode,
         "note": note,
         "required_tables": TABLES,
+        "tables": tables or {},
+        "research_grade": source_mode == "postgresql",
+        "proxy_warning": (
+            "Local development mode contains deterministic proxy tables and is not "
+            "research-grade evidence."
+            if source_mode != "postgresql"
+            else ""
+        ),
     }
     (OUTPUTS_DIR / "data_sources.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")

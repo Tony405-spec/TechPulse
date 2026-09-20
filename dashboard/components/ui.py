@@ -19,73 +19,77 @@ MODEL_LABELS = {
 }
 
 FEATURE_DESCRIPTIONS = {
-    "technology_health_score": "Composite health across community, adoption, and sentiment signals.",
+    "technology_health_score": "Composite health across community, survey, and adoption/proxy signals.",
     "growth_momentum_index": "Recent question volume compared with the trailing activity window.",
     "question_quality_score": "Answer availability adjusted for closure or unresolved-question pressure.",
     "company_diversity_score": "Breadth of enterprise sector adoption.",
-    "sentiment_delta": "Change in developer satisfaction across available observations.",
+    "sentiment_delta": "Change in observed developer survey usage share when public survey data is available.",
     "adoption_velocity": "Recent pace of new enterprise adoption.",
     "community_decay_rate": "Recent community activity decline pressure.",
 }
 
 
 def apply_theme() -> None:
-    """Install the TechPulse terminal visual system."""
+    """Install the TechPulse institutional intelligence visual system."""
     st.markdown(
         """
         <style>
         :root {
-            --tp-bg: #05070b;
-            --tp-panel: #0b1116;
-            --tp-panel-2: #101922;
-            --tp-border: #1c7f4a;
-            --tp-green: #00ff66;
-            --tp-cyan: #00d9ff;
-            --tp-purple: #bf66ff;
-            --tp-pink: #ff3d9a;
-            --tp-text: #e6fff1;
-            --tp-muted: #8fb7a1;
-            --tp-warn: #ffc857;
-            --tp-danger: #ff5c7a;
+            --tp-bg: #0b0c0f;
+            --tp-bg-2: #111318;
+            --tp-panel: #171a20;
+            --tp-panel-2: #20242c;
+            --tp-elevated: #252a33;
+            --tp-border: #3a3f49;
+            --tp-border-soft: rgba(218, 204, 173, 0.18);
+            --tp-accent: #d8c08a;
+            --tp-accent-2: #a98247;
+            --tp-text: #f4efe5;
+            --tp-muted: #b8b0a2;
+            --tp-subtle: #837c70;
+            --tp-positive: #7fb394;
+            --tp-warning: #d7ad62;
+            --tp-negative: #c76d63;
+            --tp-neutral: #9ba4b0;
         }
         .stApp {
-            background:
-                radial-gradient(circle at 20% 0%, rgba(0, 217, 255, 0.08), transparent 28rem),
-                linear-gradient(180deg, #05070b 0%, #07100c 100%);
+            background: linear-gradient(180deg, var(--tp-bg) 0%, #111216 100%);
             color: var(--tp-text);
-            font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
         section[data-testid="stSidebar"] {
-            background: #060b0f;
-            border-right: 1px solid rgba(0, 255, 102, 0.28);
+            background: #0f1116;
+            border-right: 1px solid var(--tp-border-soft);
         }
-        section[data-testid="stSidebar"] * { color: #d9ffe7; }
+        section[data-testid="stSidebar"] * { color: var(--tp-text); }
         h1, h2, h3 {
-            color: var(--tp-green);
+            color: var(--tp-text);
             letter-spacing: 0;
+            font-weight: 650;
         }
-        p, li, span, label { color: #d9ffe7; }
+        p, li, span, label { color: var(--tp-text); }
+        div[data-testid="stCaptionContainer"], .stCaptionContainer { color: var(--tp-muted); }
         .tp-hero {
-            border: 1px solid rgba(0, 255, 102, 0.35);
-            background: linear-gradient(135deg, rgba(0, 255, 102, 0.10), rgba(0, 217, 255, 0.05));
-            padding: 1.2rem 1.4rem;
+            border: 1px solid var(--tp-border-soft);
+            background: linear-gradient(135deg, rgba(216, 192, 138, 0.11), rgba(37, 42, 51, 0.92));
+            padding: 1.35rem 1.5rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 1.1rem;
         }
-        .tp-kicker { color: var(--tp-cyan); font-size: 0.78rem; text-transform: uppercase; }
-        .tp-title { color: var(--tp-green); font-size: 2rem; font-weight: 800; line-height: 1.1; }
-        .tp-subtitle { color: #bfe8d0; max-width: 64rem; }
+        .tp-kicker { color: var(--tp-accent); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
+        .tp-title { color: var(--tp-text); font-size: 2rem; font-weight: 700; line-height: 1.1; }
+        .tp-subtitle { color: var(--tp-muted); max-width: 64rem; }
         .tp-card {
-            border: 1px solid rgba(0, 255, 102, 0.24);
-            background: rgba(9, 16, 22, 0.92);
+            border: 1px solid var(--tp-border-soft);
+            background: rgba(23, 26, 32, 0.96);
             padding: 1rem;
             border-radius: 8px;
             min-height: 6.4rem;
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
         }
-        .tp-card:hover { border-color: rgba(0, 217, 255, 0.46); }
-        .tp-label { color: var(--tp-muted); font-size: 0.75rem; text-transform: uppercase; }
-        .tp-value { color: var(--tp-text); font-size: 1.55rem; font-weight: 800; }
+        .tp-card:hover { border-color: rgba(216, 192, 138, 0.42); }
+        .tp-label { color: var(--tp-muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; }
+        .tp-value { color: var(--tp-text); font-size: 1.55rem; font-weight: 700; }
         .tp-note { color: var(--tp-muted); font-size: 0.82rem; }
         .tp-badge {
             display: inline-flex;
@@ -95,26 +99,31 @@ def apply_theme() -> None:
             padding: 0.22rem 0.58rem;
             border: 1px solid currentColor;
             font-size: 0.78rem;
-            font-weight: 800;
+            font-weight: 700;
         }
-        .tp-online { color: var(--tp-green); }
-        .tp-dev { color: var(--tp-warn); }
-        .tp-risk-high { color: var(--tp-danger); }
-        .tp-risk-med { color: var(--tp-warn); }
-        .tp-risk-low { color: var(--tp-green); }
+        .tp-online { color: var(--tp-positive); }
+        .tp-dev { color: var(--tp-warning); }
+        .tp-risk-high { color: var(--tp-negative); }
+        .tp-risk-med { color: var(--tp-warning); }
+        .tp-risk-low { color: var(--tp-positive); }
         div[data-testid="stDataFrame"] {
-            border: 1px solid rgba(0, 255, 102, 0.24);
+            border: 1px solid var(--tp-border-soft);
             border-radius: 8px;
         }
         .stButton button, .stDownloadButton button {
-            background: #0b1512;
-            border: 1px solid rgba(0, 255, 102, 0.7);
-            color: var(--tp-green);
+            background: #171a20;
+            border: 1px solid rgba(216, 192, 138, 0.58);
+            color: var(--tp-accent);
             border-radius: 6px;
-            font-weight: 700;
+            font-weight: 650;
         }
         .stTextInput input, .stSelectbox div[data-baseweb="select"] {
-            border-color: rgba(0, 255, 102, 0.45);
+            border-color: rgba(216, 192, 138, 0.35);
+            background-color: #151820;
+        }
+        div[data-testid="stAlert"] {
+            border-radius: 8px;
+            border: 1px solid var(--tp-border-soft);
         }
         </style>
         """,
@@ -151,14 +160,14 @@ def data_mode() -> str:
 
 def render_sidebar() -> None:
     """Render the command-center sidebar."""
-    st.sidebar.markdown("## TECHPULSE")
-    st.sidebar.markdown("Technology Intelligence Platform")
+    st.sidebar.markdown("## TechPulse")
+    st.sidebar.markdown("Research Intelligence Platform")
     st.sidebar.markdown("---")
-    st.sidebar.markdown("⌂ COMMAND CENTER")
-    st.sidebar.markdown("◉ TECHNOLOGY EXPLORER")
-    st.sidebar.markdown("◈ GLOBAL RANKINGS")
-    st.sidebar.markdown("◫ MODEL LABORATORY")
-    st.sidebar.markdown("⚙ ABOUT / METHODOLOGY")
+    st.sidebar.markdown("Command Center")
+    st.sidebar.markdown("Technology Explorer")
+    st.sidebar.markdown("Global Rankings")
+    st.sidebar.markdown("Model Laboratory")
+    st.sidebar.markdown("About / Methodology")
     st.sidebar.markdown("---")
     st.sidebar.markdown("### SYSTEM STATUS")
     st.sidebar.markdown(f"**MODEL**  \n{selected_model_name()}")

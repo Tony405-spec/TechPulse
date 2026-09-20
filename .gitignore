@@ -20,11 +20,13 @@ models/*.pkl
 
 # Data (may be large)
 data/feature_matrix.csv
+data/raw_external/
 
 # Outputs (generated)
 outputs/*.png
 outputs/*.csv
 outputs/*.json
+!outputs/data_provenance.json
 outputs/*.html
 outputs/*.npy
 

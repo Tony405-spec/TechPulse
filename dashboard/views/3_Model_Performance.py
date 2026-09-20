@@ -34,9 +34,18 @@ def load_comparison() -> pd.DataFrame:
     return frame
 
 
+@st.cache_data
+def load_json(name: str) -> dict:
+    """Load one generated JSON artifact when it exists."""
+    path = OUTPUTS_DIR / name
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 render_shell(
     "Model Laboratory",
-    "Four classifiers evaluated using held-out test metrics and weighted F1 model selection.",
+    "Temporal validation, baselines, and honest model diagnostics.",
     "MODEL PERFORMANCE",
 )
 disclaimer_panel()
@@ -44,6 +53,14 @@ comparison = load_comparison()
 if comparison.empty:
     st.warning("No model comparison found. Run the pipeline first.")
 else:
+    source_manifest = load_json("data_sources.json")
+    eval_summary = load_json("evaluation_summary.json")
+    if source_manifest.get("proxy_warning"):
+        st.warning(source_manifest["proxy_warning"])
+    if eval_summary.get("warnings"):
+        with st.expander("Evaluation Warnings", expanded=True):
+            for warning in eval_summary["warnings"]:
+                st.write(f"- {warning}")
     selection_path = OUTPUTS_DIR / "best_model_selection.json"
     if selection_path.exists():
         selection = json.loads(selection_path.read_text(encoding="utf-8"))
@@ -57,8 +74,21 @@ else:
         with c3:
             metric_card("Accuracy", f"{selected_row.get('Accuracy', 0):.4f}", "Held-out split")
         with c4:
-            metric_card("Models Evaluated", "4", "LR · KNN · RF · XGBoost")
+            metric_card("Rows Compared", f"{len(comparison):,}", "ML models plus baselines")
         st.caption(selection["reason"])
+    split = eval_summary.get("split_metadata", {})
+    if split:
+        st.subheader("Validation Split")
+        s1, s2, s3, s4 = st.columns(4)
+        with s1:
+            metric_card("Split", str(split.get("split_strategy", "unknown")).replace("_", " ").title(), "Validation design")
+        with s2:
+            metric_card("Train Window", f"{split.get('train_start', 'N/A')} to {split.get('train_end', 'N/A')}", "Observation months")
+        with s3:
+            metric_card("Test Window", f"{split.get('test_start', 'N/A')} to {split.get('test_end', 'N/A')}", "Held-out months")
+        with s4:
+            status = "Valid" if eval_summary.get("is_multiclass_test_valid") else "Limited"
+            metric_card("Multiclass Metrics", status, "ROC-AUC requires all classes")
     st.subheader("Model Comparison")
     st.dataframe(
         comparison.style.apply(
@@ -82,14 +112,14 @@ else:
     with p3:
         metric_card("Classes", "3", "Growing · Stable · Declining")
     with p4:
-        metric_card("Cross Validation", "5-fold", "Reduced only for tiny demo splits")
+        metric_card("Baselines", "2", "Majority and momentum rules")
     with p5:
-        metric_card("Train / Test", "80 / 20", "Stratified split")
+        metric_card("Train / Test", "Chronological", "Temporal holdout when available")
     for title, body in {
         "What is Weighted F1?": "A balance of precision and recall that accounts for class frequency. TechPulse uses it as the primary selection metric because technology classes may be imbalanced.",
         "What is Precision?": "Precision asks: when the model predicts a class, how often is that prediction correct?",
         "What is Recall?": "Recall asks: of all actual examples in a class, how many did the model find?",
-        "What is ROC-AUC?": "ROC-AUC measures how well probability scores rank classes. It may be unavailable when a small test split lacks one class.",
+        "What is ROC-AUC?": "ROC-AUC measures how well probability scores rank classes. It is intentionally unavailable when the test split lacks all classes.",
         "Why not select by accuracy only?": "Accuracy can look strong on imbalanced data while hiding weak minority-class performance. Weighted F1 is more informative for this project.",
     }.items():
         with st.expander(title):

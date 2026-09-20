@@ -30,7 +30,10 @@ from src.common import (
     LABELS,
     LOGS_DIR,
     MODELS_DIR,
+    OBSERVATION_MONTH_COLUMN,
     RANDOM_STATE,
+    TARGET_LEAKAGE_COLUMNS,
+    TECH_COLUMN,
     ensure_directories,
 )
 
@@ -137,26 +140,64 @@ def load_feature_matrix(path: Path | None = None) -> pd.DataFrame:
     return frame
 
 
-def _split(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, np.ndarray, np.ndarray, OrderedLabelEncoder]:
-    """Create the sacred stratified train/test split.
+def _class_counts(values: np.ndarray) -> dict[str, int]:
+    """Return decoded label counts for metadata."""
+    inverse = {value: key for key, value in LABEL_ENCODING.items()}
+    labels, counts = np.unique(values, return_counts=True)
+    return {inverse[int(label)]: int(count) for label, count in zip(labels, counts)}
+
+
+def _split(
+    frame: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame, np.ndarray, np.ndarray, OrderedLabelEncoder, dict[str, Any]]:
+    """Create a chronological split when observation months are available.
 
     Args:
         frame: Labelled feature matrix.
 
     Returns:
-        X_train, X_test, y_train, y_test, and ordered encoder.
+        X_train, X_test, y_train, y_test, encoder, and split metadata.
     """
     encoder = OrderedLabelEncoder()
+    leakage = [column for column in TARGET_LEAKAGE_COLUMNS if column in FEATURE_COLUMNS]
+    if leakage:
+        raise ValueError(f"Target leakage columns must not be model features: {leakage}")
     X = frame[FEATURE_COLUMNS].apply(pd.to_numeric, errors="coerce")
     y = encoder.transform(frame[LABEL_COLUMN])
+    if OBSERVATION_MONTH_COLUMN in frame.columns:
+        months = pd.to_datetime(frame[OBSERVATION_MONTH_COLUMN], errors="coerce")
+        ordered_months = sorted(months.dropna().unique())
+        if len(ordered_months) >= 5:
+            cutoff_position = max(int(len(ordered_months) * 0.8), 1)
+            cutoff = ordered_months[min(cutoff_position, len(ordered_months) - 1)]
+            train_mask = months < cutoff
+            test_mask = months >= cutoff
+            if train_mask.any() and test_mask.any() and len(np.unique(y[train_mask])) >= 2:
+                metadata = {
+                    "split_strategy": "chronological",
+                    "train_start": str(months[train_mask].min().date()),
+                    "train_end": str(months[train_mask].max().date()),
+                    "test_start": str(months[test_mask].min().date()),
+                    "test_end": str(months[test_mask].max().date()),
+                }
+                return (
+                    X.loc[train_mask],
+                    X.loc[test_mask],
+                    y[train_mask],
+                    y[test_mask],
+                    encoder,
+                    metadata,
+                )
+    stratify = y if min(np.unique(y, return_counts=True)[1]) >= 2 else None
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
         test_size=0.2,
-        stratify=y,
+        stratify=stratify,
         random_state=RANDOM_STATE,
     )
-    return X_train, X_test, y_train, y_test, encoder
+    metadata = {"split_strategy": "stratified_random" if stratify is not None else "random"}
+    return X_train, X_test, y_train, y_test, encoder, metadata
 
 
 def _fit_logistic(X_train: pd.DataFrame, y_train: np.ndarray, logger: logging.Logger) -> LogisticRegression:
@@ -254,6 +295,9 @@ def _artifact(
     y_test: np.ndarray,
     train_technologies: list[str],
     test_technologies: list[str],
+    train_months: list[str],
+    test_months: list[str],
+    split_metadata: dict[str, Any],
 ) -> dict[str, Any]:
     """Bundle a fitted model with preprocessing and evaluation split metadata.
 
@@ -280,6 +324,13 @@ def _artifact(
         "y_test": y_test,
         "train_technologies": train_technologies,
         "test_technologies": test_technologies,
+        "train_months": train_months,
+        "test_months": test_months,
+        "split_metadata": {
+            **split_metadata,
+            "train_class_counts": _class_counts(y_train),
+            "test_class_counts": _class_counts(y_test),
+        },
     }
 
 
@@ -295,13 +346,28 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
     logger = _configure_logger()
     production_run = feature_path is None
     frame = load_feature_matrix(feature_path)
-    X_train, X_test, y_train, y_test, encoder = _split(frame)
-    if "technology_name" in frame:
-        train_technologies = frame.loc[X_train.index, "technology_name"].astype(str).tolist()
-        test_technologies = frame.loc[X_test.index, "technology_name"].astype(str).tolist()
+    X_train, X_test, y_train, y_test, encoder, split_metadata = _split(frame)
+    if TECH_COLUMN in frame:
+        train_technologies = frame.loc[X_train.index, TECH_COLUMN].astype(str).tolist()
+        test_technologies = frame.loc[X_test.index, TECH_COLUMN].astype(str).tolist()
     else:
         train_technologies = X_train.index.astype(str).tolist()
         test_technologies = X_test.index.astype(str).tolist()
+    if OBSERVATION_MONTH_COLUMN in frame:
+        train_months = frame.loc[X_train.index, OBSERVATION_MONTH_COLUMN].astype(str).tolist()
+        test_months = frame.loc[X_test.index, OBSERVATION_MONTH_COLUMN].astype(str).tolist()
+    else:
+        train_months = []
+        test_months = []
+    empty_feature_columns = X_train.columns[X_train.isna().all()].tolist()
+    if empty_feature_columns:
+        logger.warning(
+            "Columns with no observed training values are filled with neutral 0.5: %s",
+            empty_feature_columns,
+        )
+        X_train = X_train.fillna({column: 0.5 for column in empty_feature_columns})
+        X_test = X_test.fillna({column: 0.5 for column in empty_feature_columns})
+        split_metadata["empty_feature_columns_filled"] = empty_feature_columns
     imputer = SimpleImputer(strategy="median")
     X_train_imp = pd.DataFrame(imputer.fit_transform(X_train), columns=FEATURE_COLUMNS, index=X_train.index)
     X_test_imp = pd.DataFrame(imputer.transform(X_test), columns=FEATURE_COLUMNS, index=X_test.index)
@@ -312,25 +378,28 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
     models: dict[str, Any] = {}
     models["logistic_regression"] = _fit_logistic(X_train_imp, y_train, logger)
     models["knn"] = _fit_knn(X_train_imp, y_train, cv, logger)
-    rf_search = RandomizedSearchCV(
-        RandomForestClassifier(random_state=RANDOM_STATE),
-        {
-            "n_estimators": [100, 200, 500],
-            "max_depth": [None, 5, 10, 20],
-            "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [1, 2, 4],
-            "max_features": ["sqrt", "log2"],
-        },
-        n_iter=20 if production_run else 2,
-        scoring="f1_weighted",
-        cv=cv,
-        random_state=RANDOM_STATE,
-    )
-    rf_search.fit(X_train_imp, y_train)
-    models["random_forest"] = rf_search.best_estimator_
-    logger.info("RF feature importances: %s", models["random_forest"].feature_importances_.tolist())
-
     _, train_class_counts = np.unique(y_train, return_counts=True)
+    if int(train_class_counts.min()) >= 5:
+        rf_search = RandomizedSearchCV(
+            RandomForestClassifier(random_state=RANDOM_STATE),
+            {
+                "n_estimators": [100, 200, 500],
+                "max_depth": [None, 5, 10, 20],
+                "min_samples_split": [2, 5, 10],
+                "min_samples_leaf": [1, 2, 4],
+                "max_features": ["sqrt", "log2"],
+            },
+            n_iter=20 if production_run else 2,
+            scoring="f1_weighted",
+            cv=cv,
+            random_state=RANDOM_STATE,
+        )
+        rf_search.fit(X_train_imp, y_train)
+        models["random_forest"] = rf_search.best_estimator_
+        logger.info("RF feature importances: %s", models["random_forest"].feature_importances_.tolist())
+    else:
+        logger.warning("Skipping Random Forest because the least-populated training class has fewer than 5 rows.")
+
     if int(train_class_counts.min()) >= 5:
         xgb_search = RandomizedSearchCV(
             XGBClassifier(random_state=RANDOM_STATE, eval_metric="mlogloss", n_jobs=1),
@@ -383,6 +452,9 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
                 y_test,
                 train_technologies,
                 test_technologies,
+                train_months,
+                test_months,
+                split_metadata,
             ),
             path,
         )

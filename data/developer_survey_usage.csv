@@ -1,0 +1,686 @@
+technology,technology_name,category,survey_year,respondent_count,worked_with_count,want_to_work_with_count,admired_count,developer_usage_share,developer_interest_share,developer_admiration_share,source_type
+.NET,.NET,Other Framework/Library,2022,73268,15850,11824,0,0.2163290931921166,0.161380138668996,0.0,official_stackoverflow_developer_survey
+.NET (5+),.NET (5+),Other Framework/Library,2023,89184,17005,13889,0,0.1906732149264442,0.1557342124147829,0.0,official_stackoverflow_developer_survey
+.NET (5+),.NET (5+),Other Framework/Library,2024,65437,11542,9440,8205,0.17638339165915307,0.144260892155814,0.1253877775570396,official_stackoverflow_developer_survey
+.NET Core / .NET 5,.NET Core / .NET 5,Other Framework/Library,2021,83439,15310,13630,0,0.1834873380553458,0.16335286856266254,0.0,official_stackoverflow_developer_survey
+.NET Framework,.NET Framework,Other Framework/Library,2021,83439,16620,7761,0,0.199187430338331,0.09301405817423507,0.0,official_stackoverflow_developer_survey
+.NET Framework (1.0 - 4.8),.NET Framework (1.0 - 4.8),Other Framework/Library,2023,89184,11452,3854,0,0.1284086831718694,0.043214029422317904,0.0,official_stackoverflow_developer_survey
+.NET Framework (1.0 - 4.8),.NET Framework (1.0 - 4.8),Other Framework/Library,2024,65437,7525,2743,2534,0.1149961031220869,0.04191818084569892,0.038724269144367864,official_stackoverflow_developer_survey
+.NET MAUI,.NET MAUI,Other Framework/Library,2023,89184,1573,3832,0,0.017637692859705775,0.04296734840330104,0.0,official_stackoverflow_developer_survey
+.NET MAUI,.NET MAUI,Other Framework/Library,2024,65437,1446,2336,768,0.02209759004844354,0.03569845805889634,0.011736479361828934,official_stackoverflow_developer_survey
+APL,APL,Language,2021,83439,536,568,0,0.006423854552427522,0.00680736825705006,0.0,official_stackoverflow_developer_survey
+APL,APL,Language,2022,73268,504,608,0,0.006878855707812414,0.008298302123710214,0.0,official_stackoverflow_developer_survey
+APL,APL,Language,2023,89184,225,407,0,0.0025228740581270184,0.004563598851811984,0.0,official_stackoverflow_developer_survey
+APT,APT,Tool,2023,89184,5780,3964,0,0.06480983135988518,0.044447434517402226,0.0,official_stackoverflow_developer_survey
+APT,APT,Tool,2024,65437,5669,4134,3979,0.08663294466433363,0.06317526781484481,0.060806577318642356,official_stackoverflow_developer_survey
+ASP.NET,ASP.NET,Web Framework,2021,83439,9918,4488,0,0.11886527882644807,0.05378779707331104,0.0,official_stackoverflow_developer_survey
+ASP.NET,ASP.NET,Web Framework,2022,73268,8139,3848,0,0.11108533056723263,0.0525195173882186,0.0,official_stackoverflow_developer_survey
+ASP.NET,ASP.NET,Web Framework,2023,89184,9185,4407,0,0.10298932543954073,0.04941469321851453,0.0,official_stackoverflow_developer_survey
+ASP.NET,ASP.NET,Web Framework,2024,65437,6265,3246,2608,0.0957409416690863,0.04960496355273011,0.039855127832877424,official_stackoverflow_developer_survey
+ASP.NET CORE,ASP.NET CORE,Web Framework,2023,89184,11896,10060,0,0.13338715464657339,0.11280050233225691,0.0,official_stackoverflow_developer_survey
+ASP.NET CORE,ASP.NET CORE,Web Framework,2024,65437,8187,6905,5891,0.12511270382199674,0.10552134113727707,0.09002552072986231,official_stackoverflow_developer_survey
+ASP.NET Core,ASP.NET Core,Web Framework,2021,83439,11404,10454,0,0.1366746964848572,0.1252891333788756,0.0,official_stackoverflow_developer_survey
+ASP.NET Core,ASP.NET Core,Web Framework,2022,73268,10155,8894,0,0.1386007533984823,0.12138996560572146,0.0,official_stackoverflow_developer_survey
+AWS,AWS,Platform,2021,83439,29138,26295,0,0.3492131976653603,0.31514040197030163,0.0,official_stackoverflow_developer_survey
+AWS,AWS,Platform,2022,73268,25939,23701,0,0.35402904405743296,0.3234836490691707,0.0,official_stackoverflow_developer_survey
+AWS,AWS,Platform,2023,89184,33818,27311,0,0.3791935773232867,0.3062320595622533,0.0,official_stackoverflow_developer_survey
+AWS,AWS,Platform,2024,65437,22191,18040,14048,0.3391200696853462,0.2756850100096276,0.2146797683267876,official_stackoverflow_developer_survey
+Ada,Ada,Language,2023,89184,677,660,0,0.007591047721564406,0.007400430570505921,0.0,official_stackoverflow_developer_survey
+Ada,Ada,Language,2024,65437,542,558,218,0.008282775799624066,0.008527285786328836,0.003331448568852484,official_stackoverflow_developer_survey
+Alibaba Cloud,Alibaba Cloud,Platform,2024,65437,548,525,224,0.008374467044638354,0.008022983938750249,0.0034231398138667725,official_stackoverflow_developer_survey
+Angular,Angular,Web Framework,2021,83439,14471,11533,0,0.17343208811227365,0.1382207361066168,0.0,official_stackoverflow_developer_survey
+Angular,Angular,Web Framework,2022,73268,11138,8402,0,0.15201725173336245,0.11467489217666649,0.0,official_stackoverflow_developer_survey
+Angular,Angular,Web Framework,2023,89184,12537,9359,0,0.14057454251883747,0.10494034804449229,0.0,official_stackoverflow_developer_survey
+Angular,Angular,Web Framework,2024,65437,8306,6364,4434,0.12693124684811347,0.09725384721182206,0.06775983006555925,official_stackoverflow_developer_survey
+Angular.js,Angular.js,Web Framework,2021,83439,7242,4293,0,0.08679394527738828,0.05145076043576745,0.0,official_stackoverflow_developer_survey
+Angular.js,Angular.js,Web Framework,2022,73268,4912,2773,0,0.06704154610471147,0.03784735491619807,0.0,official_stackoverflow_developer_survey
+AngularJS,AngularJS,Web Framework,2023,89184,5176,2646,0,0.0580373161105131,0.029668998923573737,0.0,official_stackoverflow_developer_survey
+AngularJS,AngularJS,Web Framework,2024,65437,3292,1835,761,0.05030792976450632,0.02804223910020325,0.011629506242645598,official_stackoverflow_developer_survey
+Ansible,Ansible,Tool,2021,83439,5607,5876,0,0.06719879193183044,0.07042270401131366,0.0,official_stackoverflow_developer_survey
+Ansible,Ansible,Tool,2022,73268,5210,5540,0,0.07110880602718786,0.07561281869301742,0.0,official_stackoverflow_developer_survey
+Ansible,Ansible,Tool,2023,89184,6921,6359,0,0.07760360602798708,0.07130202726946537,0.0,official_stackoverflow_developer_survey
+Ansible,Ansible,Tool,2024,65437,4272,4131,2522,0.06528416645017344,0.06312942219233766,0.03854088665433929,official_stackoverflow_developer_survey
+Ant,Ant,Tool,2023,89184,2371,748,0,0.026585486185862935,0.008387154646573376,0.0,official_stackoverflow_developer_survey
+Ant,Ant,Tool,2024,65437,1539,605,476,0.023518804346165014,0.009245533872274095,0.0072741721044668915,official_stackoverflow_developer_survey
+Apache Kafka,Apache Kafka,Other Framework/Library,2022,73268,4748,6153,0,0.06480318829502647,0.08397936343287657,0.0,official_stackoverflow_developer_survey
+Apache Kafka,Apache Kafka,Other Framework/Library,2023,89184,5984,7096,0,0.067097237172587,0.07956584140653032,0.0,official_stackoverflow_developer_survey
+Apache Kafka,Apache Kafka,Other Framework/Library,2024,65437,4308,5227,2755,0.06583431392025918,0.07987835628161438,0.042101563335727496,official_stackoverflow_developer_survey
+Apache Spark,Apache Spark,Other Framework/Library,2021,83439,2833,3453,0,0.03395294766236412,0.041383525689425806,0.0,official_stackoverflow_developer_survey
+Apache Spark,Apache Spark,Other Framework/Library,2022,73268,2298,3155,0,0.03136430638204946,0.043061090789976525,0.0,official_stackoverflow_developer_survey
+Apache Spark,Apache Spark,Other Framework/Library,2023,89184,2748,3282,0,0.03081270182992465,0.03680032292787944,0.0,official_stackoverflow_developer_survey
+Apache Spark,Apache Spark,Other Framework/Library,2024,65437,2016,2521,1153,0.030808258324800955,0.03852560478017024,0.01762000091691245,official_stackoverflow_developer_survey
+Apex,Apex,Language,2023,89184,579,481,0,0.006492195909580193,0.005393344097595981,0.0,official_stackoverflow_developer_survey
+Apex,Apex,Language,2024,65437,502,389,215,0.0076715008328621425,0.005944649051759707,0.0032856029463453396,official_stackoverflow_developer_survey
+Assembly,Assembly,Language,2021,83439,4632,3578,0,0.055513608744112465,0.0428816260981076,0.0,official_stackoverflow_developer_survey
+Assembly,Assembly,Language,2022,73268,3887,3046,0,0.05305180979418027,0.04157340175792979,0.0,official_stackoverflow_developer_survey
+Assembly,Assembly,Language,2023,89184,4753,3830,0,0.053294312881234304,0.04294492285611769,0.0,official_stackoverflow_developer_survey
+Assembly,Assembly,Language,2024,65437,3233,3007,1409,0.04940629918853248,0.045952595626327614,0.02153216070418876,official_stackoverflow_developer_survey
+Astro,Astro,Web Framework,2024,65437,1462,2271,1055,0.02234210003514831,0.03470513623790822,0.016122377248345737,official_stackoverflow_developer_survey
+Bash/Shell,Bash/Shell,Language,2021,83439,22385,14043,0,0.2682798211867352,0.1683025923129472,0.0,official_stackoverflow_developer_survey
+Bash/Shell,Bash/Shell,Language,2022,73268,20656,13242,0,0.2819238958344707,0.18073374460883332,0.0,official_stackoverflow_developer_survey
+Bash/Shell (all shells),Bash/Shell (all shells),Language,2023,89184,28351,18279,0,0.317893344097596,0.20495828848223896,0.0,official_stackoverflow_developer_survey
+Bash/Shell (all shells),Bash/Shell (all shells),Language,2024,65437,20412,13744,12776,0.31193361553860965,0.210034078579397,0.19524122438375843,official_stackoverflow_developer_survey
+BigQuery,BigQuery,Database,2023,89184,3456,3643,0,0.038751345532831,0.04084813419447435,0.0,official_stackoverflow_developer_survey
+BigQuery,BigQuery,Database,2024,65437,2531,2554,1286,0.03867842352186072,0.03902990662774883,0.019652490181395848,official_stackoverflow_developer_survey
+Blazor,Blazor,Web Framework,2022,73268,2438,3880,0,0.033275099634219575,0.05295627013157177,0.0,official_stackoverflow_developer_survey
+Blazor,Blazor,Web Framework,2023,89184,3501,4553,0,0.03925592034445641,0.051051758162899176,0.0,official_stackoverflow_developer_survey
+Blazor,Blazor,Web Framework,2024,65437,2378,2971,1456,0.03634029677399636,0.04540244815624188,0.022250408790134023,official_stackoverflow_developer_survey
+Boost.Test,Boost.Test,Tool,2023,89184,342,254,0,0.003834768568353068,0.0028480444922856117,0.0,official_stackoverflow_developer_survey
+Bun,Bun,Tool,2023,89184,620,2278,0,0.006951919626838895,0.0255426982418371,0.0,official_stackoverflow_developer_survey
+Bun,Bun,Tool,2024,65437,2050,3850,1560,0.031327842046548586,0.05883521555083515,0.023839723703715024,official_stackoverflow_developer_survey
+C#,C#,Language,2021,83439,40313,27701,0,0.4831433742015125,0.33199103536715446,0.0,official_stackoverflow_developer_survey
+C#,C#,Language,2022,73268,33575,23537,0,0.458249167440083,0.3212452912594857,0.0,official_stackoverflow_developer_survey
+C#,C#,Language,2023,89184,41133,28622,0,0.461215016146394,0.32093200574094005,0.0,official_stackoverflow_developer_survey
+C#,C#,Language,2024,65437,28502,21196,16232,0.43556397756620874,0.32391460488714335,0.24805538151198864,official_stackoverflow_developer_survey
+C++,C++,Language,2021,83439,20057,15249,0,0.24037919917544553,0.1827562650559091,0.0,official_stackoverflow_developer_survey
+C++,C++,Language,2022,73268,16024,11896,0,0.21870393623409948,0.16236283234154064,0.0,official_stackoverflow_developer_survey
+C++,C++,Language,2023,89184,19634,14231,0,0.22015159669895945,0.159568980983136,0.0,official_stackoverflow_developer_survey
+C++,C++,Language,2024,65437,13827,10873,7339,0.21130247413542796,0.1661598178400599,0.11215367452664395,official_stackoverflow_developer_survey
+CMake,CMake,Tool,2023,89184,11506,6530,0,0.12901417294581988,0.07321941155364191,0.0,official_stackoverflow_developer_survey
+COBOL,COBOL,Language,2021,83439,437,309,0,0.005237359028751543,0.0037033042102613887,0.0,official_stackoverflow_developer_survey
+COBOL,COBOL,Language,2022,73268,464,346,0,0.0063329147786209536,0.004722389037506142,0.0,official_stackoverflow_developer_survey
+CUDA,CUDA,Other Framework/Library,2023,89184,3042,3903,0,0.03410925726587729,0.04376345532831001,0.0,official_stackoverflow_developer_survey
+CUDA,CUDA,Other Framework/Library,2024,65437,2658,3695,1669,0.04061922154132983,0.0564665250546327,0.025505447988141267,official_stackoverflow_developer_survey
+CUTE,CUTE,Tool,2023,89184,54,55,0,0.0006054897739504844,0.0006167025475421601,0.0,official_stackoverflow_developer_survey
+Capacitor,Capacitor,Other Framework/Library,2022,73268,1142,1073,0,0.015586613528416225,0.014644865425560954,0.0,official_stackoverflow_developer_survey
+Capacitor,Capacitor,Other Framework/Library,2023,89184,1127,915,0,0.012636795837818442,0.010259687836383207,0.0,official_stackoverflow_developer_survey
+Capacitor,Capacitor,Other Framework/Library,2024,65437,804,639,436,0.012286626831914666,0.009765117594021731,0.006662897137704968,official_stackoverflow_developer_survey
+Cargo,Cargo,Tool,2023,89184,10409,12180,0,0.1167137603157517,0.13657158234660927,0.0,official_stackoverflow_developer_survey
+Cassandra,Cassandra,Database,2021,83439,1873,4227,0,0.022447536523687965,0.05065976341998346,0.0,official_stackoverflow_developer_survey
+Cassandra,Cassandra,Database,2022,73268,1617,3178,0,0.022069662062564832,0.04337500682426162,0.0,official_stackoverflow_developer_survey
+Cassandra,Cassandra,Database,2023,89184,1927,3673,0,0.021607014711158952,0.04118451740222461,0.0,official_stackoverflow_developer_survey
+Cassandra,Cassandra,Database,2024,65437,1268,2399,461,0.01937741644635298,0.036661216131546374,0.007044943991931171,official_stackoverflow_developer_survey
+Catch2,Catch2,Tool,2023,89184,663,539,0,0.007434068891280947,0.006043684965913169,0.0,official_stackoverflow_developer_survey
+Chef,Chef,Tool,2021,83439,982,1119,0,0.011769076810604153,0.013410994858519397,0.0,official_stackoverflow_developer_survey
+Chef,Chef,Tool,2022,73268,828,911,0,0.011300977234263253,0.012433804662335535,0.0,official_stackoverflow_developer_survey
+Chef,Chef,Tool,2023,89184,758,571,0,0.008499282382490132,0.006402493720846789,0.0,official_stackoverflow_developer_survey
+Chef,Chef,Tool,2024,65437,399,375,112,0.006097467793450189,0.005730702813393034,0.0017115699069333863,official_stackoverflow_developer_survey
+Chocolatey,Chocolatey,Tool,2023,89184,6509,3435,0,0.07298394330821673,0.03851587728740581,0.0,official_stackoverflow_developer_survey
+Chocolatey,Chocolatey,Tool,2024,65437,4746,2593,2179,0.07252777480630225,0.0396258997203417,0.03329920381435579,official_stackoverflow_developer_survey
+Clickhouse,Clickhouse,Database,2023,89184,849,1284,0,0.009519644779332617,0.014397201291711518,0.0,official_stackoverflow_developer_survey
+Clickhouse,Clickhouse,Database,2024,65437,890,1328,520,0.013600868010452802,0.020294328896495867,0.007946574567905007,official_stackoverflow_developer_survey
+Clojure,Clojure,Language,2021,83439,1552,2413,0,0.018600414674193124,0.0289193302891933,0.0,official_stackoverflow_developer_survey
+Clojure,Clojure,Language,2022,73268,1070,1938,0,0.014603919855871594,0.02645083801932631,0.0,official_stackoverflow_developer_survey
+Clojure,Clojure,Language,2023,89184,1105,1910,0,0.01239011481880158,0.021416397560100466,0.0,official_stackoverflow_developer_survey
+Clojure,Clojure,Language,2024,65437,737,1331,504,0.011262741262588444,0.02034017451900301,0.007702064581200239,official_stackoverflow_developer_survey
+Cloud Firestore,Cloud Firestore,Database,2022,73268,4535,3873,0,0.061896052847081946,0.05286073046896326,0.0,official_stackoverflow_developer_survey
+Cloud Firestore,Cloud Firestore,Database,2023,89184,4901,3666,0,0.0549538033728023,0.041106027987082884,0.0,official_stackoverflow_developer_survey
+Cloud Firestore,Cloud Firestore,Database,2024,65437,2842,2119,1482,0.04343108638843468,0.03238229136421291,0.022647737518529273,official_stackoverflow_developer_survey
+Cloudflare,Cloudflare,Platform,2023,89184,10599,9954,0,0.11884418729817008,0.11161194833153928,0.0,official_stackoverflow_developer_survey
+Cloudflare,Cloudflare,Platform,2024,65437,6974,6881,4757,0.1065757904549414,0.10515457615721992,0.07269587542216177,official_stackoverflow_developer_survey
+Cobol,Cobol,Language,2023,89184,576,395,0,0.006458557588805167,0.004429045568711877,0.0,official_stackoverflow_developer_survey
+Cobol,Cobol,Language,2024,65437,413,399,108,0.006311414031816862,0.006097467793450189,0.001650442410257194,official_stackoverflow_developer_survey
+Cockroachdb,Cockroachdb,Database,2023,89184,795,1891,0,0.00891415500538213,0.02120335486185863,0.0,official_stackoverflow_developer_survey
+Cockroachdb,Cockroachdb,Database,2024,65437,507,1157,233,0.007747910203707383,0.017681128413588643,0.0035606766813882054,official_stackoverflow_developer_survey
+CodeIgniter,CodeIgniter,Web Framework,2023,89184,1238,456,0,0.013881413706494438,0.00511302475780409,0.0,official_stackoverflow_developer_survey
+CodeIgniter,CodeIgniter,Web Framework,2024,65437,812,349,244,0.012408881825267051,0.005333374084997784,0.0037287772972477346,official_stackoverflow_developer_survey
+Colocation,Colocation,Platform,2022,73268,642,537,0,0.008762351913522957,0.00732925697439537,0.0,official_stackoverflow_developer_survey
+Colocation,Colocation,Platform,2023,89184,497,458,0,0.005572748475062792,0.005135450304987441,0.0,official_stackoverflow_developer_survey
+Colocation,Colocation,Platform,2024,65437,307,344,192,0.0046915353698977645,0.005256964714152544,0.0029341198404572335,official_stackoverflow_developer_survey
+Composer,Composer,Tool,2023,89184,6266,3847,0,0.07025923932543954,0.043135540007176176,0.0,official_stackoverflow_developer_survey
+Composer,Composer,Tool,2024,65437,4767,3209,2939,0.07284869416385226,0.04903953420847533,0.044913428182832345,official_stackoverflow_developer_survey
+Cordova,Cordova,Other Framework/Library,2021,83439,3491,1475,0,0.04183894821366507,0.01767758482244514,0.0,official_stackoverflow_developer_survey
+Cordova,Cordova,Other Framework/Library,2022,73268,1903,745,0,0.02597313970628378,0.01016814980619097,0.0,official_stackoverflow_developer_survey
+Cordova,Cordova,Other Framework/Library,2023,89184,1616,516,0,0.018119842124147828,0.005785791173304629,0.0,official_stackoverflow_developer_survey
+Cordova,Cordova,Other Framework/Library,2024,65437,1011,365,242,0.015449974784907622,0.005577884071702554,0.0036982135489096383,official_stackoverflow_developer_survey
+Cosmos DB,Cosmos DB,Database,2023,89184,2672,2713,0,0.0299605310369573,0.030420254754216003,0.0,official_stackoverflow_developer_survey
+Cosmos DB,Cosmos DB,Database,2024,65437,1746,1764,876,0.02668215229915797,0.026957226034200834,0.013386921772086129,official_stackoverflow_developer_survey
+Couch DB,Couch DB,Database,2023,89184,887,975,0,0.00994573017581629,0.010932454251883746,0.0,official_stackoverflow_developer_survey
+Couch DB,Couch DB,Database,2024,65437,534,620,168,0.00816052080627168,0.009474761984809817,0.0025673548604000793,official_stackoverflow_developer_survey
+CouchDB,CouchDB,Database,2022,73268,783,1154,0,0.010686793688922858,0.015750395807173665,0.0,official_stackoverflow_developer_survey
+Couchbase,Couchbase,Database,2021,83439,1106,1670,0,0.013255192416016491,0.020014621459988734,0.0,official_stackoverflow_developer_survey
+Couchbase,Couchbase,Database,2022,73268,807,955,0,0.011014358246437735,0.013034339684446143,0.0,official_stackoverflow_developer_survey
+Couchbase,Couchbase,Database,2023,89184,598,567,0,0.006705238607822031,0.006357642626480086,0.0,official_stackoverflow_developer_survey
+Couchbase,Couchbase,Database,2024,65437,353,385,113,0.005394501581673977,0.005883521555083516,0.0017268517811024344,official_stackoverflow_developer_survey
+Crystal,Crystal,Language,2021,83439,466,790,0,0.005584918323565719,0.009467994582868922,0.0,official_stackoverflow_developer_survey
+Crystal,Crystal,Language,2022,73268,340,510,0,0.004640497898127423,0.0069607468471911335,0.0,official_stackoverflow_developer_survey
+Crystal,Crystal,Language,2023,89184,389,599,0,0.004361768927161822,0.006716451381413706,0.0,official_stackoverflow_developer_survey
+Crystal,Crystal,Language,2024,65437,253,407,120,0.003866314164769167,0.006219722786802573,0.001833824900285771,official_stackoverflow_developer_survey
+Dagger,Dagger,Tool,2023,89184,866,799,0,0.009710261930391102,0.008959006099748834,0.0,official_stackoverflow_developer_survey
+Dagger,Dagger,Tool,2024,65437,635,599,368,0.009703990097345539,0.009153842627259807,0.005623729694209698,official_stackoverflow_developer_survey
+Dart,Dart,Language,2021,83439,4965,7018,0,0.05950454823284076,0.0841093493450305,0.0,official_stackoverflow_developer_survey
+Dart,Dart,Language,2022,73268,4648,6083,0,0.06343833597204783,0.0830239668067915,0.0,official_stackoverflow_developer_survey
+Dart,Dart,Language,2023,89184,5273,6056,0,0.05912495514890563,0.06790455687118765,0.0,official_stackoverflow_developer_survey
+Dart,Dart,Language,2024,65437,3594,3709,1978,0.05492305576355884,0.05668047129299937,0.030227547106377126,official_stackoverflow_developer_survey
+Databricks,Databricks,Platform,2024,65437,918,1152,504,0.014028760487186149,0.0176047190427434,0.007702064581200239,official_stackoverflow_developer_survey
+Databricks SQL,Databricks SQL,Database,2024,65437,1003,1218,493,0.015327719791555236,0.018613322737900576,0.00753396396534071,official_stackoverflow_developer_survey
+Datomic,Datomic,Database,2023,89184,244,605,0,0.0027359167563688553,0.00678372802296376,0.0,official_stackoverflow_developer_survey
+Datomic,Datomic,Database,2024,65437,184,404,130,0.002811864847104849,0.006173877164295429,0.001986643641976252,official_stackoverflow_developer_survey
+Delphi,Delphi,Language,2021,83439,1731,975,0,0.020745694459425448,0.011685183187717973,0.0,official_stackoverflow_developer_survey
+Delphi,Delphi,Language,2022,73268,2311,1663,0,0.03154173718403669,0.02269749413113501,0.0,official_stackoverflow_developer_survey
+Delphi,Delphi,Language,2023,89184,2831,1948,0,0.031743362038033726,0.02184248295658414,0.0,official_stackoverflow_developer_survey
+Delphi,Delphi,Language,2024,65437,1073,594,450,0.016397450983388604,0.009077433256414566,0.006876843376071641,official_stackoverflow_developer_survey
+Deno,Deno,Tool,2021,83439,1027,4773,0,0.012308392957729598,0.05720346600510553,0.0,official_stackoverflow_developer_survey
+Deno,Deno,Web Framework,2022,73268,925,3717,0,0.012624883987552547,0.050731560845116555,0.0,official_stackoverflow_developer_survey
+Deno,Deno,Web Framework,2023,89184,1697,4836,0,0.019028076785073556,0.05422497308934338,0.0,official_stackoverflow_developer_survey
+Deno,Deno,Web Framework,2024,65437,943,1951,533,0.014410807341412351,0.02981493650381283,0.008145238932102634,official_stackoverflow_developer_survey
+Digital Ocean,Digital Ocean,Platform,2023,89184,9299,7133,0,0.10426758162899175,0.07998071402942232,0.0,official_stackoverflow_developer_survey
+Digital Ocean,Digital Ocean,Platform,2024,65437,5409,4507,3060,0.08265965738038113,0.06887540687989975,0.04676253495728716,official_stackoverflow_developer_survey
+DigitalOcean,DigitalOcean,Platform,2021,83439,9495,8674,0,0.11379570704346888,0.10395618355924688,0.0,official_stackoverflow_developer_survey
+DigitalOcean,DigitalOcean,Platform,2022,73268,7953,6983,0,0.10854670524649233,0.09530763771359939,0.0,official_stackoverflow_developer_survey
+DirectX,DirectX,Other Framework/Library,2024,65437,879,1044,422,0.013432767394593273,0.01595427663248621,0.006448950899338295,official_stackoverflow_developer_survey
+Django,Django,Web Framework,2021,83439,9446,9112,0,0.11320845168326561,0.10920552739126788,0.0,official_stackoverflow_developer_survey
+Django,Django,Web Framework,2022,73268,8002,7200,0,0.10921548288475187,0.09826936725446307,0.0,official_stackoverflow_developer_survey
+Django,Django,Web Framework,2023,89184,8238,6945,0,0.0923708288482239,0.0778727125941873,0.0,official_stackoverflow_developer_survey
+Django,Django,Web Framework,2024,65437,5835,4973,2960,0.08916973577639561,0.07599676024267617,0.04523434754038235,official_stackoverflow_developer_survey
+Docker,Docker,Tool,2021,83439,35644,37870,0,0.4271863277364302,0.45386449981423554,0.0,official_stackoverflow_developer_survey
+Docker,Docker,Tool,2022,73268,34981,32642,0,0.47743899110116284,0.44551509526669214,0.0,official_stackoverflow_developer_survey
+Docker,Docker,Tool,2023,89184,41369,36741,0,0.4638612307140294,0.4119685145317546,0.0,official_stackoverflow_developer_survey
+Docker,Docker,Tool,2024,65437,29219,26262,22644,0.4465210813454162,0.40133257942754097,0.346042758683925,official_stackoverflow_developer_survey
+Drupal,Drupal,Web Framework,2021,83439,1508,653,0,0.018073083330337133,0.007826076534953678,0.0,official_stackoverflow_developer_survey
+Drupal,Drupal,Web Framework,2022,73268,1211,600,0,0.016528361631271495,0.008189113937871922,0.0,official_stackoverflow_developer_survey
+Drupal,Drupal,Web Framework,2023,89184,1343,530,0,0.01505875493362038,0.005942770003588087,0.0,official_stackoverflow_developer_survey
+Drupal,Drupal,Web Framework,2024,65437,920,418,262,0.014059324235524244,0.006387823402662102,0.0040038510322906,official_stackoverflow_developer_survey
+DuckDB,DuckDB,Database,2023,89184,469,1065,0,0.005258790814495874,0.011941603875134554,0.0,official_stackoverflow_developer_survey
+DuckDB,DuckDB,Database,2024,65437,710,1468,491,0.010850130660024146,0.0224337912801626,0.007503400217002613,official_stackoverflow_developer_survey
+DynamoDB,DynamoDB,Database,2021,83439,5137,6039,0,0.0615659343951869,0.0723762269442347,0.0,official_stackoverflow_developer_survey
+DynamoDB,DynamoDB,Database,2022,73268,5029,5309,0,0.0686384233225965,0.07246000982693672,0.0,official_stackoverflow_developer_survey
+Dynamodb,Dynamodb,Database,2023,89184,6798,5573,0,0.07622443487621099,0.06248878722640833,0.0,official_stackoverflow_developer_survey
+Dynamodb,Dynamodb,Database,2024,65437,4138,3503,2055,0.063236395311521,0.05353240521417547,0.03140425141739383,official_stackoverflow_developer_survey
+ELFspy,ELFspy,Tool,2023,89184,51,61,0,0.0005718514531754575,0.0006839791890922138,0.0,official_stackoverflow_developer_survey
+Elasticsearch,Elasticsearch,Database,2021,83439,9331,11644,0,0.11183019930727837,0.13955104926952625,0.0,official_stackoverflow_developer_survey
+Elasticsearch,Elasticsearch,Database,2022,73268,7430,8533,0,0.10140852759731397,0.11646284871976852,0.0,official_stackoverflow_developer_survey
+Elasticsearch,Elasticsearch,Database,2023,89184,10263,9744,0,0.11507669537136705,0.1092572658772874,0.0,official_stackoverflow_developer_survey
+Elasticsearch,Elasticsearch,Database,2024,65437,6533,6246,3256,0.09983648394639119,0.09545058605987439,0.049757782294420586,official_stackoverflow_developer_survey
+Electron,Electron,Other Framework/Library,2022,73268,4390,4349,0,0.0599170169787629,0.05935742752634165,0.0,official_stackoverflow_developer_survey
+Electron,Electron,Other Framework/Library,2023,89184,4685,4095,0,0.05253184427700036,0.04591630785791173,0.0,official_stackoverflow_developer_survey
+Electron,Electron,Other Framework/Library,2024,65437,2961,2500,1226,0.0452496294145514,0.03820468542262023,0.01873557773125296,official_stackoverflow_developer_survey
+Elixir,Elixir,Language,2021,83439,1438,3374,0,0.01723414710147533,0.04043672623113891,0.0,official_stackoverflow_developer_survey
+Elixir,Elixir,Language,2022,73268,1528,3289,0,0.02085494349511383,0.04488999290276792,0.0,official_stackoverflow_developer_survey
+Elixir,Elixir,Language,2023,89184,2028,3880,0,0.022739504843918193,0.043505561535701474,0.0,official_stackoverflow_developer_survey
+Elixir,Elixir,Language,2024,65437,1243,2895,955,0.01899536959212678,0.04424102571939423,0.014594189831440929,official_stackoverflow_developer_survey
+Elm,Elm,Web Framework,2023,89184,580,1020,0,0.006503408683171869,0.011437029063509149,0.0,official_stackoverflow_developer_survey
+Elm,Elm,Web Framework,2024,65437,309,614,162,0.004722099118235861,0.009383070739795529,0.002475663615385791,official_stackoverflow_developer_survey
+Erlang,Erlang,Language,2021,83439,651,1379,0,0.00780210692841477,0.016527043708577525,0.0,official_stackoverflow_developer_survey
+Erlang,Erlang,Language,2022,73268,641,1224,0,0.008748703390293171,0.01670579243325872,0.0,official_stackoverflow_developer_survey
+Erlang,Erlang,Language,2023,89184,868,1416,0,0.009732687477574452,0.015877287405812703,0.0,official_stackoverflow_developer_survey
+Erlang,Erlang,Language,2024,65437,522,1137,301,0.007977138316243105,0.017375490930207682,0.004599844124883476,official_stackoverflow_developer_survey
+EventStoreDB,EventStoreDB,Database,2024,65437,162,372,89,0.002475663615385791,0.00568485719088589,0.0013600868010452802,official_stackoverflow_developer_survey
+Express,Express,Web Framework,2021,83439,15010,11885,0,0.17989189707450953,0.14243938685746474,0.0,official_stackoverflow_developer_survey
+Express,Express,Web Framework,2022,73268,12557,9333,0,0.17138450619642956,0.12738166730359776,0.0,official_stackoverflow_developer_survey
+Express,Express,Web Framework,2023,89184,13843,9115,0,0.15521842482956585,0.10220443128812343,0.0,official_stackoverflow_developer_survey
+Express,Express,Web Framework,2024,65437,8614,5616,4577,0.13163806409218026,0.08582300533337409,0.06994513807173312,official_stackoverflow_developer_survey
+F#,F#,Language,2021,83439,804,2157,0,0.009635781828641284,0.025851220652212993,0.0,official_stackoverflow_developer_survey
+F#,F#,Language,2022,73268,730,1947,0,0.009963421957744172,0.02657367472839439,0.0,official_stackoverflow_developer_survey
+F#,F#,Language,2023,89184,849,2101,0,0.009519644779332617,0.023558037316110513,0.0,official_stackoverflow_developer_survey
+F#,F#,Language,2024,65437,512,1272,272,0.007824319574552624,0.019438543943029175,0.0041566697739810815,official_stackoverflow_developer_survey
+FastAPI,FastAPI,Web Framework,2021,83439,2447,3989,0,0.02932681360035475,0.04780738024185333,0.0,official_stackoverflow_developer_survey
+FastAPI,FastAPI,Web Framework,2022,73268,3289,4571,0,0.04488999290276792,0.06238739968335426,0.0,official_stackoverflow_developer_survey
+FastAPI,FastAPI,Web Framework,2023,89184,5325,5912,0,0.059708019375672765,0.06628991747398637,0.0,official_stackoverflow_developer_survey
+FastAPI,FastAPI,Web Framework,2024,65437,4800,4914,3116,0.07335299601143085,0.07509512966670233,0.047618319910753854,official_stackoverflow_developer_survey
+Fastify,Fastify,Web Framework,2022,73268,1008,1452,0,0.013757711415624829,0.019817655729650052,0.0,official_stackoverflow_developer_survey
+Fastify,Fastify,Web Framework,2023,89184,1474,1644,0,0.016527628274129888,0.01843379978471475,0.0,official_stackoverflow_developer_survey
+Fastify,Fastify,Web Framework,2024,65437,1070,1127,600,0.01635160536088146,0.0172226721885172,0.009169124501428856,official_stackoverflow_developer_survey
+Firebase,Firebase,Database,2021,83439,11373,10776,0,0.1363031675835041,0.12914824003163988,0.0,official_stackoverflow_developer_survey
+Firebase,Firebase,Platform,2022,73268,10751,8643,0,0.14673527324343505,0.11796418627504504,0.0,official_stackoverflow_developer_survey
+Firebase,Firebase,Platform,2023,89184,10761,8364,0,0.12066065662002153,0.09378363832077502,0.0,official_stackoverflow_developer_survey
+Firebase,Firebase,Platform,2024,65437,6443,4952,3533,0.09846111527117686,0.07567584088512615,0.05399086143924691,official_stackoverflow_developer_survey
+Firebase Realtime Database,Firebase Realtime Database,Database,2022,73268,5309,5312,0,0.07246000982693672,0.07250095539662609,0.0,official_stackoverflow_developer_survey
+Firebase Realtime Database,Firebase Realtime Database,Database,2023,89184,4939,4159,0,0.05537988876928597,0.046633925367778974,0.0,official_stackoverflow_developer_survey
+Firebase Realtime Database,Firebase Realtime Database,Database,2024,65437,3018,2536,1392,0.04612069624218714,0.03875483289270596,0.021272368843314945,official_stackoverflow_developer_survey
+Firebird,Firebird,Database,2023,89184,1152,901,0,0.012917115177610334,0.010102709006099749,0.0,official_stackoverflow_developer_survey
+Firebird,Firebird,Database,2024,65437,563,450,223,0.008603695157174076,0.006876843376071641,0.0034078579396977244,official_stackoverflow_developer_survey
+Flask,Flask,Web Framework,2021,83439,10174,7594,0,0.12193338846342837,0.09101259602823619,0.0,official_stackoverflow_developer_survey
+Flask,Flask,Web Framework,2022,73268,7994,5437,0,0.10910629469891357,0.0742070208003494,0.0,official_stackoverflow_developer_survey
+Flask,Flask,Web Framework,2023,89184,8734,5513,0,0.097932364549695,0.061816020810907785,0.0,official_stackoverflow_developer_survey
+Flask,Flask,Web Framework,2024,65437,6245,3994,2880,0.09543530418570534,0.06103580543117808,0.044011797606858506,official_stackoverflow_developer_survey
+Flow,Flow,Tool,2021,83439,929,974,0,0.011133882237323074,0.011673198384448519,0.0,official_stackoverflow_developer_survey
+Flow,Flow,Tool,2022,73268,444,453,0,0.006059944314025223,0.006182781023093302,0.0,official_stackoverflow_developer_survey
+Flow,Flow,Language,2023,89184,214,181,0,0.0023995335486185865,0.00202951202009329,0.0,official_stackoverflow_developer_survey
+Flutter,Flutter,Other Framework/Library,2021,83439,6586,9212,0,0.07893191433262622,0.1104040077182133,0.0,official_stackoverflow_developer_survey
+Flutter,Flutter,Other Framework/Library,2022,73268,5799,7980,0,0.07914778620953213,0.10891521537369657,0.0,official_stackoverflow_developer_survey
+Flutter,Flutter,Other Framework/Library,2023,89184,6132,7578,0,0.068756727664155,0.08497039827771798,0.0,official_stackoverflow_developer_survey
+Flutter,Flutter,Other Framework/Library,2024,65437,4293,4704,2602,0.06560508580772346,0.07188593609120222,0.03976343658786313,official_stackoverflow_developer_survey
+Fly.io,Fly.io,Platform,2023,89184,1649,2628,0,0.018489863652673126,0.029467168998923574,0.0,official_stackoverflow_developer_survey
+Fly.io,Fly.io,Platform,2024,65437,1189,1686,733,0.01817014838699818,0.025765239849015083,0.011201613765912251,official_stackoverflow_developer_survey
+Fortran,Fortran,Language,2022,73268,646,439,0,0.008816946006442103,0.00599170169787629,0.0,official_stackoverflow_developer_survey
+Fortran,Fortran,Language,2023,89184,833,508,0,0.009340240401865806,0.005696088984571223,0.0,official_stackoverflow_developer_survey
+Fortran,Fortran,Language,2024,65437,665,487,189,0.01016244632241698,0.007442272720326421,0.0028882742179500895,official_stackoverflow_developer_survey
+GDScript,GDScript,Language,2023,89184,1495,1565,0,0.016763096519555078,0.01754799067097237,0.0,official_stackoverflow_developer_survey
+GDScript,GDScript,Language,2024,65437,1402,1667,914,0.021425187585005424,0.02547488423980317,0.013967632990509956,official_stackoverflow_developer_survey
+GNU GCC,GNU GCC,Tool,2023,89184,10038,7207,0,0.11255382131324004,0.08081045927520632,0.0,official_stackoverflow_developer_survey
+GTK,GTK,Other Framework/Library,2022,73268,1380,1314,0,0.01883496205710542,0.01793415952393951,0.0,official_stackoverflow_developer_survey
+GTK,GTK,Other Framework/Library,2023,89184,1690,1564,0,0.018949587369931825,0.017536777897380697,0.0,official_stackoverflow_developer_survey
+GTK,GTK,Other Framework/Library,2024,65437,1176,1101,553,0.017971484022800556,0.01682534346012195,0.008450876415483595,official_stackoverflow_developer_survey
+Gatsby,Gatsby,Web Framework,2021,83439,2501,2830,0,0.029973992976905284,0.03391699325255576,0.0,official_stackoverflow_developer_survey
+Gatsby,Gatsby,Web Framework,2022,73268,1889,1569,0,0.025782060381066767,0.021414532947535078,0.0,official_stackoverflow_developer_survey
+Gatsby,Gatsby,Web Framework,2023,89184,1675,1064,0,0.018781395766056693,0.011930391101542877,0.0,official_stackoverflow_developer_survey
+Gatsby,Gatsby,Web Framework,2024,65437,758,465,187,0.011583660620138454,0.007106071488607363,0.0028577104696119932,official_stackoverflow_developer_survey
+Git,Git,Tool,2021,83439,68171,58308,0,0.8170160236819712,0.6988099090353432,0.0,official_stackoverflow_developer_survey
+Go,Go,Language,2021,83439,7879,15788,0,0.09442826496003068,0.189216074018145,0.0,official_stackoverflow_developer_survey
+Go,Go,Language,2022,73268,7922,15500,0,0.10812360102636895,0.21155211006169133,0.0,official_stackoverflow_developer_survey
+Go,Go,Language,2023,89184,11592,17993,0,0.12997847147470398,0.20175143523501973,0.0,official_stackoverflow_developer_survey
+Go,Go,Language,2024,65437,8103,13837,5485,0.12382902639179669,0.21145529287711845,0.08382107981722879,official_stackoverflow_developer_survey
+Godot,Godot,Tool,2023,89184,2478,3465,0,0.02778525296017223,0.03885226049515608,0.0,official_stackoverflow_developer_survey
+Godot,Godot,Tool,2024,65437,2363,3515,1741,0.03611106866146064,0.05371578770420404,0.026605742928312727,official_stackoverflow_developer_survey
+Google Cloud,Google Cloud,Platform,2022,73268,13634,13394,0,0.18608396571490965,0.18280832013976087,0.0,official_stackoverflow_developer_survey
+Google Cloud,Google Cloud,Platform,2023,89184,16592,13972,0,0.18604233943308215,0.156664872622892,0.0,official_stackoverflow_developer_survey
+Google Cloud,Google Cloud,Platform,2024,65437,11605,9772,6452,0.1773461497318031,0.14933447437993796,0.09859865213869828,official_stackoverflow_developer_survey
+Google Cloud Platform,Google Cloud Platform,Platform,2021,83439,16687,16228,0,0.19999041215738445,0.1944893874567049,0.0,official_stackoverflow_developer_survey
+Google Test,Google Test,Tool,2023,89184,2146,1884,0,0.024062612127735916,0.0211248654467169,0.0,official_stackoverflow_developer_survey
+Google Test,Google Test,Tool,2024,65437,1678,1492,1049,0.025642984855662698,0.022800556260219755,0.01603068600333145,official_stackoverflow_developer_survey
+Gradle,Gradle,Tool,2023,89184,11961,7370,0,0.1341159849300323,0.08263814137064944,0.0,official_stackoverflow_developer_survey
+Gradle,Gradle,Tool,2024,65437,8310,5259,4377,0.12699237434478963,0.08036737625502392,0.0668887632379235,official_stackoverflow_developer_survey
+Groovy,Groovy,Language,2021,83439,2479,1177,0,0.029710327304977288,0.014106113448147748,0.0,official_stackoverflow_developer_survey
+Groovy,Groovy,Language,2022,73268,2357,1037,0,0.03216956925260687,0.014153518589288639,0.0,official_stackoverflow_developer_survey
+Groovy,Groovy,Language,2023,89184,2976,1221,0,0.03336921420882669,0.013690796555435952,0.0,official_stackoverflow_developer_survey
+Groovy,Groovy,Language,2024,65437,2004,849,611,0.030624875834772376,0.01297431116952183,0.009337225117288385,official_stackoverflow_developer_survey
+H2,H2,Database,2023,89184,2808,1380,0,0.03148546824542519,0.015473627556512378,0.0,official_stackoverflow_developer_survey
+H2,H2,Database,2024,65437,2006,1040,850,0.030655439583110473,0.015893149135810015,0.012989593043690878,official_stackoverflow_developer_survey
+HTML/CSS,HTML/CSS,Language,2021,83439,46259,29353,0,0.554405014441688,0.351789930368293,0.0,official_stackoverflow_developer_survey
+HTML/CSS,HTML/CSS,Language,2022,73268,39142,25423,0,0.5342304962603046,0.3469864060708631,0.0,official_stackoverflow_developer_survey
+HTML/CSS,HTML/CSS,Language,2023,89184,46396,29928,0,0.5202278435593829,0.33557588805166844,0.0,official_stackoverflow_developer_survey
+HTML/CSS,HTML/CSS,Language,2024,65437,31816,20721,19851,0.48620810856243407,0.3166557146568455,0.3033604841297737,official_stackoverflow_developer_survey
+Hadoop,Hadoop,Other Framework/Library,2021,83439,2155,2802,0,0.025827251045674085,0.03358141876101104,0.0,official_stackoverflow_developer_survey
+Hadoop,Hadoop,Other Framework/Library,2022,73268,1581,1993,0,0.021578315226292517,0.027201506796964568,0.0,official_stackoverflow_developer_survey
+Hadoop,Hadoop,Other Framework/Library,2023,89184,1539,1628,0,0.017256458557588804,0.018254395407247936,0.0,official_stackoverflow_developer_survey
+Hadoop,Hadoop,Other Framework/Library,2024,65437,1047,1175,379,0.01600012225499335,0.017956202148631507,0.005791830310069227,official_stackoverflow_developer_survey
+Haskell,Haskell,Language,2021,83439,1749,3453,0,0.020961420918275627,0.041383525689425806,0.0,official_stackoverflow_developer_survey
+Haskell,Haskell,Language,2022,73268,1577,2961,0,0.02152372113337337,0.040413277283397935,0.0,official_stackoverflow_developer_survey
+Haskell,Haskell,Language,2023,89184,1829,3360,0,0.02050816289917474,0.03767491926803014,0.0,official_stackoverflow_developer_survey
+Haskell,Haskell,Language,2024,65437,1193,2221,634,0.018231275883674375,0.03394104252945581,0.00968870822317649,official_stackoverflow_developer_survey
+Heroku,Heroku,Platform,2021,83439,12897,8182,0,0.1545680077661525,0.09805966035067534,0.0,official_stackoverflow_developer_survey
+Heroku,Heroku,Platform,2022,73268,10160,5951,0,0.13866899601463123,0.08122236174045969,0.0,official_stackoverflow_developer_survey
+Heroku,Heroku,Platform,2023,89184,8358,2852,0,0.09371636167922498,0.031978830283458916,0.0,official_stackoverflow_developer_survey
+Heroku,Heroku,Platform,2024,65437,3798,1666,979,0.05804055809404465,0.02545960236563412,0.014960954811498083,official_stackoverflow_developer_survey
+Hetzner,Hetzner,Platform,2023,89184,3069,2813,0,0.034412002152852526,0.031541532113383564,0.0,official_stackoverflow_developer_survey
+Hetzner,Hetzner,Platform,2024,65437,2301,2460,1716,0.03516359246297966,0.0375934104558583,0.026223696074086526,official_stackoverflow_developer_survey
+Homebrew,Homebrew,Tool,2022,73268,14420,10424,0,0.19681170497352188,0.14227220614729486,0.0,official_stackoverflow_developer_survey
+Homebrew,Homebrew,Tool,2023,89184,17647,12386,0,0.19787181557229996,0.13888141370649443,0.0,official_stackoverflow_developer_survey
+Homebrew,Homebrew,Tool,2024,65437,12081,8798,8436,0.18462032183627,0.13444992893928512,0.1289178904900897,official_stackoverflow_developer_survey
+Htmx,Htmx,Web Framework,2024,65437,1591,4201,1160,0.024313461802955516,0.06419915338417104,0.017726974036095786,official_stackoverflow_developer_survey
+Hugging Face Transformers,Hugging Face Transformers,Other Framework/Library,2022,73268,925,1462,0,0.012624883987552547,0.019954140961947916,0.0,official_stackoverflow_developer_survey
+Hugging Face Transformers,Hugging Face Transformers,Other Framework/Library,2023,89184,1852,3186,0,0.020766056691783278,0.035723896663078576,0.0,official_stackoverflow_developer_survey
+Hugging Face Transformers,Hugging Face Transformers,Other Framework/Library,2024,65437,2038,2884,1480,0.03114445955652001,0.0440729251035347,0.022617173770191176,official_stackoverflow_developer_survey
+IBM Cloud Or Watson,IBM Cloud Or Watson,Platform,2023,89184,801,717,0,0.008981431646932185,0.008039558665231431,0.0,official_stackoverflow_developer_survey
+IBM Cloud Or Watson,IBM Cloud Or Watson,Platform,2024,65437,506,528,204,0.007732628329538334,0.008068829561257393,0.003117502330485811,official_stackoverflow_developer_survey
+IBM Cloud or Watson,IBM Cloud or Watson,Platform,2021,83439,1373,1768,0,0.016455134888960797,0.021189132180395257,0.0,official_stackoverflow_developer_survey
+IBM Cloud or Watson,IBM Cloud or Watson,Platform,2022,73268,853,888,0,0.011642190315007916,0.012119888628050446,0.0,official_stackoverflow_developer_survey
+IBM DB2,IBM DB2,Database,2021,83439,1438,678,0,0.01723414710147533,0.008125696616690038,0.0,official_stackoverflow_developer_survey
+IBM DB2,IBM DB2,Database,2022,73268,1219,519,0,0.016637549817109788,0.007083583556259212,0.0,official_stackoverflow_developer_survey
+IBM DB2,IBM DB2,Database,2023,89184,1414,496,0,0.01585486185862935,0.005561535701471116,0.0,official_stackoverflow_developer_survey
+IBM DB2,IBM DB2,Database,2024,65437,914,406,246,0.013967632990509956,0.0062044409126335255,0.0037593410455858305,official_stackoverflow_developer_survey
+InfluxDB,InfluxDB,Database,2023,89184,2091,1656,0,0.023445909580193755,0.018568353067814854,0.0,official_stackoverflow_developer_survey
+InfluxDB,InfluxDB,Database,2024,65437,1338,1090,601,0.020447147638186346,0.01665724284426242,0.009184406375597903,official_stackoverflow_developer_survey
+Ionic,Ionic,Other Framework/Library,2022,73268,2417,1679,0,0.03298848064639406,0.022915870502811596,0.0,official_stackoverflow_developer_survey
+Ionic,Ionic,Other Framework/Library,2023,89184,1948,1201,0,0.02184248295658414,0.01346654108360244,0.0,official_stackoverflow_developer_survey
+Ionic,Ionic,Other Framework/Library,2024,65437,1132,738,448,0.01729908155936244,0.011278023136757492,0.006846279627733545,official_stackoverflow_developer_survey
+JAX,JAX,Other Framework/Library,2023,89184,641,829,0,0.007187387872264083,0.009295389307499104,0.0,official_stackoverflow_developer_survey
+JAX,JAX,Other Framework/Library,2024,65437,477,723,264,0.00728945397863594,0.01104879502422177,0.004034414780628696,official_stackoverflow_developer_survey
+Java,Java,Language,2021,83439,29162,17222,0,0.3495008329438272,0.2064022819065425,0.0,official_stackoverflow_developer_survey
+Java,Java,Language,2022,73268,23644,13345,0,0.32270568324507287,0.18213954250150133,0.0,official_stackoverflow_developer_survey
+Java,Java,Language,2023,89184,26757,14384,0,0.300020182992465,0.16128453534266235,0.0,official_stackoverflow_developer_survey
+Java,Java,Language,2024,65437,18239,10668,8687,0.27872610296926814,0.16302703363540505,0.13275364090652078,official_stackoverflow_developer_survey
+JavaScript,JavaScript,Language,2021,83439,53587,37008,0,0.6422296528002492,0.4435335993959659,0.0,official_stackoverflow_developer_survey
+JavaScript,JavaScript,Language,2022,73268,46443,31551,0,0.6338783643609761,0.430624556422995,0.0,official_stackoverflow_developer_survey
+JavaScript,JavaScript,Language,2023,89184,55711,34986,0,0.6246748295658414,0.39229009687836386,0.0,official_stackoverflow_developer_survey
+JavaScript,JavaScript,Language,2024,65437,37492,23774,21869,0.5729480263459511,0.3633112764949493,0.3341993062029127,official_stackoverflow_developer_survey
+Julia,Julia,Language,2021,83439,1068,2445,0,0.012799769891777226,0.02930284399381584,0.0,official_stackoverflow_developer_survey
+Julia,Julia,Language,2022,73268,1084,2221,0,0.014794999181088606,0.0303133700933559,0.0,official_stackoverflow_developer_survey
+Julia,Julia,Language,2023,89184,1010,2184,0,0.011324901327592393,0.02448869752421959,0.0,official_stackoverflow_developer_survey
+Julia,Julia,Language,2024,65437,684,1263,422,0.010452801931628895,0.01930100707550774,0.006448950899338295,official_stackoverflow_developer_survey
+Keras,Keras,Other Framework/Library,2021,83439,4930,5190,0,0.059085080118409856,0.06220112896846798,0.0,official_stackoverflow_developer_survey
+Keras,Keras,Other Framework/Library,2022,73268,3333,3493,0,0.04549052792487853,0.04767429164164438,0.0,official_stackoverflow_developer_survey
+Keras,Keras,Other Framework/Library,2023,89184,2839,2921,0,0.031833064226767134,0.03275251166128453,0.0,official_stackoverflow_developer_survey
+Keras,Keras,Other Framework/Library,2024,65437,1968,2020,1181,0.030074728364686644,0.030869385821477146,0.018047893393645795,official_stackoverflow_developer_survey
+Kotlin,Kotlin,Language,2021,83439,6866,10691,0,0.08228765924807345,0.12812953175373626,0.0,official_stackoverflow_developer_survey
+Kotlin,Kotlin,Language,2022,73268,6507,9316,0,0.088810940656221,0.1271496424086914,0.0,official_stackoverflow_developer_survey
+Kotlin,Kotlin,Language,2023,89184,7935,10558,0,0.08897335844994618,0.11838446358091137,0.0,official_stackoverflow_developer_survey
+Kotlin,Kotlin,Language,2024,65437,5665,7379,3449,0.08657181716765744,0.11276494949340587,0.05270718400904687,official_stackoverflow_developer_survey
+Ktor,Ktor,Other Framework/Library,2023,89184,740,970,0,0.008297452457839971,0.010876390383925369,0.0,official_stackoverflow_developer_survey
+Ktor,Ktor,Other Framework/Library,2024,65437,559,728,389,0.008542567660497883,0.011125204395067012,0.005944649051759707,official_stackoverflow_developer_survey
+Kubernetes,Kubernetes,Tool,2021,83439,12115,21977,0,0.14519589160943924,0.26339002145279783,0.0,official_stackoverflow_developer_survey
+Kubernetes,Kubernetes,Tool,2022,73268,12624,18647,0,0.17229895725282524,0.25450401266582956,0.0,official_stackoverflow_developer_survey
+Kubernetes,Kubernetes,Tool,2023,89184,15260,19424,0,0.1711069250089702,0.21779691424470757,0.0,official_stackoverflow_developer_survey
+Kubernetes,Kubernetes,Tool,2024,65437,10503,13197,7608,0.16050552439751212,0.20167489340892766,0.11626449867811789,official_stackoverflow_developer_survey
+LISP,LISP,Language,2021,83439,1096,1513,0,0.013135344383321947,0.018133007346684403,0.0,official_stackoverflow_developer_survey
+LISP,LISP,Language,2022,73268,932,1240,0,0.012720423650161053,0.016924168804935306,0.0,official_stackoverflow_developer_survey
+LLVM's Clang,LLVM's Clang,Tool,2023,89184,5959,5236,0,0.06681691783279511,0.05871008252601363,0.0,official_stackoverflow_developer_survey
+Laravel,Laravel,Web Framework,2021,83439,6377,4734,0,0.07642709044931027,0.056736058677596804,0.0,official_stackoverflow_developer_survey
+Laravel,Laravel,Web Framework,2022,73268,5159,3808,0,0.07041273134246874,0.051973576459027136,0.0,official_stackoverflow_developer_survey
+Laravel,Laravel,Web Framework,2023,89184,5440,4024,0,0.06099748833871547,0.04512020093290276,0.0,official_stackoverflow_developer_survey
+Laravel,Laravel,Web Framework,2024,65437,3834,3103,2162,0.05859070556413039,0.04741965554655623,0.03303941195348197,official_stackoverflow_developer_survey
+Linode,Linode,Platform,2022,73268,1994,2259,0,0.027215155320194355,0.03083201397608779,0.0,official_stackoverflow_developer_survey
+"Linode, now Akamai","Linode, now Akamai",Platform,2023,89184,2755,2807,0,0.03089119124506638,0.03147425547183351,0.0,official_stackoverflow_developer_survey
+"Linode, now Akamai","Linode, now Akamai",Platform,2024,65437,1425,1470,786,0.02177667069089353,0.022464355028500697,0.0120115530968718,official_stackoverflow_developer_survey
+Lisp,Lisp,Language,2023,89184,1342,1705,0,0.015047542160028704,0.01911777897380696,0.0,official_stackoverflow_developer_survey
+Lisp,Lisp,Language,2024,65437,889,1255,509,0.013585586136283754,0.019178752082155356,0.007778473952045479,official_stackoverflow_developer_survey
+Lit,Lit,Web Framework,2023,89184,490,632,0,0.0054942590599210625,0.0070864729099390025,0.0,official_stackoverflow_developer_survey
+Lua,Lua,Language,2022,73268,2867,2390,0,0.039130316099798,0.03261997051918982,0.0,official_stackoverflow_developer_survey
+Lua,Lua,Language,2023,89184,5336,4082,0,0.0598313598851812,0.04577054180121995,0.0,official_stackoverflow_developer_survey
+Lua,Lua,Language,2024,65437,3728,3322,1960,0.05697082690221129,0.050766385989577764,0.02995247337133426,official_stackoverflow_developer_survey
+MATLAB,MATLAB,Language,2022,73268,2913,1059,0,0.03975814816836818,0.014453786100343943,0.0,official_stackoverflow_developer_survey
+MATLAB,MATLAB,Language,2023,89184,3339,1139,0,0.03743945102260495,0.01277134912091855,0.0,official_stackoverflow_developer_survey
+MATLAB,MATLAB,Language,2024,65437,2378,945,516,0.03634029677399636,0.014441371089750446,0.007885447071228815,official_stackoverflow_developer_survey
+MFC,MFC,Other Framework/Library,2023,89184,671,239,0,0.007523771080014352,0.002679852888410477,0.0,official_stackoverflow_developer_survey
+MFC,MFC,Other Framework/Library,2024,65437,469,176,126,0.007167198985283555,0.002689609853752464,0.0019255161453000597,official_stackoverflow_developer_survey
+MSBuild,MSBuild,Tool,2023,89184,8520,5230,0,0.09553283100107643,0.05864280588446358,0.0,official_stackoverflow_developer_survey
+MSBuild,MSBuild,Tool,2024,65437,5973,3845,3668,0.09127863441172425,0.058758806179989916,0.0560539144520684,official_stackoverflow_developer_survey
+MSVC,MSVC,Tool,2023,89184,3666,2003,0,0.041106027987082884,0.0224591855041263,0.0,official_stackoverflow_developer_survey
+Make,Make,Tool,2023,89184,16161,9987,0,0.18120963401506998,0.11198196986006459,0.0,official_stackoverflow_developer_survey
+Make,Make,Tool,2024,65437,11259,7377,6780,0.17205862126931246,0.11273438574506778,0.10361110686614607,official_stackoverflow_developer_survey
+Managed Hosting,Managed Hosting,Platform,2022,73268,2927,1887,0,0.0399492274935852,0.025754763334607196,0.0,official_stackoverflow_developer_survey
+Managed Hosting,Managed Hosting,Platform,2023,89184,2379,1530,0,0.02667518837459634,0.017155543595263726,0.0,official_stackoverflow_developer_survey
+Managed Hosting,Managed Hosting,Platform,2024,65437,1386,1070,868,0.021180677598300654,0.01635160536088146,0.013264666778733744,official_stackoverflow_developer_survey
+MariaDB,MariaDB,Database,2021,83439,12088,8176,0,0.14487230192116396,0.09798775153105861,0.0,official_stackoverflow_developer_survey
+MariaDB,MariaDB,Database,2022,73268,10912,7181,0,0.1489326854834307,0.09801004531309712,0.0,official_stackoverflow_developer_survey
+MariaDB,MariaDB,Database,2023,89184,13495,8317,0,0.1513163796196627,0.09325663796196627,0.0,official_stackoverflow_developer_survey
+MariaDB,MariaDB,Database,2024,65437,8991,5947,5020,0.13739933065391138,0.090881305683329,0.07671500832862142,official_stackoverflow_developer_survey
+Matlab,Matlab,Language,2021,83439,3846,1562,0,0.04609355337432136,0.018720262706887668,0.0,official_stackoverflow_developer_survey
+Maven (build tool),Maven (build tool),Tool,2023,89184,12109,6721,0,0.1357754754216003,0.07536105130965196,0.0,official_stackoverflow_developer_survey
+Maven (build tool),Maven (build tool),Tool,2024,65437,8435,5069,4619,0.12890260861592065,0.07746382016290478,0.07058697678683314,official_stackoverflow_developer_survey
+Meson,Meson,Tool,2023,89184,1052,877,0,0.01179583781844277,0.009833602439899534,0.0,official_stackoverflow_developer_survey
+MicroPython,MicroPython,Language,2024,65437,942,1039,458,0.014395525467243302,0.015877867261640966,0.0069990983694240266,official_stackoverflow_developer_survey
+Micronaut,Micronaut,Other Framework/Library,2023,89184,441,717,0,0.0049448331539289556,0.008039558665231431,0.0,official_stackoverflow_developer_survey
+Microsoft Access,Microsoft Access,Database,2023,89184,3257,884,0,0.036520003588087546,0.009912091855041263,0.0,official_stackoverflow_developer_survey
+Microsoft Access,Microsoft Access,Database,2024,65437,2193,662,511,0.033513150052722464,0.010116600699909837,0.007809037700383575,official_stackoverflow_developer_survey
+Microsoft Azure,Microsoft Azure,Platform,2021,83439,16540,15096,0,0.19822864607677465,0.1809225901556826,0.0,official_stackoverflow_developer_survey
+Microsoft Azure,Microsoft Azure,Platform,2022,73268,14604,12785,0,0.1993230332478026,0.17449636949282088,0.0,official_stackoverflow_developer_survey
+Microsoft Azure,Microsoft Azure,Platform,2023,89184,18105,14689,0,0.2030072658772874,0.16470443128812343,0.0,official_stackoverflow_developer_survey
+Microsoft Azure,Microsoft Azure,Platform,2024,65437,12850,10304,7693,0.19637208307226797,0.15746443143787153,0.11756345798248698,official_stackoverflow_developer_survey
+Microsoft SQL Server,Microsoft SQL Server,Database,2021,83439,18896,11394,0,0.22646484257960905,0.13655484845216265,0.0,official_stackoverflow_developer_survey
+Microsoft SQL Server,Microsoft SQL Server,Database,2022,73268,16355,9867,0,0.2232215974231588,0.13466997870830377,0.0,official_stackoverflow_developer_survey
+Microsoft SQL Server,Microsoft SQL Server,Database,2023,89184,19506,11611,0,0.21871636167922498,0.13019151417294583,0.0,official_stackoverflow_developer_survey
+Microsoft SQL Server,Microsoft SQL Server,Database,2024,65437,13275,7905,7230,0.20286687959411343,0.12080321530632517,0.1104879502422177,official_stackoverflow_developer_survey
+MongoDB,MongoDB,Database,2021,83439,19479,20131,0,0.23345198288570093,0.24126607461738517,0.0,official_stackoverflow_developer_survey
+MongoDB,MongoDB,Database,2022,73268,17228,17297,0,0.23513675820276247,0.23607850630561772,0.0,official_stackoverflow_developer_survey
+MongoDB,MongoDB,Database,2023,89184,19556,16533,0,0.21927700035880876,0.1853807857911733,0.0,official_stackoverflow_developer_survey
+MongoDB,MongoDB,Database,2024,65437,13007,10982,7211,0.19877133731680854,0.16782554212448614,0.1101975946330058,official_stackoverflow_developer_survey
+MySQL,MySQL,Database,2021,83439,35289,20307,0,0.42293172257577394,0.2433753999928091,0.0,official_stackoverflow_developer_survey
+MySQL,MySQL,Database,2022,73268,28520,16271,0,0.38925588251351206,0.22207512147185673,0.0,official_stackoverflow_developer_survey
+MySQL,MySQL,Database,2023,89184,31489,17769,0,0.35307902762827414,0.1992397739504844,0.0,official_stackoverflow_developer_survey
+MySQL,MySQL,Database,2024,65437,21099,12269,11082,0.3224322630927457,0.18749331418005105,0.16935372954139097,official_stackoverflow_developer_survey
+Neo4J,Neo4J,Database,2023,89184,1432,2377,0,0.016056691783279512,0.02665276282741299,0.0,official_stackoverflow_developer_survey
+Neo4J,Neo4J,Database,2024,65437,998,1570,463,0.015251310420709995,0.023992542445405506,0.007075507740269267,official_stackoverflow_developer_survey
+Neo4j,Neo4j,Database,2022,73268,1291,2354,0,0.01762024348965442,0.03212862368291751,0.0,official_stackoverflow_developer_survey
+NestJS,NestJS,Web Framework,2023,89184,3681,4123,0,0.04127421959095802,0.04623026551847865,0.0,official_stackoverflow_developer_survey
+NestJS,NestJS,Web Framework,2024,65437,2832,3055,1722,0.043278267646744195,0.04668612558644192,0.026315387319100814,official_stackoverflow_developer_survey
+Netlify,Netlify,Platform,2023,89184,6228,4543,0,0.06983315392895587,0.05093963042698242,0.0,official_stackoverflow_developer_survey
+Netlify,Netlify,Platform,2024,65437,3238,2217,1599,0.049482708559377725,0.03387991503277962,0.024435716796307898,official_stackoverflow_developer_survey
+Next.js,Next.js,Web Framework,2022,73268,7386,10348,0,0.10080799257520336,0.14123491838183108,0.0,official_stackoverflow_developer_survey
+Next.js,Next.js,Web Framework,2023,89184,11972,14129,0,0.13423932543954073,0.15842527807678508,0.0,official_stackoverflow_developer_survey
+Next.js,Next.js,Web Framework,2024,65437,8681,8507,5165,0.1326619496615065,0.13000290355609212,0.0789308800831334,official_stackoverflow_developer_survey
+Nim,Nim,Language,2023,89184,331,811,0,0.003711428058844636,0.009093559382848941,0.0,official_stackoverflow_developer_survey
+Nim,Nim,Language,2024,65437,210,499,106,0.0032091935755000993,0.007625655210354998,0.0016198786619190978,official_stackoverflow_developer_survey
+Ninja,Ninja,Tool,2023,89184,2928,2139,0,0.03283100107642627,0.02398412271259419,0.0,official_stackoverflow_developer_survey
+Ninja,Ninja,Tool,2024,65437,2212,1729,1398,0.03380350566193438,0.02642236043828415,0.021364060088329234,official_stackoverflow_developer_survey
+Nix,Nix,Tool,2023,89184,1647,2517,0,0.018467438105489772,0.02822255113024758,0.0,official_stackoverflow_developer_survey
+Nix,Nix,Tool,2024,65437,1450,2275,1050,0.022158717545119732,0.03476626373458441,0.016045967877500497,official_stackoverflow_developer_survey
+Node.js,Node.js,Language,2021,83439,27975,24100,0,0.33527487146298496,0.2888337587938494,0.0,official_stackoverflow_developer_survey
+Node.js,Node.js,Web Framework,2022,73268,25733,20948,0,0.35121744827209694,0.2859092646175684,0.0,official_stackoverflow_developer_survey
+Node.js,Node.js,Web Framework,2023,89184,30626,23027,0,0.34340240401865807,0.2581965374955149,0.0,official_stackoverflow_developer_survey
+Node.js,Node.js,Web Framework,2024,65437,19772,14735,12698,0.3021532160704189,0.22517841588092363,0.19404923819857267,official_stackoverflow_developer_survey
+NuGet,NuGet,Tool,2023,89184,12235,8457,0,0.1371882848941514,0.09482642626480087,0.0,official_stackoverflow_developer_survey
+NuGet,NuGet,Tool,2024,65437,8703,6178,5887,0.13299815089322556,0.09441141861637911,0.08996439323318611,official_stackoverflow_developer_survey
+NumPy,NumPy,Other Framework/Library,2021,83439,16445,12773,0,0.19709008976617648,0.15308189216074017,0.0,official_stackoverflow_developer_survey
+NumPy,NumPy,Other Framework/Library,2022,73268,13144,10248,0,0.17939618933231424,0.13987006605885244,0.0,official_stackoverflow_developer_survey
+NumPy,NumPy,Other Framework/Library,2023,89184,13614,10495,0,0.15265069967707212,0.11767805884463581,0.0,official_stackoverflow_developer_survey
+NumPy,NumPy,Other Framework/Library,2024,65437,9718,7638,6600,0.14850925317480937,0.11672295490318933,0.1008603695157174,official_stackoverflow_developer_survey
+Nuxt.js,Nuxt.js,Web Framework,2022,73268,2089,3805,0,0.028511765027024075,0.05193263088933777,0.0,official_stackoverflow_developer_survey
+Nuxt.js,Nuxt.js,Web Framework,2023,89184,2652,3391,0,0.029736275565123788,0.038022515249372085,0.0,official_stackoverflow_developer_survey
+Nuxt.js,Nuxt.js,Web Framework,2024,65437,1753,2208,1056,0.026789125418341306,0.033742378165258186,0.016137659122514785,official_stackoverflow_developer_survey
+OCaml,OCaml,Language,2022,73268,422,739,0,0.005759676802969919,0.01008625866681225,0.0,official_stackoverflow_developer_survey
+OCaml,OCaml,Language,2023,89184,614,1083,0,0.006884642985288841,0.012143433799784715,0.0,official_stackoverflow_developer_survey
+OCaml,OCaml,Language,2024,65437,458,1080,243,0.0069990983694240266,0.01650442410257194,0.0037134954230786865,official_stackoverflow_developer_survey
+OVH,OVH,Platform,2022,73268,1913,1233,0,0.026109624938581644,0.0168286291423268,0.0,official_stackoverflow_developer_survey
+OVH,OVH,Platform,2023,89184,2378,1536,0,0.026663975601004666,0.017222820236813777,0.0,official_stackoverflow_developer_survey
+OVH,OVH,Platform,2024,65437,1397,1038,770,0.021348778214160185,0.01586258538747192,0.011767043110167031,official_stackoverflow_developer_survey
+Objective-C,Objective-C,Language,2021,83439,2310,1400,0,0.02768489555243951,0.016778724577236066,0.0,official_stackoverflow_developer_survey
+Objective-C,Objective-C,Language,2022,73268,1698,877,0,0.02317519244417754,0.011969754872522793,0.0,official_stackoverflow_developer_survey
+Objective-C,Objective-C,Language,2023,89184,2019,954,0,0.02263858988159311,0.010696986006458558,0.0,official_stackoverflow_developer_survey
+Objective-C,Objective-C,Language,2024,65437,1283,686,337,0.019606644558888702,0.01048336567996699,0.005149991594969207,official_stackoverflow_developer_survey
+OpenCL,OpenCL,Other Framework/Library,2024,65437,785,1125,421,0.011996271222702753,0.017192108440179103,0.006433669025169246,official_stackoverflow_developer_survey
+OpenGL,OpenGL,Other Framework/Library,2023,89184,4664,4752,0,0.05229637603157517,0.053283100107642624,0.0,official_stackoverflow_developer_survey
+OpenGL,OpenGL,Other Framework/Library,2024,65437,3122,3174,1745,0.047710011155768145,0.048504668612558643,0.02666687042498892,official_stackoverflow_developer_survey
+OpenShift,OpenShift,Platform,2023,89184,1671,1458,0,0.01873654467168999,0.01634822389666308,0.0,official_stackoverflow_developer_survey
+OpenShift,OpenShift,Platform,2024,65437,1120,1012,583,0.017115699069333863,0.015465256659076668,0.008909332640555037,official_stackoverflow_developer_survey
+OpenStack,OpenStack,Platform,2022,73268,1029,1385,0,0.014044330403450347,0.018903204673254355,0.0,official_stackoverflow_developer_survey
+OpenStack,OpenStack,Platform,2023,89184,1076,1184,0,0.012064944384642985,0.013275923932543954,0.0,official_stackoverflow_developer_survey
+OpenStack,OpenStack,Platform,2024,65437,716,853,351,0.010941821905038434,0.013035438666198022,0.00536393783333588,official_stackoverflow_developer_survey
+Opencv,Opencv,Other Framework/Library,2023,89184,5455,4914,0,0.061165679942590596,0.05509956942949408,0.0,official_stackoverflow_developer_survey
+Opencv,Opencv,Other Framework/Library,2024,65437,3961,3594,2390,0.060531503583599496,0.05492305576355884,0.03652367926402494,official_stackoverflow_developer_survey
+Oracle,Oracle,Database,2021,83439,8868,4557,0,0.10628123539352101,0.05461474849890339,0.0,official_stackoverflow_developer_survey
+Oracle,Oracle,Database,2022,73268,6994,3511,0,0.09545777146912704,0.04791996505978053,0.0,official_stackoverflow_developer_survey
+Oracle,Oracle,Database,2023,89184,7507,3537,0,0.084174291352709,0.039659580193756726,0.0,official_stackoverflow_developer_survey
+Oracle,Oracle,Database,2024,65437,5273,2636,1985,0.08058132249339059,0.04028302030961077,0.030334520225560463,official_stackoverflow_developer_survey
+Oracle Cloud Infrastructure,Oracle Cloud Infrastructure,Platform,2021,83439,1014,1398,0,0.012152590515226692,0.016754754970697155,0.0,official_stackoverflow_developer_survey
+Oracle Cloud Infrastructure,Oracle Cloud Infrastructure,Platform,2022,73268,1110,1144,0,0.015149860785063056,0.015613910574875798,0.0,official_stackoverflow_developer_survey
+Oracle Cloud Infrastructure (OCI),Oracle Cloud Infrastructure (OCI),Platform,2023,89184,1810,1505,0,0.020295120200932902,0.016875224255471832,0.0,official_stackoverflow_developer_survey
+Oracle Cloud Infrastructure (OCI),Oracle Cloud Infrastructure (OCI),Platform,2024,65437,1332,1168,750,0.02035545639317206,0.01784922902944817,0.011461405626786068,official_stackoverflow_developer_survey
+PHP,PHP,Language,2021,83439,18130,8852,0,0.21728448327520702,0.10608947854120974,0.0,official_stackoverflow_developer_survey
+PHP,PHP,Language,2022,73268,14827,7325,0,0.20236665392804498,0.09997543265818638,0.0,official_stackoverflow_developer_survey
+PHP,PHP,Language,2023,89184,16274,8014,0,0.18247667743092932,0.08985916756368856,0.0,official_stackoverflow_developer_survey
+PHP,PHP,Language,2024,65437,10951,5745,4793,0.16735180402524566,0.08779436710118128,0.0732460228922475,official_stackoverflow_developer_survey
+Pacman,Pacman,Tool,2023,89184,5280,4073,0,0.059203444564047365,0.04566962683889487,0.0,official_stackoverflow_developer_survey
+Pacman,Pacman,Tool,2024,65437,3702,2990,2696,0.05657349817381604,0.045692803765453795,0.04119993275975366,official_stackoverflow_developer_survey
+Pandas,Pandas,Other Framework/Library,2021,83439,13664,10863,0,0.16376035187382398,0.1301909179160824,0.0,official_stackoverflow_developer_survey
+Pandas,Pandas,Other Framework/Library,2022,73268,11506,9070,0,0.1570399082819239,0.12379210569416389,0.0,official_stackoverflow_developer_survey
+Pandas,Pandas,Other Framework/Library,2023,89184,12756,9605,0,0.1430301399354144,0.1076986903480445,0.0,official_stackoverflow_developer_survey
+Pandas,Pandas,Other Framework/Library,2024,65437,9501,7344,6231,0.1451930864801259,0.11223008389748919,0.09522135794733866,official_stackoverflow_developer_survey
+Perl,Perl,Language,2021,83439,2028,1175,0,0.024305181030453385,0.01408214384160884,0.0,official_stackoverflow_developer_survey
+Perl,Perl,Language,2022,73268,1644,934,0,0.022438172189769068,0.012747720696620626,0.0,official_stackoverflow_developer_survey
+Perl,Perl,Language,2023,89184,2151,1078,0,0.024118675995694294,0.012087369931826337,0.0,official_stackoverflow_developer_survey
+Perl,Perl,Language,2024,65437,1482,794,486,0.022647737518529273,0.012133808090224185,0.007426990846157373,official_stackoverflow_developer_survey
+Phoenix,Phoenix,Web Framework,2022,73268,1164,1862,0,0.01588688103947153,0.02541355025386253,0.0,official_stackoverflow_developer_survey
+Phoenix,Phoenix,Web Framework,2023,89184,1468,2262,0,0.016460351632579834,0.02536329386437029,0.0,official_stackoverflow_developer_survey
+Phoenix,Phoenix,Web Framework,2024,65437,930,1586,778,0.014212142977214726,0.024237052432110273,0.011889298103519415,official_stackoverflow_developer_survey
+Pip,Pip,Tool,2023,89184,23281,14466,0,0.2610445819878005,0.16220398277717976,0.0,official_stackoverflow_developer_survey
+Pip,Pip,Tool,2024,65437,17561,11393,10914,0.26836499228265354,0.1741063924079649,0.1667863746809909,official_stackoverflow_developer_survey
+Play Framework,Play Framework,Web Framework,2022,73268,450,371,0,0.006141835453403942,0.005063602118250805,0.0,official_stackoverflow_developer_survey
+Play Framework,Play Framework,Web Framework,2023,89184,545,338,0,0.006110961607463222,0.003789917473986365,0.0,official_stackoverflow_developer_survey
+Play Framework,Play Framework,Web Framework,2024,65437,387,282,153,0.005914085303421612,0.004309488515671562,0.002338126747864358,official_stackoverflow_developer_survey
+Podman,Podman,Tool,2023,89184,3129,4156,0,0.03508476856835307,0.046600287047003947,0.0,official_stackoverflow_developer_survey
+Podman,Podman,Tool,2024,65437,2682,3222,1800,0.040985986521386984,0.049238198572672955,0.027507373504286566,official_stackoverflow_developer_survey
+PostgreSQL,PostgreSQL,Database,2021,83439,28424,27082,0,0.34065604813096995,0.3245724421433622,0.0,official_stackoverflow_developer_survey
+PostgreSQL,PostgreSQL,Database,2022,73268,26538,25212,0,0.3622045094720751,0.3441065676693782,0.0,official_stackoverflow_developer_survey
+PostgreSQL,PostgreSQL,Database,2023,89184,34909,31550,0,0.3914267133118048,0.35376300681736633,0.0,official_stackoverflow_developer_survey
+PostgreSQL,PostgreSQL,Database,2024,65437,25536,24005,19012,0.3902379387808121,0.36684138942799943,0.2905389917019423,official_stackoverflow_developer_survey
+PowerShell,PowerShell,Language,2021,83439,8871,4896,0,0.10631718980332938,0.05867759680724841,0.0,official_stackoverflow_developer_survey
+PowerShell,PowerShell,Language,2022,73268,8575,4700,0,0.11703608669541955,0.06414805917999672,0.0,official_stackoverflow_developer_survey
+PowerShell,PowerShell,Language,2023,89184,11902,6142,0,0.13345443128812343,0.06886885540007176,0.0,official_stackoverflow_developer_survey
+PowerShell,PowerShell,Language,2024,65437,8328,4287,3603,0.1272674480798325,0.06551339456270917,0.05506059263108028,official_stackoverflow_developer_survey
+Presto,Presto,Database,2024,65437,323,319,178,0.004936045356602534,0.004874917859926341,0.0027201736020905603,official_stackoverflow_developer_survey
+Prolog,Prolog,Language,2023,89184,776,558,0,0.008701112307140295,0.006256727664155005,0.0,official_stackoverflow_developer_survey
+Prolog,Prolog,Language,2024,65437,486,396,114,0.007426990846157373,0.006051622170943045,0.0017421336552714826,official_stackoverflow_developer_survey
+Pulumi,Pulumi,Tool,2021,83439,368,901,0,0.004410407603159194,0.010798307745778352,0.0,official_stackoverflow_developer_survey
+Pulumi,Pulumi,Tool,2022,73268,461,1050,0,0.006291969208931594,0.014330949391275863,0.0,official_stackoverflow_developer_survey
+Pulumi,Pulumi,Tool,2023,89184,659,1104,0,0.007389217796914245,0.012378902045209902,0.0,official_stackoverflow_developer_survey
+Pulumi,Pulumi,Tool,2024,65437,495,925,314,0.007564527713678806,0.014135733606369485,0.004798508489081101,official_stackoverflow_developer_survey
+Puppet,Puppet,Tool,2021,83439,1313,1428,0,0.015736046692793538,0.017114299068780786,0.0,official_stackoverflow_developer_survey
+Puppet,Puppet,Tool,2022,73268,1025,1056,0,0.0139897363105312,0.014412840530654582,0.0,official_stackoverflow_developer_survey
+Puppet,Puppet,Tool,2023,89184,900,768,0,0.010091496232508074,0.008611410118406888,0.0,official_stackoverflow_developer_survey
+Puppet,Puppet,Tool,2024,65437,629,524,224,0.00961229885233125,0.0080077020645812,0.0034231398138667725,official_stackoverflow_developer_survey
+Python,Python,Language,2021,83439,39792,34929,0,0.4768992916981268,0.41861719339877035,0.0,official_stackoverflow_developer_survey
+Python,Python,Language,2022,73268,34155,29350,0,0.46616531091335917,0.40058415679423487,0.0,official_stackoverflow_developer_survey
+Python,Python,Language,2023,89184,43158,34715,0,0.48392088266953714,0.38925143523501976,0.0,official_stackoverflow_developer_survey
+Python,Python,Language,2024,65437,30719,25047,20774,0.46944389259898833,0.38276510231214755,0.3174656539878051,official_stackoverflow_developer_survey
+PythonAnywhere,PythonAnywhere,Platform,2024,65437,892,786,371,0.013631431758790898,0.0120115530968718,0.0056695753167168425,official_stackoverflow_developer_survey
+QMake,QMake,Tool,2023,89184,983,434,0,0.01102215644061715,0.004866343738787226,0.0,official_stackoverflow_developer_survey
+Qt,Qt,Other Framework/Library,2021,83439,4812,3478,0,0.057670873332614246,0.04168314577116217,0.0,official_stackoverflow_developer_survey
+Qt,Qt,Other Framework/Library,2022,73268,3906,2895,0,0.05331113173554621,0.03951247475023203,0.0,official_stackoverflow_developer_survey
+Qt,Qt,Other Framework/Library,2023,89184,4401,3111,0,0.04934741657696448,0.034882938643702906,0.0,official_stackoverflow_developer_survey
+Qt,Qt,Other Framework/Library,2024,65437,3360,2443,1562,0.05134709720800159,0.03733361859498449,0.02387028745205312,official_stackoverflow_developer_survey
+Quarkus,Quarkus,Other Framework/Library,2023,89184,763,1207,0,0.008555346250448511,0.013533817725152494,0.0,official_stackoverflow_developer_survey
+Quarkus,Quarkus,Other Framework/Library,2024,65437,585,821,363,0.008939896388893134,0.012546418692788483,0.005547320323364457,official_stackoverflow_developer_survey
+Qwik,Qwik,Web Framework,2023,89184,389,2167,0,0.004361768927161822,0.024298080373161106,0.0,official_stackoverflow_developer_survey
+R,R,Language,2021,83439,4185,4015,0,0.05015640168266638,0.048118985126859144,0.0,official_stackoverflow_developer_survey
+R,R,Language,2022,73268,3308,2934,0,0.04514931484413386,0.0400447671561937,0.0,official_stackoverflow_developer_survey
+R,R,Language,2023,89184,3702,3068,0,0.04150968783638321,0.03440078937926085,0.0,official_stackoverflow_developer_survey
+R,R,Language,2024,65437,2595,2177,1073,0.0396564634686798,0.03326864006601769,0.016397450983388604,official_stackoverflow_developer_survey
+RabbitMQ,RabbitMQ,Other Framework/Library,2023,89184,6942,6448,0,0.07783907427341227,0.07229996411912451,0.0,official_stackoverflow_developer_survey
+RabbitMQ,RabbitMQ,Other Framework/Library,2024,65437,5010,4858,3005,0.07656218958693094,0.07423934471323564,0.045922031877989516,official_stackoverflow_developer_survey
+Raku,Raku,Language,2023,89184,156,279,0,0.0017491926803013993,0.0031283638320775027,0.0,official_stackoverflow_developer_survey
+RavenDB,RavenDB,Database,2023,89184,227,336,0,0.0025452996053103695,0.003767491926803014,0.0,official_stackoverflow_developer_survey
+RavenDB,RavenDB,Database,2024,65437,159,222,66,0.002429817992878647,0.0033925760655286762,0.001008603695157174,official_stackoverflow_developer_survey
+React,React,Web Framework,2021,83439,25296,25718,0,0.30316758350411677,0.3082251704838265,0.0,official_stackoverflow_developer_survey
+React,React,Web Framework,2022,73268,23277,21910,0,0.3176966752197412,0.29903914396462306,0.0,official_stackoverflow_developer_survey
+React,React,Web Framework,2023,89184,29137,24100,0,0.326706584140653,0.27022784355938284,0.0,official_stackoverflow_developer_survey
+React,React,Web Framework,2024,65437,19167,15404,11915,0.2929076821981448,0.2354019897000168,0.18208353072420802,official_stackoverflow_developer_survey
+React Native,React Native,Other Framework/Library,2021,83439,7051,8621,0,0.08450484785292249,0.1033209889859658,0.0,official_stackoverflow_developer_survey
+React Native,React Native,Other Framework/Library,2022,73268,5765,6728,0,0.07868373641971939,0.09182726429000382,0.0,official_stackoverflow_developer_survey
+React Native,React Native,Other Framework/Library,2023,89184,5667,6026,0,0.06354278794402583,0.06756817366343738,0.0,official_stackoverflow_developer_survey
+React Native,React Native,Other Framework/Library,2024,65437,3832,4250,2166,0.05856014181579229,0.06494796521845439,0.033100539450158166,official_stackoverflow_developer_survey
+Redis,Redis,Database,2021,83439,14552,17212,0,0.17440285717709944,0.20628243387384795,0.0,official_stackoverflow_developer_survey
+Redis,Redis,Database,2022,73268,13471,16211,0,0.18385925642845444,0.22125621007806956,0.0,official_stackoverflow_developer_survey
+Redis,Redis,Database,2023,89184,15639,16930,0,0.17535656620021528,0.18983225690706854,0.0,official_stackoverflow_developer_survey
+Redis,Redis,Database,2024,65437,10463,10847,7007,0.15989424943075017,0.16576248911166466,0.10708009230251998,official_stackoverflow_developer_survey
+Remix,Remix,Web Framework,2023,89184,912,2249,0,0.01022604951560818,0.025217527807678507,0.0,official_stackoverflow_developer_survey
+Remix,Remix,Web Framework,2024,65437,757,1294,429,0.011568378745969405,0.01977474517474823,0.006555924018521632,official_stackoverflow_developer_survey
+Render,Render,Platform,2023,89184,1287,1164,0,0.014430839612486545,0.013051668460710441,0.0,official_stackoverflow_developer_survey
+Render,Render,Platform,2024,65437,1305,940,655,0.01994284579060776,0.014364961718905207,0.0100096275807265,official_stackoverflow_developer_survey
+Roslyn,Roslyn,Other Framework/Library,2024,65437,755,859,558,0.01153781499763131,0.013127129911212312,0.008527285786328836,official_stackoverflow_developer_survey
+Ruby,Ruby,Language,2021,83439,5569,4942,0,0.06674336940759118,0.059228897757643305,0.0,official_stackoverflow_developer_survey
+Ruby,Ruby,Language,2022,73268,4299,3907,0,0.058675001364852326,0.053324780258776,0.0,official_stackoverflow_developer_survey
+Ruby,Ruby,Language,2023,89184,5454,4293,0,0.06115446716899892,0.048136437029063506,0.0,official_stackoverflow_developer_survey
+Ruby,Ruby,Language,2024,65437,3147,2774,1576,0.048092058009994346,0.042391918944939405,0.024084233690419794,official_stackoverflow_developer_survey
+Ruby on Rails,Ruby on Rails,Web Framework,2021,83439,4438,4249,0,0.05318855690983833,0.05092342909191146,0.0,official_stackoverflow_developer_survey
+Ruby on Rails,Ruby on Rails,Web Framework,2022,73268,3182,3272,0,0.04342960091718076,0.04465796800786155,0.0,official_stackoverflow_developer_survey
+Ruby on Rails,Ruby on Rails,Web Framework,2023,89184,3940,3501,0,0.04417832795120201,0.03925592034445641,0.0,official_stackoverflow_developer_survey
+Ruby on Rails,Ruby on Rails,Web Framework,2024,65437,2294,2301,1270,0.03505661934379632,0.03516359246297966,0.019407980194691078,official_stackoverflow_developer_survey
+Ruff,Ruff,Other Framework/Library,2024,65437,1355,1353,1140,0.020706939499060165,0.020676375750722068,0.017421336552714824,official_stackoverflow_developer_survey
+Rust,Rust,Language,2021,83439,5799,15865,0,0.06949987415956567,0.190138903869893,0.0,official_stackoverflow_developer_survey
+Rust,Rust,Language,2022,73268,6625,17113,0,0.09042146639733581,0.233567178031337,0.0,official_stackoverflow_developer_survey
+Rust,Rust,Language,2023,89184,11427,26710,0,0.1281283638320775,0.29949318263365626,0.0,official_stackoverflow_developer_survey
+Rust,Rust,Language,2024,65437,7559,17232,6215,0.11551568684383452,0.2633372556810367,0.0949768479606339,official_stackoverflow_developer_survey
+SAS,SAS,Language,2022,73268,435,378,0,0.005937107604957144,0.005159141780859311,0.0,official_stackoverflow_developer_survey
+SAS,SAS,Language,2023,89184,427,355,0,0.004787854323645497,0.003980534625044851,0.0,official_stackoverflow_developer_survey
+SCons,SCons,Tool,2023,89184,378,183,0,0.004238428417653391,0.0020519375672766417,0.0,official_stackoverflow_developer_survey
+SQL,SQL,Language,2021,83439,38835,26631,0,0.465429834969259,0.3191672958688383,0.0,official_stackoverflow_developer_survey
+SQL,SQL,Language,2022,73268,35127,24804,0,0.4794316754927117,0.3385379701916253,0.0,official_stackoverflow_developer_survey
+SQL,SQL,Language,2023,89184,42623,29598,0,0.47792204879799066,0.3318756727664155,0.0,official_stackoverflow_developer_survey
+SQL,SQL,Language,2024,65437,30682,22400,20692,0.46887846325473354,0.34231398138667724,0.31621254030594315,official_stackoverflow_developer_survey
+SQLite,SQLite,Database,2021,83439,22634,15381,0,0.27126403720082937,0.18433825908747709,0.0,official_stackoverflow_developer_survey
+SQLite,SQLite,Database,2022,73268,19487,14085,0,0.26596877217885023,0.19223944969154338,0.0,official_stackoverflow_developer_survey
+SQLite,SQLite,Database,2023,89184,23678,16933,0,0.26549605310369573,0.18986589522784356,0.0,official_stackoverflow_developer_survey
+SQLite,SQLite,Database,2024,65437,17365,13489,10886,0.2653697449455201,0.2061372006662897,0.16635848220425753,official_stackoverflow_developer_survey
+Scala,Scala,Language,2021,83439,2148,3165,0,0.025743357422787903,0.03793190234782296,0.0,official_stackoverflow_developer_survey
+Scala,Scala,Language,2022,73268,1837,2451,0,0.025072337173117867,0.0334525304362068,0.0,official_stackoverflow_developer_survey
+Scala,Scala,Language,2023,89184,2422,2770,0,0.027157337639038392,0.031059382848941514,0.0,official_stackoverflow_developer_survey
+Scala,Scala,Language,2024,65437,1547,1790,788,0.0236410593395174,0.027354554762596083,0.012042116845209897,official_stackoverflow_developer_survey
+Scaleway,Scaleway,Platform,2023,89184,628,588,0,0.0070416218155723,0.006593110871905275,0.0,official_stackoverflow_developer_survey
+Scaleway,Scaleway,Platform,2024,65437,396,369,220,0.006051622170943045,0.005639011568378746,0.0033620123171905804,official_stackoverflow_developer_survey
+Scikit-Learn,Scikit-Learn,Other Framework/Library,2023,89184,6339,5491,0,0.07107777179763186,0.06156933979189092,0.0,official_stackoverflow_developer_survey
+Scikit-Learn,Scikit-Learn,Other Framework/Library,2024,65437,4849,4196,3228,0.0741018078457142,0.0641227440133258,0.04932988981768724,official_stackoverflow_developer_survey
+Scikit-learn,Scikit-learn,Other Framework/Library,2022,73268,5776,5175,0,0.07883387017524704,0.07063110771414532,0.0,official_stackoverflow_developer_survey
+Snowflake,Snowflake,Database,2023,89184,1820,2336,0,0.02040724793684966,0.026193039110154286,0.0,official_stackoverflow_developer_survey
+Snowflake,Snowflake,Database,2024,65437,1364,1784,699,0.0208444763665816,0.027262863517581795,0.010682030044164617,official_stackoverflow_developer_survey
+Solid.js,Solid.js,Web Framework,2023,89184,979,3448,0,0.010977305346250448,0.03866164334409759,0.0,official_stackoverflow_developer_survey
+Solid.js,Solid.js,Web Framework,2024,65437,590,1684,395,0.009016305759738375,0.025734676100676986,0.006036340296773996,official_stackoverflow_developer_survey
+Solidity,Solidity,Language,2022,73268,1031,2606,0,0.01407162744990992,0.035568051536823714,0.0,official_stackoverflow_developer_survey
+Solidity,Solidity,Language,2023,89184,1168,1597,0,0.013096519555077143,0.017906799425905992,0.0,official_stackoverflow_developer_survey
+Solidity,Solidity,Language,2024,65437,644,957,332,0.00984152696486697,0.014624753579779024,0.005073582224123967,official_stackoverflow_developer_survey
+Solr,Solr,Database,2023,89184,1189,775,0,0.013331987800502333,0.00868989953354862,0.0,official_stackoverflow_developer_survey
+Solr,Solr,Database,2024,65437,766,558,320,0.011705915613490839,0.008527285786328836,0.004890199734095389,official_stackoverflow_developer_survey
+Spring,Spring,Web Framework,2021,83439,9177,7229,0,0.1099845396037824,0.08663814283488537,0.0,official_stackoverflow_developer_survey
+Spring,Spring,Other Framework/Library,2022,73268,7399,5472,0,0.10098542337719059,0.07468471911339193,0.0,official_stackoverflow_developer_survey
+Spring Boot,Spring Boot,Web Framework,2023,89184,8583,6587,0,0.09623923573735199,0.07385853964836742,0.0,official_stackoverflow_developer_survey
+Spring Boot,Spring Boot,Web Framework,2024,65437,6165,5068,3843,0.0942127542521815,0.07744853828873573,0.05872824243165182,official_stackoverflow_developer_survey
+Spring Framework,Spring Framework,Other Framework/Library,2023,89184,7460,5285,0,0.08364729099390025,0.05925950843200574,0.0,official_stackoverflow_developer_survey
+Spring Framework,Spring Framework,Other Framework/Library,2024,65437,5091,3918,3243,0.07780002139462383,0.05987438299433043,0.04955911793022296,official_stackoverflow_developer_survey
+Strapi,Strapi,Web Framework,2024,65437,815,692,354,0.012454727447774195,0.01057505692498128,0.005409783455843024,official_stackoverflow_developer_survey
+Supabase,Supabase,Database,2023,89184,2122,3943,0,0.023793505561535703,0.044211966271977036,0.0,official_stackoverflow_developer_survey
+Supabase,Supabase,Database,2024,65437,2078,2930,1254,0.03175573452328193,0.04477589131531091,0.019163470207986307,official_stackoverflow_developer_survey
+Supabase,Supabase,Platform,2024,65437,1767,2287,1109,0.02700307165670798,0.03494964622461299,0.016947598453474336,official_stackoverflow_developer_survey
+Svelte,Svelte,Web Framework,2021,83439,1735,5235,0,0.020793633672503267,0.06274044511559343,0.0,official_stackoverflow_developer_survey
+Svelte,Svelte,Web Framework,2022,73268,2500,6741,0,0.034121308074466346,0.09200469509199105,0.0,official_stackoverflow_developer_survey
+Svelte,Svelte,Web Framework,2023,89184,4753,9803,0,0.053294312881234304,0.10991881951919627,0.0,official_stackoverflow_developer_survey
+Svelte,Svelte,Web Framework,2024,65437,3146,5374,2290,0.0480767761358253,0.08212479178446444,0.03499549184712013,official_stackoverflow_developer_survey
+Swift,Swift,Language,2021,83439,4204,6353,0,0.05038411294478601,0.07613945517084338,0.0,official_stackoverflow_developer_survey
+Swift,Swift,Language,2022,73268,3489,5071,0,0.04761969754872523,0.06921166129824753,0.0,official_stackoverflow_developer_survey
+Swift,Swift,Language,2023,89184,4072,5387,0,0.045658414065303195,0.060403211338356654,0.0,official_stackoverflow_developer_survey
+Swift,Swift,Language,2024,65437,2829,3877,1792,0.04323242202423705,0.059247826153399456,0.02738511851093418,official_stackoverflow_developer_survey
+SwiftUI,SwiftUI,Other Framework/Library,2023,89184,2643,3470,0,0.02963536060279871,0.03890832436311446,0.0,official_stackoverflow_developer_survey
+SwiftUI,SwiftUI,Other Framework/Library,2024,65437,1986,2681,1353,0.03034980209972951,0.040970704647217936,0.020676375750722068,official_stackoverflow_developer_survey
+Symfony,Symfony,Web Framework,2021,83439,2427,1786,0,0.029087117534965665,0.021404858639245437,0.0,official_stackoverflow_developer_survey
+Symfony,Symfony,Web Framework,2022,73268,1955,1433,0,0.02668286291423268,0.01955833378828411,0.0,official_stackoverflow_developer_survey
+Symfony,Symfony,Web Framework,2023,89184,2301,1591,0,0.02580059203444564,0.017839522784355938,0.0,official_stackoverflow_developer_survey
+Symfony,Symfony,Web Framework,2024,65437,1531,1153,836,0.02339654935281263,0.01762000091691245,0.012775646805324205,official_stackoverflow_developer_survey
+Tauri,Tauri,Other Framework/Library,2023,89184,1516,3236,0,0.016998564764980264,0.03628453534266236,0.0,official_stackoverflow_developer_survey
+Tauri,Tauri,Other Framework/Library,2024,65437,1114,2088,822,0.017024007824319575,0.03190855326497242,0.012561700566957532,official_stackoverflow_developer_survey
+TensorFlow,TensorFlow,Other Framework/Library,2021,83439,8034,11879,0,0.0962859094667961,0.14236747803784802,0.0,official_stackoverflow_developer_survey
+TensorFlow,TensorFlow,Other Framework/Library,2022,73268,5942,8836,0,0.0810995250313916,0.12059835125839384,0.0,official_stackoverflow_developer_survey
+TensorFlow,TensorFlow,Other Framework/Library,2023,89184,6405,9143,0,0.07181781485468246,0.10251838894869035,0.0,official_stackoverflow_developer_survey
+TensorFlow,TensorFlow,Other Framework/Library,2024,65437,4638,6058,2682,0.07087733239604505,0.09257759371609334,0.040985986521386984,official_stackoverflow_developer_survey
+Terraform,Terraform,Tool,2021,83439,5442,7756,0,0.06522129939237048,0.0929541341578878,0.0,official_stackoverflow_developer_survey
+Terraform,Terraform,Tool,2022,73268,6160,8130,0,0.08407490309548507,0.11096249385816455,0.0,official_stackoverflow_developer_survey
+Terraform,Terraform,Tool,2023,89184,9068,10250,0,0.10167743092931468,0.11493092931467527,0.0,official_stackoverflow_developer_survey
+Terraform,Terraform,Tool,2024,65437,5754,6195,3790,0.08793190396870272,0.09467121047725292,0.05791830310069227,official_stackoverflow_developer_survey
+TiDB,TiDB,Database,2023,89184,157,375,0,0.001760405453893075,0.004204790096878364,0.0,official_stackoverflow_developer_survey
+TiDB,TiDB,Database,2024,65437,127,255,62,0.0019407980194691076,0.0038968779131072634,0.0009474761984809817,official_stackoverflow_developer_survey
+Tidyverse,Tidyverse,Other Framework/Library,2022,73268,996,828,0,0.013593929136867392,0.011300977234263253,0.0,official_stackoverflow_developer_survey
+Tidyverse,Tidyverse,Other Framework/Library,2023,89184,1045,814,0,0.01171734840330104,0.009127197703623968,0.0,official_stackoverflow_developer_survey
+Tidyverse,Tidyverse,Other Framework/Library,2024,65437,768,647,522,0.011736479361828934,0.009887372587374115,0.007977138316243105,official_stackoverflow_developer_survey
+Torch/PyTorch,Torch/PyTorch,Other Framework/Library,2021,83439,4808,7977,0,0.05762293411953643,0.09560277568043721,0.0,official_stackoverflow_developer_survey
+Torch/PyTorch,Torch/PyTorch,Other Framework/Library,2022,73268,3952,6073,0,0.0539389638041164,0.08288748157449365,0.0,official_stackoverflow_developer_survey
+Torch/PyTorch,Torch/PyTorch,Other Framework/Library,2023,89184,5884,8276,0,0.06597595981341944,0.09279691424470757,0.0,official_stackoverflow_developer_survey
+Torch/PyTorch,Torch/PyTorch,Other Framework/Library,2024,65437,4846,6353,3376,0.07405596222320705,0.09708574659596253,0.05159160719470636,official_stackoverflow_developer_survey
+TypeScript,TypeScript,Language,2021,83439,24909,26905,0,0.29852946463883795,0.3224511319646688,0.0,official_stackoverflow_developer_survey
+TypeScript,TypeScript,Language,2022,73268,24752,26050,0,0.33782824698367636,0.35554403013593927,0.0,official_stackoverflow_developer_survey
+TypeScript,TypeScript,Language,2023,89184,34041,32256,0,0.38169402583423034,0.36167922497308935,0.0,official_stackoverflow_developer_survey
+TypeScript,TypeScript,Language,2024,65437,23150,20239,16079,0.35377538701346334,0.30928985130736436,0.24571725476412426,official_stackoverflow_developer_survey
+Unity 3D,Unity 3D,Tool,2021,83439,7206,8285,0,0.08636249235968792,0.09929409508742915,0.0,official_stackoverflow_developer_survey
+Unity 3D,Unity 3D,Tool,2022,73268,5840,6293,0,0.07970737566195338,0.08589015668504668,0.0,official_stackoverflow_developer_survey
+Unity 3D,Unity 3D,Tool,2023,89184,5561,5653,0,0.06235423394330822,0.06338580911374238,0.0,official_stackoverflow_developer_survey
+Unity 3D,Unity 3D,Tool,2024,65437,3179,2716,1462,0.048581077983403886,0.041505570243134615,0.02234210003514831,official_stackoverflow_developer_survey
+Uno Platform,Uno Platform,Other Framework/Library,2022,73268,334,578,0,0.004558606758748703,0.007888846426816618,0.0,official_stackoverflow_developer_survey
+Uno Platform,Uno Platform,Other Framework/Library,2023,89184,357,549,0,0.004002960172228202,0.006155812701829925,0.0,official_stackoverflow_developer_survey
+Unreal Engine,Unreal Engine,Tool,2021,83439,2339,5563,0,0.028032454847253682,0.06667146058797445,0.0,official_stackoverflow_developer_survey
+Unreal Engine,Unreal Engine,Tool,2022,73268,2180,5061,0,0.02975378064093465,0.06907517606594966,0.0,official_stackoverflow_developer_survey
+Unreal Engine,Unreal Engine,Tool,2023,89184,2482,5043,0,0.02783010405453893,0.05654601722282024,0.0,official_stackoverflow_developer_survey
+Unreal Engine,Unreal Engine,Tool,2024,65437,1639,2899,884,0.025046991763069824,0.04430215321607042,0.013509176765438514,official_stackoverflow_developer_survey
+VBA,VBA,Language,2021,83439,3847,1069,0,0.04610553817759081,0.012811754695046682,0.0,official_stackoverflow_developer_survey
+VBA,VBA,Language,2022,73268,3185,923,0,0.04347054648687012,0.012597586941092974,0.0,official_stackoverflow_developer_survey
+VBA,VBA,Language,2023,89184,3107,950,0,0.034838087549336205,0.010652134912091856,0.0,official_stackoverflow_developer_survey
+VBA,VBA,Language,2024,65437,2248,723,559,0.03435365313202011,0.01104879502422177,0.008542567660497883,official_stackoverflow_developer_survey
+VMware,VMware,Platform,2022,73268,4429,2495,0,0.06044930938472457,0.03405306545831741,0.0,official_stackoverflow_developer_survey
+VMware,VMware,Platform,2023,89184,4964,2635,0,0.05566020810907786,0.029545658414065302,0.0,official_stackoverflow_developer_survey
+VMware,VMware,Platform,2024,65437,3043,1606,1191,0.04650274309641334,0.024542689915491234,0.018200712135336278,official_stackoverflow_developer_survey
+Vercel,Vercel,Platform,2023,89184,7431,8197,0,0.08332212055974166,0.09191110513096519,0.0,official_stackoverflow_developer_survey
+Vercel,Vercel,Platform,2024,65437,5491,4614,3264,0.08391277106224307,0.0705105674159879,0.049880037287772974,official_stackoverflow_developer_survey
+Visual Basic (.Net),Visual Basic (.Net),Language,2023,89184,3568,1350,0,0.04000717617509867,0.01513724434876211,0.0,official_stackoverflow_developer_survey
+Visual Basic (.Net),Visual Basic (.Net),Language,2024,65437,2499,962,618,0.038189403548451184,0.014701162950624265,0.009444198236471722,official_stackoverflow_developer_survey
+Visual Studio Solution,Visual Studio Solution,Tool,2023,89184,11751,8360,0,0.1317613024757804,0.09373878722640833,0.0,official_stackoverflow_developer_survey
+Visual Studio Solution,Visual Studio Solution,Tool,2024,65437,8315,6064,5759,0.12706878371563488,0.09266928496110763,0.08800831333954796,official_stackoverflow_developer_survey
+Vite,Vite,Tool,2023,89184,11807,12789,0,0.13238921779691423,0.14340016146393972,0.0,official_stackoverflow_developer_survey
+Vite,Vite,Tool,2024,65437,10804,9980,8281,0.16510536852239557,0.15251310420709996,0.12654919999388725,official_stackoverflow_developer_survey
+Vue.js,Vue.js,Web Framework,2021,83439,11954,15784,0,0.14326633828305707,0.18916813480506717,0.0,official_stackoverflow_developer_survey
+Vue.js,Vue.js,Web Framework,2022,73268,10278,12666,0,0.14027952175574604,0.17287219522847627,0.0,official_stackoverflow_developer_survey
+Vue.js,Vue.js,Web Framework,2023,89184,11758,12001,0,0.13183979189092213,0.1345644958736993,0.0,official_stackoverflow_developer_survey
+Vue.js,Vue.js,Web Framework,2024,65437,7483,7604,4505,0.11435426440698687,0.1162033711814417,0.06884484313156165,official_stackoverflow_developer_survey
+Vultr,Vultr,Platform,2023,89184,1357,1076,0,0.01521573376390384,0.012064944384642985,0.0,official_stackoverflow_developer_survey
+Vultr,Vultr,Platform,2024,65437,798,644,408,0.012194935586900378,0.00984152696486697,0.006235004660971622,official_stackoverflow_developer_survey
+Wasmer,Wasmer,Tool,2023,89184,431,1237,0,0.004832705418012199,0.013870200932902763,0.0,official_stackoverflow_developer_survey
+Webpack,Webpack,Tool,2023,89184,16665,7436,0,0.18686087190527448,0.08337818442770004,0.0,official_stackoverflow_developer_survey
+Webpack,Webpack,Tool,2024,65437,9970,4527,3892,0.15236028546540947,0.06918104436328071,0.05947705426593517,official_stackoverflow_developer_survey
+WordPress,WordPress,Web Framework,2023,89184,9604,3955,0,0.10768747757445282,0.044346519555077145,0.0,official_stackoverflow_developer_survey
+WordPress,WordPress,Web Framework,2024,65437,5711,2516,1972,0.08727478337943366,0.038449195409325,0.03013585586136284,official_stackoverflow_developer_survey
+Xamarin,Xamarin,Tool,2021,83439,2844,2977,0,0.03408478049832812,0.03567875933316555,0.0,official_stackoverflow_developer_survey
+Xamarin,Xamarin,Other Framework/Library,2022,73268,2388,2259,0,0.03259267347273025,0.03083201397608779,0.0,official_stackoverflow_developer_survey
+Xamarin,Xamarin,Other Framework/Library,2023,89184,2233,1305,0,0.0250381234302117,0.014632669537136706,0.0,official_stackoverflow_developer_survey
+Xamarin,Xamarin,Other Framework/Library,2024,65437,1333,705,268,0.020370738267341107,0.010773721289178905,0.004095542277304889,official_stackoverflow_developer_survey
+Yarn,Yarn,Tool,2021,83439,12937,9936,0,0.1550473998969307,0.11908100528529825,0.0,official_stackoverflow_developer_survey
+Yarn,Yarn,Tool,2022,73268,15175,11154,0,0.2071163400120107,0.15223562810503904,0.0,official_stackoverflow_developer_survey
+Yarn,Yarn,Tool,2023,89184,17545,10934,0,0.19672811266594906,0.12260046645138141,0.0,official_stackoverflow_developer_survey
+Yarn,Yarn,Tool,2024,65437,10209,5955,5209,0.15601265339181197,0.09100356067668139,0.07960328254657151,official_stackoverflow_developer_survey
+Yii 2,Yii 2,Web Framework,2024,65437,454,244,155,0.006937970872747834,0.0037287772972477346,0.0023686904962024542,official_stackoverflow_developer_survey
+Zephyr,Zephyr,Language,2024,65437,184,248,100,0.002811864847104849,0.003789904793923927,0.0015281874169048091,official_stackoverflow_developer_survey
+Zig,Zig,Language,2023,89184,729,3647,0,0.00817411194833154,0.04089298528884105,0.0,official_stackoverflow_developer_survey
+Zig,Zig,Language,2024,65437,667,3688,492,0.010193010070755078,0.056359551935449365,0.007518682091171661,official_stackoverflow_developer_survey
+bandit,bandit,Tool,2023,89184,362,290,0,0.00405902404018658,0.0032517043415859347,0.0,official_stackoverflow_developer_survey
+build2,build2,Tool,2023,89184,159,156,0,0.0017828310010764262,0.0017491926803013993,0.0,official_stackoverflow_developer_survey
+cppunit,cppunit,Tool,2023,89184,346,283,0,0.0038796196627197705,0.0031732149264442054,0.0,official_stackoverflow_developer_survey
+doctest,doctest,Tool,2023,89184,393,385,0,0.0044066200215285255,0.00431691783279512,0.0,official_stackoverflow_developer_survey
+jQuery,jQuery,Web Framework,2021,83439,21693,8487,0,0.25998633732427284,0.10171502534785891,0.0,official_stackoverflow_developer_survey
+jQuery,jQuery,Web Framework,2022,73268,15602,5937,0,0.21294425943112955,0.08103128241524267,0.0,official_stackoverflow_developer_survey
+jQuery,jQuery,Web Framework,2023,89184,15784,5838,0,0.17698241837100825,0.06546017222820237,0.0,official_stackoverflow_developer_survey
+jQuery,jQuery,Web Framework,2024,65437,10381,4233,3702,0.15864113574888825,0.06468817335758058,0.05657349817381604,official_stackoverflow_developer_survey
+lest,lest,Tool,2023,89184,55,57,0,0.0006167025475421601,0.0006391280947255113,0.0,official_stackoverflow_developer_survey
+liblittletest,liblittletest,Tool,2023,89184,37,42,0,0.00041487262289199855,0.00047093649085037676,0.0,official_stackoverflow_developer_survey
+mlflow,mlflow,Other Framework/Library,2024,65437,531,694,341,0.008114675183764537,0.010605620673319376,0.0052111190916454,official_stackoverflow_developer_survey
+npm,npm,Tool,2022,73268,35778,23147,0,0.48831686411530273,0.315922367199869,0.0,official_stackoverflow_developer_survey
+npm,npm,Tool,2023,89184,39609,24495,0,0.4441267491926803,0.2746568891280947,0.0,official_stackoverflow_developer_survey
+npm,npm,Tool,2024,65437,26866,16714,16068,0.41056283142564604,0.25542124486146983,0.24554915414826475,official_stackoverflow_developer_survey
+pnpm,pnpm,Tool,2023,89184,5036,5705,0,0.056467527807678504,0.0639688733405095,0.0,official_stackoverflow_developer_survey
+pnpm,pnpm,Tool,2024,65437,4836,4444,3293,0.07390314348151657,0.06791264880724972,0.05032321163867537,official_stackoverflow_developer_survey
+snitch,snitch,Tool,2023,89184,55,65,0,0.0006167025475421601,0.0007288302834589164,0.0,official_stackoverflow_developer_survey
+tunit,tunit,Tool,2023,89184,69,65,0,0.0007736813778256189,0.0007288302834589164,0.0,official_stackoverflow_developer_survey

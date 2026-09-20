@@ -29,7 +29,7 @@ def main() -> None:
             "SHAP analysis skipped. Run training and evaluation first so "
             f"best-model artifacts exist. Reason: {exc}"
         )
-        return
+        raise SystemExit(1) from exc
     print(importance.to_string(index=False))
 
 

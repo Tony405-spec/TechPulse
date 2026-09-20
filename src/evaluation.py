@@ -83,6 +83,43 @@ def _predict_proba(model: object, X: pd.DataFrame) -> np.ndarray:
     return proba
 
 
+def _metric_row(
+    name: str,
+    y_test: np.ndarray,
+    predictions: np.ndarray,
+    probabilities: np.ndarray | None,
+    status: str = "Candidate",
+) -> tuple[dict[str, object], list[str]]:
+    """Build one metrics row and warnings for invalid metrics."""
+    warnings: list[str] = []
+    present_classes = set(np.unique(y_test).tolist())
+    roc_auc = np.nan
+    if probabilities is not None and present_classes == {0, 1, 2}:
+        try:
+            roc_auc = roc_auc_score(
+                label_binarize(y_test, classes=[0, 1, 2]),
+                probabilities,
+                average="macro",
+                multi_class="ovr",
+            )
+        except ValueError as exc:
+            warnings.append(f"{name}: ROC-AUC unavailable ({exc}).")
+    else:
+        warnings.append(f"{name}: ROC-AUC not statistically meaningful because the test split lacks all classes.")
+    return (
+        {
+            "Model": name,
+            "Accuracy": accuracy_score(y_test, predictions),
+            "Weighted_F1": f1_score(y_test, predictions, average="weighted", zero_division=0),
+            "Precision": precision_score(y_test, predictions, average="weighted", zero_division=0),
+            "Recall": recall_score(y_test, predictions, average="weighted", zero_division=0),
+            "Macro_ROC_AUC": roc_auc,
+            "Status": status,
+        },
+        warnings,
+    )
+
+
 def _plot_confusion(name: str, y_test: np.ndarray, predictions: np.ndarray) -> None:
     """Write a confusion matrix PNG.
 
@@ -138,9 +175,12 @@ def compare_and_select_best_model(model_paths: dict[str, Path] | None = None) ->
     model_paths = model_paths or _latest_model_paths()
     rows: list[dict[str, object]] = []
     artifacts: dict[str, dict] = {}
+    warnings_out: list[str] = []
+    split_metadata: dict[str, object] = {}
     for name, path in model_paths.items():
         artifact = joblib.load(path)
         artifacts[name] = artifact
+        split_metadata = artifact.get("split_metadata", split_metadata)
         X_test = pd.DataFrame(
             artifact["imputer"].transform(artifact["X_test"]),
             columns=FEATURE_COLUMNS,
@@ -151,50 +191,62 @@ def compare_and_select_best_model(model_paths: dict[str, Path] | None = None) ->
         model = artifact["model"]
         predictions = model.predict(X_test)
         probabilities = _predict_proba(model, X_test)
-        try:
-            roc_auc = roc_auc_score(
-                label_binarize(y_test, classes=[0, 1, 2]),
-                probabilities,
-                average="macro",
-                multi_class="ovr",
-            )
-        except ValueError:
-            roc_auc = np.nan
         _plot_confusion(name, y_test, predictions)
-        if name in {"random_forest", "xgboost"}:
+        if name in {"random_forest", "xgboost"} and set(np.unique(y_test).tolist()) == {0, 1, 2}:
             _plot_roc(name, y_test, probabilities)
-        rows.append(
-            {
-                "Model": name,
-                "Accuracy": accuracy_score(y_test, predictions),
-                "Weighted_F1": f1_score(y_test, predictions, average="weighted"),
-                "Precision": precision_score(y_test, predictions, average="weighted", zero_division=0),
-                "Recall": recall_score(y_test, predictions, average="weighted", zero_division=0),
-                "Macro_ROC_AUC": roc_auc,
-                "Status": "Candidate",
-                "Path": str(path),
-            }
-        )
+        row, metric_warnings = _metric_row(name, y_test, predictions, probabilities)
+        row["Path"] = str(path)
+        rows.append(row)
+        warnings_out.extend(metric_warnings)
+
+    if artifacts:
+        reference = next(iter(artifacts.values()))
+        y_train = reference["y_train"]
+        y_test = reference["y_test"]
+        majority = int(pd.Series(y_train).mode().iloc[0])
+        majority_predictions = np.repeat(majority, len(y_test))
+        row, metric_warnings = _metric_row("baseline_majority_class", y_test, majority_predictions, None)
+        rows.append(row)
+        warnings_out.extend(metric_warnings)
+        if "growth_momentum_index" in reference["X_test"]:
+            momentum_values = pd.to_numeric(reference["X_test"]["growth_momentum_index"], errors="coerce").fillna(0.5)
+            momentum_predictions = np.where(momentum_values >= 0.65, 0, np.where(momentum_values <= 0.35, 2, 1))
+            row, metric_warnings = _metric_row("baseline_momentum_rule", y_test, momentum_predictions, None)
+            rows.append(row)
+            warnings_out.extend(metric_warnings)
 
     comparison = pd.DataFrame(rows)
     comparison["_xgb_priority"] = (comparison["Model"] == "xgboost").astype(int)
+    comparison["_baseline_penalty"] = comparison["Model"].astype(str).str.startswith("baseline_").astype(int)
     comparison = comparison.sort_values(
-        ["Weighted_F1", "Macro_ROC_AUC", "_xgb_priority"],
-        ascending=[False, False, False],
+        ["_baseline_penalty", "Weighted_F1", "Macro_ROC_AUC", "_xgb_priority"],
+        ascending=[True, False, False, False],
         na_position="last",
     )
-    best = comparison.iloc[0].copy()
+    selectable = comparison[~comparison["Model"].astype(str).str.startswith("baseline_")]
+    best = selectable.iloc[0].copy() if not selectable.empty else comparison.iloc[0].copy()
     comparison.loc[comparison["Model"] == best["Model"], "Status"] = "Selected"
-    public = comparison.drop(columns=["_xgb_priority", "Path"])
+    public = comparison.drop(columns=["_xgb_priority", "_baseline_penalty", "Path"], errors="ignore")
     public.to_csv(OUTPUTS_DIR / "model_comparison.csv", index=False)
     (OUTPUTS_DIR / "model_comparison.md").write_text(_to_markdown_table(public), encoding="utf-8")
-    reason = "Highest Weighted_F1; tie broken by Macro_ROC_AUC, then XGBoost default if needed."
+    reason = (
+        "Selected from trainable ML models using Weighted_F1; baselines are reported for context. "
+        "Metrics with missing classes are marked with NaN ROC-AUC and warnings."
+    )
     (OUTPUTS_DIR / "best_model_selection.json").write_text(
         json.dumps(
             {"selected_model": best["Model"], "file_path": best["Path"], "reason": reason},
             indent=2,
         ),
         encoding="utf-8",
+    )
+    evaluation_summary = {
+        "split_metadata": split_metadata,
+        "warnings": sorted(set(warnings_out)),
+        "is_multiclass_test_valid": split_metadata.get("test_class_counts", {}) and len(split_metadata.get("test_class_counts", {})) == len(LABELS),
+    }
+    (OUTPUTS_DIR / "evaluation_summary.json").write_text(
+        json.dumps(evaluation_summary, indent=2), encoding="utf-8"
     )
     joblib.dump(artifacts[str(best["Model"])], MODELS_DIR / "best_model.joblib")
     _write_dashboard_predictions(artifacts[str(best["Model"])], str(best["Model"]))

@@ -1,6 +1,6 @@
 # TechPulse
 
-> Predicting Developer Technology Decline Using Community Signals and Enterprise Adoption Patterns  
+> Assessing Developer Technology Trajectories Using Community Signals and Transparent Validation  
 > KCA University BSc. Data Science Final Year Project 2026
 
 ![Python](https://img.shields.io/badge/PYTHON-3.10+-00FF00?style=for-the-badge&logo=python&logoColor=white&labelColor=0D1117&color=00FF00)
@@ -11,11 +11,11 @@
 ![Streamlit](https://img.shields.io/badge/DASHBOARD-Streamlit-00FF00?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=0D1117&color=00FF00)
 ![License](https://img.shields.io/badge/LICENSE-MIT-00FF00?style=for-the-badge&logoColor=white&labelColor=0D1117&color=00FF00)
 
-TechPulse is a supervised machine-learning platform that classifies software technologies as `Growing`, `Stable`, or `Declining`.
+TechPulse is a supervised machine-learning and dashboard project that classifies software-technology trajectory observations as `Growing`, `Stable`, or `Declining`.
 
-It combines community activity, enterprise adoption, and developer sentiment signals, then presents predictions, decline risk, model confidence, SHAP explanations, rankings, and model-performance evidence through a polished Streamlit dashboard.
+It combines community activity with clearly marked development proxies for enterprise adoption and developer sentiment, then presents trajectory estimates, decline-risk style rankings, model confidence, SHAP explanations, baselines, and validation diagnostics through a Streamlit dashboard.
 
-The current implementation is runnable end to end for development using local repository CSVs. It also includes a PostgreSQL ingestion path for a full production/research warehouse when `DATABASE_URL` is configured.
+The current implementation is runnable end to end for development using local repository CSVs. It also includes a PostgreSQL ingestion path for a fuller research warehouse when `DATABASE_URL` is configured. Local development output is useful for engineering validation, not for claiming real-world decline prediction accuracy.
 
 ---
 
@@ -27,13 +27,12 @@ Implemented and verified:
 - Local CSV development fallback using `data/stackexchange.csv` and `data/fortune.csv`.
 - Data-source provenance written to `outputs/data_sources.json`.
 - EDA reporting and charts under `outputs/`.
-- Seven predictive features normalized to `[0, 1]`.
-- Deterministic trajectory labelling.
-- Four classifiers: Logistic Regression, K-Nearest Neighbours, Random Forest, and XGBoost.
-- 80/20 stratified train/test split.
-- Stratified cross-validation where the dataset supports it.
-- Weighted F1 as the primary model-selection metric.
-- Accuracy, weighted F1, precision, recall, ROC-AUC where calculable, and confusion matrices.
+- Technology-month feature matrix with observation months and future-window target fields.
+- Future-window trajectory labelling based on later community activity, with future target fields excluded from model features.
+- Chronological train/test validation when observation months are available.
+- Logistic Regression, K-Nearest Neighbours, Random Forest, and XGBoost where class support allows them.
+- Majority-class and momentum-rule baselines in `outputs/model_comparison.csv`.
+- Weighted F1, accuracy, precision, recall, ROC-AUC only when statistically meaningful, confusion matrices, and `outputs/evaluation_summary.json`.
 - Best-model persistence in `models/best_model.joblib`.
 - Dashboard prediction artifact in `outputs/technology_predictions.csv`.
 - SHAP global and local explanation artifacts.
@@ -45,7 +44,7 @@ Verified locally:
 
 ```text
 pytest tests/ -v
-13 passed
+19 passed
 ```
 
 ```text
@@ -62,45 +61,13 @@ Streamlit page execution was also checked with `streamlit.testing.v1.AppTest`: t
 
 ---
 
-## Live Streamlit Evidence
-
-The screenshots below were captured from the real TechPulse Streamlit application running locally with:
+## Streamlit Verification
 
 ```text
 python -m streamlit run dashboard/app.py --server.headless=true --server.port=8501
 ```
 
-They document the actual dashboard state generated from the repository's current model, prediction, ranking, and explanation artifacts.
-
-### Command Center Overview
-
-![TechPulse Command Center overview](assets/screenshots/01-command-center-overview.png)
-
-The live command center shows the TechPulse system status, research disclaimer, 53 analyzed technologies, trajectory distribution, average decline-risk KPI, technology search controls, and the selected `actionscript` prediction with its trajectory, risk, and confidence outputs.
-
-### Technology Search Interaction
-
-![TechPulse technology search for amazon](assets/screenshots/02-technology-search-amazon.png)
-
-The search field has been filled with `amazon`, and the application filters the technology explorer to a matching prediction. The selected `amazon` record is classified as `Declining` with a displayed decline risk of `97.5/100` and `High` confidence.
-
-### Global Risk Rankings
-
-![TechPulse global risk rankings](assets/screenshots/03-global-rankings.png)
-
-The rankings page displays interactive filters, the highest-risk technology bar chart, and the risk-index table generated from `outputs/technology_predictions.csv`.
-
-### Model Laboratory
-
-![TechPulse model laboratory](assets/screenshots/04-model-laboratory.png)
-
-The model laboratory shows the selected champion model (`XGBoost`), weighted F1, accuracy, four evaluated classifiers, the model-comparison table, and the best-model confusion matrix artifact.
-
-### About And Methodology
-
-![TechPulse about and methodology page](assets/screenshots/05-about-methodology.png)
-
-The methodology page documents the project overview, research design, data sources, feature engineering, modelling, explainability, limitations, licences, and academic context inside the running dashboard.
+The current dashboard uses a restrained institutional data-intelligence visual system. Previously captured green-terminal screenshots were removed from the README because they no longer represent the application after the redesign.
 
 To refresh these screenshots after a dashboard change, start Streamlit and run:
 
@@ -118,7 +85,8 @@ In this mode:
 
 - `data/stackexchange.csv` supplies Stack Exchange community activity.
 - `data/fortune.csv` supplies Fortune-style company profile data.
-- Missing sentiment, adoption-stack, metadata, and question-company mapping tables are deterministically derived for development only.
+- `data/developer_survey_usage.csv`, when present, supplies observed Stack Overflow Developer Survey technology usage, interest, and admiration shares.
+- Adoption-stack, metadata, and question-company mapping tables remain deterministic development proxies unless a PostgreSQL research warehouse supplies real tables.
 - The dashboard clearly marks this as development data.
 
 Development data is suitable for smoke testing, dashboard demonstrations, validating pipeline integration, and UI development. It is not suitable for final empirical research claims, real investment decisions, or claiming real-world prediction accuracy.
@@ -245,11 +213,11 @@ flowchart TB
         F6["Adoption Velocity"]:::feature
         F7["Community Decay Rate"]:::feature
         NORM["Feature Validation<br/>min-max normalization to 0..1<br/>feature_schema.json"]:::feature
-        MATRIX["data/feature_matrix.csv<br/>one technology per row"]:::artifact
+        MATRIX["data/feature_matrix.csv<br/>technology-month panel"]:::artifact
     end
 
     subgraph TARGETS["TARGET ENGINEERING"]
-        LAB["src/labelling.py<br/>deterministic reproducible rules"]:::target
+        LAB["src/labelling.py<br/>future-window trajectory labels"]:::target
         GROW["Growing"]:::target
         STABLE["Stable"]:::target
         DECLINE["Declining"]:::target
@@ -258,8 +226,8 @@ flowchart TB
 
     subgraph ML["MACHINE LEARNING EXPERIMENTATION"]
         TRAIN["src/model_training.py<br/>RANDOM_STATE = 42"]:::ml
-        SPLIT["80/20 Stratified Train-Test Split"]:::ml
-        CV["Stratified Cross-Validation<br/>5-fold when class counts support it"]:::ml
+        SPLIT["Chronological Train-Test Split"]:::ml
+        CV["Stratified CV<br/>only when class counts support it"]:::ml
         TUNE["Hyperparameter Tuning<br/>reasonable grids/random search"]:::ml
         LR["Logistic Regression<br/>interpretable baseline"]:::ml
         KNN["K-Nearest Neighbours<br/>non-parametric baseline"]:::ml
@@ -421,8 +389,8 @@ Diagram source files:
 | Signal Family | Source | What It Captures |
 |---|---|---|
 | Community Activity | Stack Overflow / Stack Exchange activity | Question volume, unanswered pressure, engagement, community decay |
-| Enterprise Adoption | Fortune 500 stack/company data | Adoption depth, company diversity, sector spread, adoption velocity |
-| Developer Sentiment | Survey-style sentiment signal | Satisfaction trend and sentiment delta |
+| Enterprise / Company Context | Local Fortune company profiles plus optional warehouse tables | Sector context in local mode; real adoption only when supplied by a research warehouse |
+| Developer Survey Usage | Official Stack Overflow Developer Survey archive | Yearly technology usage, interest, and admiration shares |
 
 ---
 
@@ -432,12 +400,12 @@ The pipeline produces these seven predictive features:
 
 | Feature | Meaning |
 |---|---|
-| `technology_health_score` | Composite health score across community, sentiment, and adoption signals |
+| `technology_health_score` | Composite health score across available community, survey, and adoption/proxy signals |
 | `growth_momentum_index` | Recent question volume relative to trailing historical activity |
 | `question_quality_score` | Answer availability adjusted for closure/unresolved pressure |
-| `company_diversity_score` | Breadth of enterprise sector adoption |
-| `sentiment_delta` | Change in developer satisfaction across available observations |
-| `adoption_velocity` | Pace of new enterprise adoption over recent quarters |
+| `company_diversity_score` | Breadth of observed sectors where real/proxy company context exists |
+| `sentiment_delta` | As-of change in public developer-survey usage share when available |
+| `adoption_velocity` | Adoption velocity where real adoption dates exist; proxy-only in local development mode |
 | `community_decay_rate` | Recent decline pressure in community activity |
 
 All seven final predictive features are normalized to `[0, 1]`.
@@ -445,6 +413,20 @@ All seven final predictive features are normalized to `[0, 1]`.
 ---
 
 ## Machine Learning Pipeline
+
+## Methodological Validity
+
+TechPulse now uses a temporal target design when dated Stack Exchange activity is available.
+
+- Target definition: labels compare future average monthly question volume against the recent observed average for the same technology.
+- Feature observation window: model features are computed from activity up to the observation month, not from later activity.
+- Prediction horizon: local development mode uses future-window community activity fields such as `future_avg_monthly_volume` only to construct labels.
+- Leakage control: future-window fields are listed in `TARGET_LEAKAGE_COLUMNS` and are excluded from `FEATURE_COLUMNS`.
+- Validation split: model training uses a chronological holdout when `observation_month` exists; random splitting is a fallback for small synthetic fixtures.
+- Metric honesty: ROC-AUC is left unavailable when the held-out split lacks all classes, and warnings are written to `outputs/evaluation_summary.json`.
+- Local-data limitation: local fallback data is not research-grade evidence of real technology decline because enterprise adoption, metadata, and mapping tables remain deterministic proxies. Survey usage is observed public data but is not the same as enterprise adoption or direct sentiment.
+
+---
 
 The model-training stage trains and compares:
 
@@ -454,23 +436,27 @@ The model-training stage trains and compares:
 | K-Nearest Neighbours | Non-parametric baseline |
 | Random Forest | Ensemble model with feature importances |
 | XGBoost | Gradient boosting model for tabular classification |
+| Majority-class baseline | Minimum sanity-check baseline |
+| Momentum-rule baseline | Transparent non-ML comparison |
 
 Evaluation protocol:
 
 - `RANDOM_STATE = 42`
-- 80/20 stratified train/test split
+- chronological train/test split when observation months are available
 - stratified cross-validation where class counts allow it
+- baseline comparison against majority-class and momentum-rule predictors
 - weighted F1 as the primary model-selection metric
+- ROC-AUC only when the held-out split contains all classes
 - best model persisted for dashboard use
 - SHAP applied to the selected model
 
-For tiny development datasets, cross-validation folds are reduced only when a class has too few examples to support 5-fold CV. This prevents invalid training folds while preserving the documented 5-fold protocol for full datasets.
+For small or imbalanced development datasets, cross-validation folds are reduced or heavier models are skipped when class counts cannot support them. This avoids reporting invalid experiments as if they were research-grade evidence.
 
 ---
 
 ## Dashboard
 
-The Streamlit dashboard is implemented as a technology intelligence terminal with a dark, high-contrast analytical interface.
+The Streamlit dashboard is implemented as a restrained institutional technology-intelligence interface using charcoal surfaces, ivory text, and champagne accents.
 
 Dashboard entry point:
 
@@ -567,6 +553,14 @@ MODEL_PATH=models/best_model.joblib
 ```
 
 `DATABASE_URL` may be left empty for local development mode.
+
+### Acquire Public Data
+
+```bash
+python scripts/acquire_public_data.py --years 2021 2022 2023 2024
+```
+
+This downloads permitted official Stack Overflow Developer Survey files into the ignored raw cache under `data/raw_external/`, then writes the derived `data/developer_survey_usage.csv` and `outputs/data_provenance.json`.
 
 ### Run Pipeline
 
@@ -678,9 +672,12 @@ The pipeline creates outputs such as:
 ```text
 outputs/data_quality_report.json
 outputs/data_sources.json
+outputs/data_provenance.json
 outputs/eda_report.json
 outputs/model_comparison.csv
 outputs/best_model_selection.json
+outputs/evaluation_summary.json
+outputs/target_leakage_columns.json
 outputs/technology_predictions.csv
 outputs/global_feature_importance.csv
 outputs/shap_per_prediction.json
@@ -696,9 +693,11 @@ Large/generated artifacts are ignored where appropriate and should be regenerate
 ## Known Limitations
 
 - The verified local run used development-mode CSV fallback, not a production PostgreSQL warehouse.
-- Development-mode sentiment/adoption/metadata/mapping tables are derived for testing and presentation flow.
+- Developer survey usage shares are observed public survey data, but local enterprise adoption, metadata, and mapping tables are still proxies.
+- The local temporal panel may not contain all three target classes; evaluation warnings should be read before interpreting metrics.
+- The current local Stack Exchange observations predate the 2021-2024 survey window, so survey usage is documented but unavailable as an as-of feature for the local 2016-2018 prediction rows.
 - Historical trend and sector-level enterprise visualizations require richer source artifacts than the local fallback currently provides.
-- ROC-AUC can be unavailable on very small splits when a class is absent from the test fold.
+- ROC-AUC is unavailable when a held-out split lacks all classes.
 - The dashboard is a research-support tool, not a guaranteed forecasting system.
 
 ---
@@ -708,8 +707,8 @@ Large/generated artifacts are ignored where appropriate and should be regenerate
 | Dataset | Source | Licence |
 |---|---|---|
 | Stack Overflow / Stack Exchange activity | Stack Exchange data sources | CC BY-SA where applicable |
-| Developer sentiment signal | Stack Overflow Developer Survey-style signal | CC BY-SA where applicable |
-| Fortune 500 company data | Public/aggregated sources | Open/public data |
+| Developer survey usage / interest / admiration | Official Stack Overflow Developer Survey archive | ODbL 1.0 / DbCL 1.0 |
+| Fortune 500 company profile data | Public/aggregated local CSV | Open/public data; not evidence of stack adoption |
 | Company profiles | Public/aggregated sources | Open/public data |
 | Technology metadata | Public registries / derived metadata | Open/public data |
 | Question-company mapping | Derived analytical mapping | Derived research artifact |
@@ -746,7 +745,7 @@ They must not be used as the sole basis for technology investment, hiring, platf
 ```bibtex
 @misc{kenga2026techpulse,
   author       = {Kitili Tony Kenga},
-  title        = {TechPulse: Predicting Developer Technology Decline Using Community Signals and Enterprise Adoption Patterns},
+  title        = {TechPulse: Assessing Developer Technology Trajectories Using Community Signals and Transparent Validation},
   year         = {2026},
   institution  = {KCA University},
   note         = {BSc. Data Science Final Year Project, STU 4101},
