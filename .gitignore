@@ -29,6 +29,7 @@ outputs/*.json
 !outputs/data_provenance.json
 outputs/*.html
 outputs/*.npy
+outputs/live_data/
 
 # OS
 .DS_Store
@@ -39,3 +40,4 @@ Thumbs.db
 
 # Streamlit
 .streamlit/secrets.toml
+.pdf_review/

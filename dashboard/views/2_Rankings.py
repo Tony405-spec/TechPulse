@@ -1,106 +1,62 @@
-"""Global risk rankings page."""
+"""Transparent ranking and filters over saved technology records."""
 
 from __future__ import annotations
-
-import sys
-from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+from dashboard.components.ui import disclaimer_panel, render_shell
+from dashboard.data import load_predictions, risk_from_probability
 
-from src.common import CATEGORY_COLUMN, DATA_DIR, DISCLAIMER, LABEL_COLUMN, OUTPUTS_DIR, TECH_COLUMN  # noqa: E402
-from dashboard.components.ui import disclaimer_panel, render_shell  # noqa: E402
-
-
-@st.cache_data
-def load_rankings() -> pd.DataFrame:
-    """Load and score ranked technologies.
-
-    Returns:
-        Rankings DataFrame.
-    """
-    prediction_path = OUTPUTS_DIR / "technology_predictions.csv"
-    path = prediction_path if prediction_path.exists() else DATA_DIR / "feature_matrix.csv"
-    if not path.exists():
-        return pd.DataFrame()
-    frame = pd.read_csv(path)
-    if "risk_score" in frame:
-        frame["Risk Score"] = frame["risk_score"].round().astype(int)
-    else:
-        frame["Risk Score"] = ((1 - frame["growth_momentum_index"].fillna(0.5)) * 100).astype(int)
-    if "confidence_level" in frame:
-        frame["Confidence Level"] = frame["confidence_level"]
-    else:
-        frame["Confidence Level"] = "Unavailable"
-    if "predicted_label" in frame:
-        frame[LABEL_COLUMN] = frame["predicted_label"]
-    return frame.sort_values("Risk Score", ascending=False).reset_index(drop=True)
-
-
-render_shell(
-    "Global Technology Risk Index",
-    "Technologies ranked by estimated decline risk.",
-    "GLOBAL RANKINGS",
-)
+render_shell("Technology Rankings", "Filter saved technology records and compare the indicators available in this snapshot.", "COMPARE")
 disclaimer_panel()
-data = load_rankings()
-if data.empty:
-    st.warning("No rankings available. Run the pipeline first.")
+frame, probabilities = load_predictions()
+if frame.empty:
+    st.info("No saved technology rows are available yet. Run the pipeline to create them.")
+    st.stop()
+if probabilities:
+    frame["Risk indicator"] = frame["prob_Growing"].map(risk_from_probability)
 else:
-    if "risk_score" not in data.columns:
-        st.warning("Probability-based risk scores are unavailable. Current ranking uses feature proxies.")
-    filter_cols = st.columns([1.2, 1.2, 1.6, 1.6])
-    category_options = ["All Categories"] + sorted(data[CATEGORY_COLUMN].dropna().astype(str).unique().tolist())
-    with filter_cols[0]:
-        category = st.selectbox("Category", category_options)
-    with filter_cols[1]:
-        label = st.selectbox("Trajectory Label", ["All", "Growing", "Stable", "Declining"])
-    with filter_cols[2]:
-        risk_range = st.slider("Risk Range", 0, 100, (0, 100))
-    with filter_cols[3]:
-        search = st.text_input("Search", placeholder="Filter technologies")
-    filtered = data.copy()
-    if category != "All Categories":
-        filtered = filtered[filtered[CATEGORY_COLUMN].astype(str) == category]
-    if label != "All":
-        filtered = filtered[filtered[LABEL_COLUMN] == label]
-    filtered = filtered[
-        (filtered["Risk Score"] >= risk_range[0]) & (filtered["Risk Score"] <= risk_range[1])
-    ]
-    if search:
-        filtered = filtered[
-            filtered[TECH_COLUMN].astype(str).str.contains(search, case=False, regex=False, na=False)
-        ]
-    chart_data = filtered.nlargest(12, "Risk Score").sort_values("Risk Score")
-    if not chart_data.empty:
-        fig = px.bar(
-            chart_data,
-            x="Risk Score",
-            y=TECH_COLUMN,
-            orientation="h",
-            color="Risk Score",
-            color_continuous_scale=["#7FB394", "#D8C08A", "#C76D63"],
-            title="Highest Risk Technologies",
-            hover_data=[CATEGORY_COLUMN, LABEL_COLUMN, "Confidence Level"],
-            range_x=[0, 100],
-        )
-        fig.update_layout(
-            template="plotly_dark",
-            paper_bgcolor="#171a20",
-            plot_bgcolor="#171a20",
-            font_color="#f4efe5",
-            height=420,
-            margin=dict(l=10, r=10, t=50, b=20),
-        )
+    st.warning("Class probabilities are not present. A probability-based risk ranking cannot be calculated; showing saved rows without inventing a score.")
+    frame["Risk indicator"] = pd.NA
+frame["Trajectory"] = frame.get("predicted_label", frame.get("trajectory_label", "Unavailable")).astype(str)
+
+controls = st.columns(4)
+with controls[0]:
+    cats = sorted(frame["category"].dropna().astype(str).unique()) if "category" in frame else []
+    cat = st.selectbox("Technology category", ["All categories", *cats])
+with controls[1]:
+    label = st.selectbox("Saved trajectory", ["All classes", "Growing", "Stable", "Declining"])
+with controls[2]:
+    search = st.text_input("Search technologies", placeholder="Type part of a name")
+with controls[3]:
+    order = st.selectbox("Sort records by", ["Highest risk first", "Lowest risk first", "Name A to Z"])
+
+view = frame.copy()
+if cat != "All categories" and "category" in view:
+    view = view[view["category"].astype(str) == cat]
+if label != "All classes":
+    view = view[view["Trajectory"] == label]
+if search:
+    view = view[view["technology_name"].str.contains(search, case=False, regex=False, na=False)]
+if order == "Name A to Z":
+    view = view.sort_values("technology_name", key=lambda x: x.str.casefold())
+else:
+    view = view.sort_values("Risk indicator", ascending=order == "Lowest risk first", na_position="last")
+st.caption(f"Showing {len(view):,} of {len(frame):,} saved records. Filters only select rows; they do not generate predictions.")
+if view.empty:
+    st.info("No records match these filters. Change a filter or clear the search.")
+else:
+    if probabilities:
+        chart = view.dropna(subset=["Risk indicator"]).head(15)
+        fig = px.bar(chart.sort_values("Risk indicator"), x="Risk indicator", y="technology_name", color="Trajectory", orientation="h", title="Saved records with the highest derived risk indicator", color_discrete_map={"Growing":"#527D5A","Stable":"#8B6C37","Declining":"#8B443D"}, hover_data=["category"] if "category" in view else None)
+        fig.update_layout(xaxis_title="Derived indicator (0-100)", yaxis_title="Technology", paper_bgcolor="#F3EEE7", plot_bgcolor="#F3EEE7", font_color="#3A3734")
         st.plotly_chart(fig, use_container_width=True)
-    table = filtered[[TECH_COLUMN, CATEGORY_COLUMN, LABEL_COLUMN, "Risk Score", "Confidence Level"]].copy()
-    table.insert(0, "Rank", range(1, len(table) + 1))
-    table.columns = ["Rank", "Technology Name", "Category", "Trajectory Label", "Risk Score", "Confidence Level"]
-    st.subheader("Risk Index Table")
+        st.caption("The indicator is (1 - saved P(Growing)) × 100. It is not a validated probability of failure or decline.")
+    cols = [c for c in ["technology_name", "category", "Trajectory", "Risk indicator", "confidence", "confidence_level"] if c in view]
+    table = view[cols].rename(columns={"technology_name":"Technology", "category":"Category", "confidence":"Maximum class probability", "confidence_level":"Confidence band"})
     st.dataframe(table, use_container_width=True, hide_index=True)
-    st.download_button("Download CSV", table.to_csv(index=False), "techpulse_rankings.csv", "text/csv")
+    st.download_button("Download visible rows as CSV", table.to_csv(index=False).encode("utf-8"), file_name="techpulse_visible_rankings.csv", mime="text/csv")
+with st.expander("What a ranking can and cannot tell you"):
+    st.write("A ranking sorts the saved model-derived indicator, when probabilities exist. It is not a ranking of popularity, software quality, enterprise use or future success. The records are a single saved snapshot, and class support and data provenance affect interpretation.")

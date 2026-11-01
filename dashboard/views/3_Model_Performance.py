@@ -1,126 +1,78 @@
-"""Model performance dashboard page."""
+"""Display recorded model metrics with explicit auditability checks."""
 
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
-ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+from dashboard.components.ui import disclaimer_panel, render_shell
+from dashboard.data import DATA, OUTPUTS, artifact_consistency, load_predictions, read_csv_artifact, read_json_artifact
 
-from src.common import OUTPUTS_DIR  # noqa: E402
-from dashboard.components.ui import disclaimer_panel, metric_card, render_shell  # noqa: E402
-
-
-@st.cache_data
-def load_comparison() -> pd.DataFrame:
-    """Load model comparison metrics.
-
-    Returns:
-        Comparison DataFrame.
-    """
-    path = OUTPUTS_DIR / "model_comparison.csv"
-    if not path.exists():
-        return pd.DataFrame()
-    frame = pd.read_csv(path)
-    for column in ["Accuracy", "Weighted_F1", "Precision", "Recall", "Macro_ROC_AUC"]:
-        if column in frame:
-            frame[column] = frame[column].round(4)
-    return frame
-
-
-@st.cache_data
-def load_json(name: str) -> dict:
-    """Load one generated JSON artifact when it exists."""
-    path = OUTPUTS_DIR / name
-    if not path.exists():
-        return {}
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-render_shell(
-    "Model Laboratory",
-    "Temporal validation, baselines, and honest model diagnostics.",
-    "MODEL PERFORMANCE",
-)
+render_shell("Model Performance & Validation", "Compare the metric artifact with the evidence needed to interpret it.", "MODEL AUDIT")
 disclaimer_panel()
-comparison = load_comparison()
-if comparison.empty:
-    st.warning("No model comparison found. Run the pipeline first.")
+metrics = read_csv_artifact(str(OUTPUTS / "model_comparison.csv"))
+features = read_csv_artifact(str(DATA / "feature_matrix.csv"))
+eval_meta = read_json_artifact(str(OUTPUTS / "evaluation_summary.json"))
+selection = read_json_artifact(str(OUTPUTS / "best_model_selection.json"))
+if metrics.empty:
+    st.warning("No model comparison CSV is available. Run the pipeline to create model metrics.")
 else:
-    source_manifest = load_json("data_sources.json")
-    eval_summary = load_json("evaluation_summary.json")
-    if source_manifest.get("proxy_warning"):
-        st.warning(source_manifest["proxy_warning"])
-    if eval_summary.get("warnings"):
-        with st.expander("Evaluation Warnings", expanded=True):
-            for warning in eval_summary["warnings"]:
-                st.write(f"- {warning}")
-    selection_path = OUTPUTS_DIR / "best_model_selection.json"
-    if selection_path.exists():
-        selection = json.loads(selection_path.read_text(encoding="utf-8"))
-        selected_model = selection["selected_model"]
-        selected_row = comparison.loc[comparison["Model"] == selected_model].iloc[0]
-        c1, c2, c3, c4 = st.columns(4)
-        with c1:
-            metric_card("Champion Model", selected_model.replace("_", " ").title(), "Selected by Weighted F1")
-        with c2:
-            metric_card("Weighted F1", f"{selected_row.get('Weighted_F1', 0):.4f}", "Primary metric")
-        with c3:
-            metric_card("Accuracy", f"{selected_row.get('Accuracy', 0):.4f}", "Held-out split")
-        with c4:
-            metric_card("Rows Compared", f"{len(comparison):,}", "ML models plus baselines")
-        st.caption(selection["reason"])
-    split = eval_summary.get("split_metadata", {})
-    if split:
-        st.subheader("Validation Split")
-        s1, s2, s3, s4 = st.columns(4)
-        with s1:
-            metric_card("Split", str(split.get("split_strategy", "unknown")).replace("_", " ").title(), "Validation design")
-        with s2:
-            metric_card("Train Window", f"{split.get('train_start', 'N/A')} to {split.get('train_end', 'N/A')}", "Observation months")
-        with s3:
-            metric_card("Test Window", f"{split.get('test_start', 'N/A')} to {split.get('test_end', 'N/A')}", "Held-out months")
-        with s4:
-            status = "Valid" if eval_summary.get("is_multiclass_test_valid") else "Limited"
-            metric_card("Multiclass Metrics", status, "ROC-AUC requires all classes")
-    st.subheader("Model Comparison")
-    st.dataframe(
-        comparison.style.apply(
-            lambda row: ["background-color: #123923; color: #e6fff1" if row.get("Status") == "Selected" else "" for _ in row],
-            axis=1,
-        ),
-        use_container_width=True,
-        hide_index=True,
-    )
-    if selection_path.exists():
-        cm_path = OUTPUTS_DIR / f"cm_{selection['selected_model']}.png"
-        if cm_path.exists():
-            st.subheader("Best Model — Confusion Matrix")
-            st.image(str(cm_path), caption="Held-out test confusion matrix")
-    st.subheader("Pipeline Transparency")
-    p1, p2, p3, p4, p5 = st.columns(5)
-    with p1:
-        metric_card("Data Sources", "6", "Expected warehouse tables")
-    with p2:
-        metric_card("Features", "7", "Predictive signals")
-    with p3:
-        metric_card("Classes", "3", "Growing · Stable · Declining")
-    with p4:
-        metric_card("Baselines", "2", "Majority and momentum rules")
-    with p5:
-        metric_card("Train / Test", "Chronological", "Temporal holdout when available")
-    for title, body in {
-        "What is Weighted F1?": "A balance of precision and recall that accounts for class frequency. TechPulse uses it as the primary selection metric because technology classes may be imbalanced.",
-        "What is Precision?": "Precision asks: when the model predicts a class, how often is that prediction correct?",
-        "What is Recall?": "Recall asks: of all actual examples in a class, how many did the model find?",
-        "What is ROC-AUC?": "ROC-AUC measures how well probability scores rank classes. It is intentionally unavailable when the test split lacks all classes.",
-        "Why not select by accuracy only?": "Accuracy can look strong on imbalanced data while hiding weak minority-class performance. Weighted F1 is more informative for this project.",
-    }.items():
-        with st.expander(title):
-            st.write(body)
+    recorded = metrics.copy()
+    baseline_present = "Model" in recorded and recorded["Model"].astype(str).str.contains("baseline", case=False, na=False).any()
+    if not eval_meta:
+        st.error("**Read this before interpreting the scores:** this checkout has no run-level evaluation summary. The displayed metrics cannot be independently tied to a documented split or held-out class distribution.")
+    if not baseline_present:
+        st.warning("The saved comparison contains no majority-class baseline row. The current metrics therefore do not establish improvement over that simple reference.")
+    if artifact_consistency():
+        st.warning("There are inconsistencies among the saved labels and run artifacts. Review the warnings on Start Here and reconcile the artifacts before making performance claims.")
+    st.markdown("### Recorded model comparison")
+    st.caption("Values below are read directly from `outputs/model_comparison.csv`; they are not recalculated by this page.")
+    number_formats = {column: "{:.4f}" for column in ["Accuracy", "Weighted_F1", "Precision", "Recall", "Macro_ROC_AUC"] if column in recorded}
+    st.dataframe(recorded.style.format(number_formats), use_container_width=True, hide_index=True)
+    ml = recorded[~recorded["Model"].astype(str).str.startswith("baseline_")] if "Model" in recorded else recorded
+    if {"Model", "Weighted_F1"}.issubset(ml.columns):
+        plot=ml.copy()
+        plot["Weighted_F1"] = pd.to_numeric(plot["Weighted_F1"], errors="coerce")
+        fig=px.bar(plot,x="Weighted_F1",y="Model",orientation="h",title="Weighted F1 recorded for candidate models",range_x=[0,1])
+        fig.update_traces(marker_color="#8B7D6B")
+        fig.update_layout(xaxis_title="Weighted F1 (0-1)",yaxis_title="Candidate model",paper_bgcolor="#F3EEE7",plot_bgcolor="#F3EEE7",font_color="#3A3734")
+        st.plotly_chart(fig,use_container_width=True)
+    if not eval_meta:
+        st.caption("The score table is retained as a record of the saved CSV. Split dates, held-out class counts, and probability-score validity remain unverified in this checkout.")
+    if not {"Macro_F1", "Per_Class_Precision", "Per_Class_Recall"}.issubset(recorded.columns):
+        st.info("Macro F1 and per-class precision/recall are not supplied in the saved comparison CSV. They are not inferred from aggregate scores.")
+    if "Macro_ROC_AUC" in recorded and not eval_meta:
+        st.warning("ROC-AUC values in the CSV are left as recorded, but without split class-coverage metadata their validity cannot be confirmed. AUC should be marked unavailable when required classes are absent.")
+    if selection:
+        st.caption(f"Saved selection record: {selection.get('selected_model','not recorded')} — {selection.get('reason','No selection rationale is recorded.')}")
+
+st.markdown("### Label support in the current feature table")
+if not features.empty and "trajectory_label" in features:
+    support=features["trajectory_label"].value_counts(dropna=False).reindex(["Growing","Stable","Declining"],fill_value=0).rename_axis("Class").reset_index(name="Rows")
+    support["Share (%)"]=(100*support["Rows"]/max(1,len(features))).round(1)
+    st.dataframe(support,use_container_width=True,hide_index=True)
+    if (support["Rows"] == 0).any():
+        st.error("At least one target class has no examples in the current labeled feature table. A three-class evaluation is not supported by this table.")
+else:
+    st.info("A labeled feature table is not available for class-support checks.")
+
+st.markdown("### Audit checks")
+issues=artifact_consistency()
+if issues:
+    for issue in issues: st.warning(issue)
+else:
+    st.success("No obvious label-summary mismatch was found in the available artifacts. This does not replace a full evaluation audit.")
+
+for title, body in {
+    "Accuracy": "The share of all test rows classified correctly. If one class dominates, a model can score well by mostly predicting that class.",
+    "Precision and recall": "Precision asks how often predictions for a class are correct. Recall asks how many actual examples of that class are found.",
+    "Weighted F1": "A precision-recall balance averaged across classes with more influence from classes with more test rows. It can still hide weak performance on a rare class.",
+    "Macro F1 and per-class results": "Macro F1 gives each class equal weight. Per-class precision, recall, support, and a confusion matrix help reveal which groups are missed.",
+    "Why compare with a baseline?": "A majority-class baseline always predicts the most common training class. The candidate model should be compared with this simple reference to determine whether the added complexity improves the result.",
+    "Split and leakage": "The training code in this checkout uses a stratified random 80/20 split, not a chronological split. Because observations are repeated across technologies and time, temporal and grouped validation should be considered before making generalisation claims.",
+}.items():
+    with st.expander(title): st.write(body)

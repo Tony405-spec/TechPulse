@@ -345,3 +345,21 @@ def _write_source_manifest(source_mode: str, note: str, tables: dict[str, Any] |
         ),
     }
     (OUTPUTS_DIR / "data_sources.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+
+def append_external_observations(records: list[dict[str, Any]]) -> int:
+    """Validate and persist additive public-source observations through TechPulse ingestion.
+
+    These rows are deliberately kept outside the six historical research tables
+    and are not returned by ``load_and_validate_datasets`` for model training.
+    """
+    from src.live_data.storage import append_observations
+
+    return append_observations(records)
+
+
+def load_external_observations() -> pd.DataFrame:
+    """Read additive API observations using the configured warehouse/CSV mode."""
+    from src.live_data.storage import load_observations
+
+    return load_observations()

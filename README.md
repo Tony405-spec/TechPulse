@@ -84,3 +84,15 @@ Detailed references: [SQL schema](docs/schema_diagram.md) · [methodology](docs/
 ## Data use
 
 Respect the source data licences recorded in the provenance files. Do not commit secrets, private datasets, or data that identifies individuals. Generated models and run outputs should be recreated locally unless an artifact is intentionally reviewed for publication.
+
+## Live technology observations
+
+The **Live Technology Intelligence** page supplements the saved research catalogue with bounded observations from GitHub, Stack Exchange, PyPI and npm. Collection is user-triggered from the dashboard or can run independently through `python scripts/collect_live_data.py` and `python scripts/schedule_live_data.py`. The scheduler supports a one-shot run with `--once` and configurable catalogue selections.
+
+Associations between catalogue technologies and package names are explicit in `data/live_package_map.json`. Observations retain source identifiers and collection timestamps. PostgreSQL mode writes to the additive `techpulse_live_observations` table; local mode appends to `outputs/live_data/live_observations.csv`. Existing pipeline inputs, labels and saved predictions are not changed by live collection. These supplemental counts are descriptive only: stars, questions and package downloads do not establish adoption, unique users or production use. See `docs/LIVE_DATA_IMPLEMENTATION_PLAN.md` for the collection design and limitations.
+
+Copy `.env.example` to `.env` for optional API credentials and settings. Public APIs can be used anonymously within their lower rate limits. Never commit `.env` or credentials.
+
+## Dashboard guides and evidence
+
+Beginner, technical and five-minute presentation guides are provided in `docs/` in Markdown and PDF formats. Browser screenshots for the nine dashboard pages are indexed in `outputs/live_data_screenshots/index_live_data.md`. The live-data test report is `outputs/live_data_test_report.md`.

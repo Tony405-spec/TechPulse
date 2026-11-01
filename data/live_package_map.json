@@ -1,0 +1,26 @@
+{
+  "amazon-web-services": {
+    "pypi": "awscli",
+    "npm": "@aws-sdk/client-s3"
+  },
+  "azure": {
+    "pypi": "azure-identity",
+    "npm": "@azure/identity"
+  },
+  "dropbox-api": {
+    "pypi": "dropbox",
+    "npm": "dropbox"
+  },
+  "mongodb": {
+    "pypi": "pymongo",
+    "npm": "mongodb"
+  },
+  "paypal": {
+    "pypi": "paypalrestsdk",
+    "npm": "@paypal/checkout-server-sdk"
+  },
+  "stripe-payments": {
+    "pypi": "stripe",
+    "npm": "stripe"
+  }
+}
