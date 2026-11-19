@@ -9,8 +9,12 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from dashboard.components.shap_viewer import load_prediction_shap, shap_bar, shap_summary_sentence
-from src.common import BASE_DIR, DISCLAIMER, FEATURE_COLUMNS, LABELS, OUTPUTS_DIR
+from dashboard.components.shap_viewer import (
+    load_prediction_shap,
+    shap_bar,
+    shap_summary_sentence,
+)
+from src.common import DISCLAIMER, FEATURE_COLUMNS, LABELS, OUTPUTS_DIR
 
 LABEL_COLOURS = {"Growing": "#7FB394", "Stable": "#D8C08A", "Declining": "#C76D63"}
 
@@ -77,8 +81,12 @@ def _model_probabilities(row: pd.Series) -> dict[str, float]:
         return {name: 1.0 if name == label else 0.0 for name in LABELS}
     selection = json.loads(selection_path.read_text(encoding="utf-8"))
     artifact = joblib.load(selection["file_path"])
-    feature_row = pd.DataFrame([row[FEATURE_COLUMNS].apply(pd.to_numeric, errors="coerce")])
-    transformed = pd.DataFrame(artifact["imputer"].transform(feature_row), columns=FEATURE_COLUMNS)
+    feature_row = pd.DataFrame(
+        [row[FEATURE_COLUMNS].apply(pd.to_numeric, errors="coerce")]
+    )
+    transformed = pd.DataFrame(
+        artifact["imputer"].transform(feature_row), columns=FEATURE_COLUMNS
+    )
     if selection["selected_model"] == "xgboost":
         transformed = transformed.astype("float32")
     probabilities = artifact["model"].predict_proba(transformed)[0]
@@ -101,31 +109,38 @@ def render_detail_panel(row: pd.Series) -> None:
     score = risk_score(probabilities)
     confidence = confidence_level(probabilities)
     st.subheader(technology)
-    tabs = st.tabs(["Overview", "Trends", "SHAP Analysis", "Enterprise Adoption"])
+    tabs = st.tabs(["Overview", "Trends", "SHAP Analysis", "Evidence & Coverage"])
     with tabs[0]:
         st.markdown(trajectory_badge(label), unsafe_allow_html=True)
         gauge = go.Figure(
             go.Indicator(
                 mode="gauge+number",
                 value=score,
-                gauge={"axis": {"range": [0, 100]}, "bar": {"color": LABEL_COLOURS.get(label)}},
+                gauge={
+                    "axis": {"range": [0, 100]},
+                    "bar": {"color": LABEL_COLOURS.get(label)},
+                },
                 title={"text": "Risk Score"},
             )
         )
-        st.plotly_chart(gauge, use_container_width=True)
+        st.plotly_chart(gauge, width="stretch")
         st.metric("Confidence", confidence)
         st.dataframe(
             pd.DataFrame(
                 {
                     "Class": list(probabilities.keys()),
-                    "Probability": [round(float(value), 4) for value in probabilities.values()],
+                    "Probability": [
+                        round(float(value), 4) for value in probabilities.values()
+                    ],
                 }
             ),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
-        st.dataframe(row[FEATURE_COLUMNS].to_frame("Value"), use_container_width=True)
-        st.caption("Data recency follows the latest date available in the source tables.")
+        st.dataframe(row[FEATURE_COLUMNS].to_frame("Value"), width="stretch")
+        st.caption(
+            "Data recency follows the latest date available in the source tables."
+        )
     with tabs[1]:
         st.info(
             "HISTORICAL DATA UNAVAILABLE. This visualization requires raw historical "
@@ -133,13 +148,12 @@ def render_detail_panel(row: pd.Series) -> None:
             "interpreted as zero activity."
         )
     with tabs[2]:
-        values = load_prediction_shap(OUTPUTS_DIR / "shap_per_prediction.json", technology)
-        st.plotly_chart(shap_bar(values), use_container_width=True)
+        values = load_prediction_shap(
+            OUTPUTS_DIR / "shap_per_prediction.json", technology
+        )
+        st.plotly_chart(shap_bar(values), width="stretch")
         st.write(shap_summary_sentence(values, label, technology))
     with tabs[3]:
-        st.metric("Adoption Velocity", f"{float(row.get('adoption_velocity', 0) or 0):.3f}")
-        st.metric("Company Diversity Score", f"{float(row.get('company_diversity_score', 0) or 0):.3f}")
         st.info(
-            "Sector-level company details are unavailable in the current dashboard artifact. "
-            "Run against the full PostgreSQL warehouse to enable richer enterprise heatmaps."
+            "No verified company technology evidence or Kenya-specific market observations are attached to this record. Local generated company mappings are demonstration proxies and are excluded from the predictor set."
         )

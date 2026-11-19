@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -33,7 +34,7 @@ def _configure_logger() -> logging.Logger:
     return logger
 
 
-def _label_row(row: pd.Series, logger: logging.Logger) -> str:
+def _label_row(row: pd.Series, logger: logging.Logger) -> str | None:
     """Assign one trajectory label from future activity.
 
     Args:
@@ -47,7 +48,7 @@ def _label_row(row: pd.Series, logger: logging.Logger) -> str:
         recent = pd.to_numeric(row.get("recent_avg_monthly_volume"), errors="coerce")
         future = pd.to_numeric(row.get("future_avg_monthly_volume"), errors="coerce")
         if pd.isna(recent) or pd.isna(future):
-            return "Stable"
+            return None
         ratio = future / max(float(recent), MIN_RECENT_AVG_VOLUME)
         if ratio >= GROWTH_RATIO_THRESHOLD:
             return "Growing"
@@ -56,15 +57,10 @@ def _label_row(row: pd.Series, logger: logging.Logger) -> str:
         return "Stable"
 
     logger.warning(
-        "Future-window target columns are absent; falling back to legacy labels for %s.",
+        "Future-window targets are unavailable; leaving %s unlabeled.",
         row.get("technology_name"),
     )
-    momentum = row.get("growth_momentum_index")
-    if momentum > 0.70:
-        return "Growing"
-    if momentum < 0.40:
-        return "Declining"
-    return "Stable"
+    return None
 
 
 def assign_trajectory_labels(
@@ -84,17 +80,30 @@ def assign_trajectory_labels(
         FileNotFoundError: If the feature matrix is missing.
     """
     logger = _configure_logger()
+    if feature_path is None and os.environ.get(
+        "TECHPULSE_ALLOW_EXPLORATORY_RATIO_LABELS", ""
+    ).strip().lower() not in {"1", "true", "yes"}:
+        raise RuntimeError(
+            "Default research labels are blocked: the current future-volume ratio rule "
+            "has not been reconciled with the SRS GMI/slope rule. For an explicitly "
+            "exploratory run only, set TECHPULSE_ALLOW_EXPLORATORY_RATIO_LABELS=true."
+        )
     feature_path = feature_path or DATA_DIR / "feature_matrix.csv"
     output_path = output_path or feature_path
     if not feature_path.exists():
         raise FileNotFoundError(f"Feature matrix not found: {feature_path}")
     frame = pd.read_csv(feature_path)
     frame[LABEL_COLUMN] = frame.apply(lambda row: _label_row(row, logger), axis=1)
-    counts = frame[LABEL_COLUMN].value_counts().reindex(
-        ["Growing", "Stable", "Declining"], fill_value=0
+    counts = (
+        frame[LABEL_COLUMN]
+        .value_counts(dropna=True)
+        .reindex(["Growing", "Stable", "Declining"], fill_value=0)
     )
     summary = {
-        label: {"count": int(count), "percentage": float(count / max(len(frame), 1) * 100)}
+        label: {
+            "count": int(count),
+            "percentage": float(count / max(len(frame), 1) * 100),
+        }
         for label, count in counts.items()
     }
     summary["_method"] = {
@@ -103,8 +112,9 @@ def assign_trajectory_labels(
         "decline_ratio_threshold": DECLINE_RATIO_THRESHOLD,
         "note": (
             "Labels compare future average monthly question volume with recent observed "
-            "average volume. Future target columns are excluded from model features."
+            "average volume. Incomplete targets are unlabeled. Future target columns are excluded from model features."
         ),
+        "unlabeled_rows": int(frame[LABEL_COLUMN].isna().sum()),
     }
     logger.info("Class distribution: %s", summary)
     (OUTPUTS_DIR / "labelling_summary.json").write_text(

@@ -15,6 +15,10 @@ if str(ROOT) not in sys.path:
 
 from src import data_ingestion, eda, evaluation, feature_engineering, labelling, model_training, shap_analysis  # noqa: E402
 from src.common import DATA_DIR, LOGS_DIR, ensure_directories  # noqa: E402
+from src.research_readiness import (  # noqa: E402
+    require_research_source_manifest,
+    require_validated_research_datasets,
+)
 
 
 def _md5(path: Path) -> str:
@@ -63,7 +67,9 @@ def run_pipeline() -> list[tuple[str, str]]:
     datasets = None
     steps = [
         ("FR-01 data_ingestion.load_and_validate_datasets", lambda: data_ingestion.load_and_validate_datasets()),
+        ("research source/proxy gate", lambda: require_research_source_manifest(DATA_DIR.parent / "outputs" / "data_sources.json")),
         ("FR-02 eda.generate_eda_report", lambda: eda.generate_eda_report(datasets)),
+        ("FR-01/FR-03 validated-data gate", lambda: require_validated_research_datasets(DATA_DIR.parent / "outputs" / "data_quality_report.json")),
         ("FR-03 feature_engineering.compute_feature_matrix", lambda: feature_engineering.compute_feature_matrix(datasets)),
         ("FR-04 labelling.assign_trajectory_labels", lambda: labelling.assign_trajectory_labels()),
         ("FR-05-FR-09 model_training.train_all_models", lambda: model_training.train_all_models()),

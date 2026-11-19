@@ -1,4 +1,4 @@
-"""TechPulse Streamlit dashboard entry point."""
+"""TechPulse application with explicit, isolated Research and Demo modes."""
 
 from __future__ import annotations
 
@@ -11,21 +11,73 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from dashboard.components.ui import apply_theme  # noqa: E402
+from dashboard.db.health import check_database  # noqa: E402
+from dashboard.page_renderer import PAGES as RESEARCH_PAGES, render_page as render_research_page  # noqa: E402
+from dashboard.demo_renderer import PAGES as DEMO_PAGES, render_page as render_demo_page  # noqa: E402
+from dashboard.demo_store import DATABASE_PATH as DEMO_DATABASE_PATH  # noqa: E402
 
-st.set_page_config(page_title="TechPulse", page_icon="TP", layout="wide")
-apply_theme()
+st.set_page_config(
+    page_title="TechPulse | Evidence Dashboard", page_icon="TP", layout="wide"
+)
+
+with st.sidebar:
+    st.markdown("## TechPulse")
+    mode = st.selectbox(
+        "Data mode",
+        ["Research data · PostgreSQL", "Synthetic demonstration · separate SQLite"],
+        key="techpulse_data_mode",
+        index=1,
+        help="The modes use separate databases. The app never falls back between them.",
+    )
+
+if mode == "Research data · PostgreSQL":
+    health = check_database()
+    with st.sidebar:
+        if health["connected"]:
+            st.success("Research PostgreSQL connected")
+            st.caption(f"Database: {health['database_name']}")
+            version = str(health["postgres_version"] or "").splitlines()[0]
+            st.caption(version)
+            st.caption(f"Canonical migration records: {health['migration_count']}")
+            st.caption(f"Last ingestion: {health['last_ingestion'] or 'Unavailable'}")
+            st.caption(f"Latest survey year: {health['latest_survey_year'] or 'Unavailable'}")
+            st.caption(f"Last source data collected: {health['last_collected_at'] or 'Unavailable'}")
+            st.caption(f"Last successful model run: {health['last_model_run'] or 'Unavailable'}")
+        else:
+            st.error("Research PostgreSQL unavailable")
+            st.caption(health["error"] or "Canonical schema validation failed.")
+            if health["missing_relations"]:
+                st.caption(f"Missing relations: {health['missing_relations']}")
+        st.caption("Research mode · canonical PostgreSQL only · no CSV/demo fallback")
+    active_pages = RESEARCH_PAGES
+    page_renderer = render_research_page
+else:
+    with st.sidebar:
+        st.warning("SYNTHETIC DEMONSTRATION DATA", icon="⚠️")
+        st.caption("Separate SQLite database; fictional records and synthetic-only metrics.")
+        st.caption(f"Demo store: {DEMO_DATABASE_PATH.relative_to(ROOT)}")
+    if not DEMO_DATABASE_PATH.exists():
+        st.error("Synthetic demonstration database is missing.")
+        st.code("python -m dashboard.demo_store --build")
+        st.stop()
+    active_pages = DEMO_PAGES
+    page_renderer = render_demo_page
+
+
+def _make_page(title: str):
+    def page() -> None:
+        page_renderer(title)
+
+    page.__name__ = "page_" + title.lower().replace(" ", "_")
+    return page
+
 
 pages = [
-    st.Page("views/0_Start_Here.py", title="Start Here", icon=":material/home:"),
-    st.Page("views/1_Home.py", title="Technology Explorer", icon=":material/search:"),
-    st.Page("views/2_Rankings.py", title="Technology Rankings", icon=":material/leaderboard:"),
-    st.Page("views/5_Community_Health.py", title="Community Health", icon=":material/groups:"),
-    st.Page("views/6_Prediction_Explorer.py", title="Prediction Explorer", icon=":material/psychology:"),
-    st.Page("views/3_Model_Performance.py", title="Model Performance & Validation", icon=":material/analytics:"),
-    st.Page("views/7_Methodology_Data.py", title="Methodology & Data", icon=":material/schema:"),
-    st.Page("views/8_Live_Technology_Intelligence.py", title="Live Technology Intelligence", icon=":material/public:"),
-    st.Page("views/4_About.py", title="About & User Guide", icon=":material/help:"),
+    st.Page(
+        _make_page(title),
+        title=title,
+        default=(title == ("Executive Overview" if mode == "Research data · PostgreSQL" else "Command Center")),
+    )
+    for title in active_pages
 ]
-navigation = st.navigation(pages)
-navigation.run()
+st.navigation(pages).run()

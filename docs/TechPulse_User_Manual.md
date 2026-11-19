@@ -1,7 +1,11 @@
+# Historical manual - superseded on 2026-11-08
+
+This guide describes an earlier six-table interface and old evaluation artifacts. Preserve it as project history. Current sources, limits, and pages are documented in docs/DATA_LINEAGE_AUDIT.md, docs/RESPONSIBLE_USE.md, and README.md.
+
 # TechPulse User Manual
 
-**Assessing Developer Technology Trajectories with Community Signals and Transparent Validation**  
-KCA University · BSc Data Science · 2026  
+**Assessing Developer Technology Trajectories with Community Signals and Transparent Validation**
+KCA University · BSc Data Science · 2026
 Version date: 1 November 2026
 
 > This guide describes the current OneDrive project checkout. It separates observed source data, development proxies, derived metrics and saved model outputs. The screenshots were captured from the redesigned application running locally.
@@ -112,81 +116,81 @@ Start at **Start Here**. Review the artifact warnings before looking at scores. 
 
 ### 6.1 Start Here
 
-**Purpose:** Explain the research prototype and show the active data mode.  
-**Use it:** Review the record counts, source mode and visible artifact-consistency warnings. Read the class explanations and suggested page sequence.  
-**Interpretation:** The target labels in the feature matrix and predicted classes in the saved prediction file are separate fields. The page shows both separately when present.  
-**Common mistake:** Treating the class counts as validation performance. A class distribution is not a test score.  
+**Purpose:** Explain the research prototype and show the active data mode.
+**Use it:** Review the record counts, source mode and visible artifact-consistency warnings. Read the class explanations and suggested page sequence.
+**Interpretation:** The target labels in the feature matrix and predicted classes in the saved prediction file are separate fields. The page shows both separately when present.
+**Common mistake:** Treating the class counts as validation performance. A class distribution is not a test score.
 **Limit:** The current label summary does not match the feature matrix; the evaluation summary file is absent.
 
 ### 6.2 Technology Explorer
 
 ![Technology Explorer with search and observed activity trend](../outputs/live_data_screenshots/02-technology-explorer.png)
 
-**Purpose:** Find a saved technology row and compare it with available observed community history.  
-**Use it:** Type a name into **Search technology names**, press Enter, choose **Category** if desired, then select **Choose a technology**. The app displays the saved class and available signals. A historical chart appears only when an exact matching tag exists.  
-**Read the chart:** Horizontal axis is month; vertical axis is recorded questions in the local community file. A rising line means higher volume in this source over that period. It does not establish the cause of the change or total technology usage.  
+**Purpose:** Find a saved technology row and compare it with available observed community history.
+**Use it:** Type a name into **Search technology names**, press Enter, choose **Category** if desired, then select **Choose a technology**. The app displays the saved class and available signals. A historical chart appears only when an exact matching tag exists.
+**Read the chart:** Horizontal axis is month; vertical axis is recorded questions in the local community file. A rising line means higher volume in this source over that period. It does not establish the cause of the change or total technology usage.
 **Common mistake:** Assuming a missing chart means zero activity. Missing history is shown as unavailable.
 
 ### 6.3 Technology Rankings
 
 ![Technology Rankings with filters, chart and saved records](../outputs/live_data_screenshots/03-technology-rankings.png)
 
-**Purpose:** Filter and compare saved prediction rows.  
-**Use it:** Choose **Technology category**, **Saved trajectory**, enter **Search technologies**, and select **Sort records by**. Use **Download visible rows as CSV** to export the filtered table.  
-**Interpretation:** When all class probabilities exist, the chart sorts `(1 - P(Growing)) × 100`. This is a derived indicator.  
+**Purpose:** Filter and compare saved prediction rows.
+**Use it:** Choose **Technology category**, **Saved trajectory**, enter **Search technologies**, and select **Sort records by**. Use **Download visible rows as CSV** to export the filtered table.
+**Interpretation:** When all class probabilities exist, the chart sorts `(1 - P(Growing)) × 100`. This is a derived indicator.
 **Limit:** The ranking is not a popularity or quality ranking, and filters do not make a fresh model prediction.
 
 ### 6.4 Community Health
 
 ![Community Health showing observed activity and unanswered share](../outputs/live_data_screenshots/04-community-health.png)
 
-**Purpose:** Inspect observed community question volume and unanswered share.  
-**Use it:** Select a **technology tag**. Read total questions, source records and unanswered share; inspect the monthly chart.  
-**Read the chart:** Month is on the horizontal axis and source question count is on the vertical axis. Unanswered share is unanswered questions divided by question count when both fields are available.  
+**Purpose:** Inspect observed community question volume and unanswered share.
+**Use it:** Select a **technology tag**. Read total questions, source records and unanswered share; inspect the monthly chart.
+**Read the chart:** Month is on the horizontal axis and source question count is on the vertical axis. Unanswered share is unanswered questions divided by question count when both fields are available.
 **Limit:** This is one community platform, not all developers. Do not infer technology quality or causation. Survey aggregates, if present, appear separately and may not align with historical records.
 
 ### 6.5 Prediction Explorer
 
 ![Prediction Explorer showing a saved class, probabilities and risk indicator](../outputs/live_data_screenshots/05-prediction-explorer.png)
 
-**Purpose:** Explain one existing prediction row.  
-**Use it:** Search a technology and select it. Review **Saved classification**, the probability chart, **Maximum class score**, **Derived risk indicator**, and available input signals. A saved local SHAP explanation appears only when a matching artifact entry exists.  
-**Interpretation:** Confidence is the highest saved class score. SHAP attributes a model output across its input features; it is not causal evidence.  
+**Purpose:** Explain one existing prediction row.
+**Use it:** Search a technology and select it. Review **Saved classification**, the probability chart, **Maximum class score**, **Derived risk indicator**, and available input signals. A saved local SHAP explanation appears only when a matching artifact entry exists.
+**Interpretation:** Confidence is the highest saved class score. SHAP attributes a model output across its input features; it is not causal evidence.
 **Limit:** Selecting a name only retrieves saved output. The application has no new-input prediction form.
 
 ### 6.6 Model Performance & Validation
 
 ![Model comparison with prominent evaluation-data caveats](../outputs/live_data_screenshots/06-model-performance.png)
 
-**Purpose:** Display recorded metrics and expose whether they can be audited.  
-**Use it:** Read the warnings first, then compare candidate rows and expand explanations for Accuracy, Precision, Recall, Weighted F1, Macro F1, baselines, and split methodology.  
-**Current snapshot:** The CSV records Accuracy, Weighted F1, Precision, Recall and Macro ROC-AUC of 1.0000 for four candidate models. The current feature matrix has 53 rows, while `labelling_summary.json` describes 36 rows (12 per class), and the run-level evaluation summary is absent. The comparison CSV contains no baseline row. The recorded values are therefore not independently attributable to the current feature table and should not be reported as validated performance.  
+**Purpose:** Display recorded metrics and expose whether they can be audited.
+**Use it:** Read the warnings first, then compare candidate rows and expand explanations for Accuracy, Precision, Recall, Weighted F1, Macro F1, baselines, and split methodology.
+**Current snapshot:** The CSV records Accuracy, Weighted F1, Precision, Recall and Macro ROC-AUC of 1.0000 for four candidate models. The current feature matrix has 53 rows, while `labelling_summary.json` describes 36 rows (12 per class), and the run-level evaluation summary is absent. The comparison CSV contains no baseline row. The recorded values are therefore not independently attributable to the current feature table and should not be reported as validated performance.
 **Limit:** Macro F1 and per-class precision/recall are absent. The training source uses a stratified random 80/20 split, not a time-forward split.
 
 ### 6.7 Methodology & Data
 
 ![Methodology and data provenance page](../outputs/live_data_screenshots/07-methodology-data.png)
 
-**Purpose:** Trace the source-to-output workflow and inspect the SQL analyses.  
-**Use it:** Review the active manifest, six-table contract, label rule, feature names and validation limits. Expand a numbered SQL analysis to see its purpose and actual repository query.  
+**Purpose:** Trace the source-to-output workflow and inspect the SQL analyses.
+**Use it:** Review the active manifest, six-table contract, label rule, feature names and validation limits. Expand a numbered SQL analysis to see its purpose and actual repository query.
 **Limit:** Existing SQL files refer to a related descriptive schema; reconcile table names with the six-table ingestion contract before running in a warehouse.
 
 ### 6.8 Live Technology Intelligence
 
 ![Live Technology Intelligence status and indicators](../outputs/live_data_screenshots/08-live-technology-intelligence-final-4.png)
 
-**Purpose:** Inspect supplementary, timestamped snapshots from public technology APIs.  
-**Use it:** Select a technology from the existing saved catalogue. Review per-source status, last attempt, last successful collection and any error. **Collect selected technology now** launches a separate process; use **Reload data** to read its results. Choose a source and metric to chart the available history.  
-**Sources:** GitHub repository search metadata is a capped sample; Stack Exchange uses the chosen tag and a capped recent-question sample; PyPI and npm data are retrieved only for explicit mappings in `data/live_package_map.json`. npm provides a last-month package download count. The official PyPI JSON API's deprecated downloads field is ignored.  
-**Interpretation:** Observation timestamps refer to original event dates when provided by the source; otherwise they record the time the snapshot was collected. Collection timestamps record when TechPulse retrieved them. Missing dates are not imputed as zero.  
+**Purpose:** Inspect supplementary, timestamped snapshots from public technology APIs.
+**Use it:** Select a technology from the existing saved catalogue. Review per-source status, last attempt, last successful collection and any error. **Collect selected technology now** launches a separate process; use **Reload data** to read its results. Choose a source and metric to chart the available history.
+**Sources:** GitHub repository search metadata is a capped sample; Stack Exchange uses the chosen tag and a capped recent-question sample; PyPI and npm data are retrieved only for explicit mappings in `data/live_package_map.json`. npm provides a last-month package download count. The official PyPI JSON API's deprecated downloads field is ignored.
+**Interpretation:** Observation timestamps refer to original event dates when provided by the source; otherwise they record the time the snapshot was collected. Collection timestamps record when TechPulse retrieved them. Missing dates are not imputed as zero.
 **Limit:** Stars, question volume and package downloads are not enterprise adoption or actual production usage. Live observations are not joined to historical features, labels, training, predictions or evaluation.
 
 ### 6.9 About & User Guide
 
 ![About page with quick guide, glossary and FAQ](../outputs/live_data_screenshots/09-about-user-guide.png)
 
-**Purpose:** Provide persistent help and plain-language definitions.  
-**Use it:** Expand a glossary term or FAQ. Download a guide when the document buttons appear. Use the sidebar link to return to Start Here.  
+**Purpose:** Provide persistent help and plain-language definitions.
+**Use it:** Expand a glossary term or FAQ. Download a guide when the document buttons appear. Use the sidebar link to return to Start Here.
 **Limit:** A glossary definition does not make an unverified score valid; consult the validation page and source caveats.
 
 ## Chapter 7: Understanding technology classifications
@@ -256,12 +260,12 @@ Use the system to demonstrate software and inspect research questions. Do not us
 
 ## Chapter 14: Frequently asked questions
 
-**Does the app make a prediction for a new technology?** No. It reads saved rows.  
-**Does opening Live Technology Intelligence query external APIs?** No. Use its explicit background collection button or the independent daily scheduler.  
-**Are live API observations used by the model?** No. They are stored separately until a separate temporal and measurement validation establishes suitability.  
-**Does the official PyPI JSON endpoint provide package downloads?** Its deprecated downloads field is always unusable; the dashboard does not report it.  
-**Why does the same technology have a target label and predicted class?** The target is derived from observed future activity in the labeled dataset; the prediction is the model output. They must not be treated as interchangeable.  
-**Does a risk value of 97 mean a 97% chance of decline?** No. It is a complement of the Growing class score.  
-**Why is there a Development Data badge?** The local CSV mode includes development-derived tables and is not research-grade evidence.  
-**Why does the metrics page warn about perfect scores?** Run metadata is missing, the metrics do not align with current labels, and the current comparison has no baseline row.  
+**Does the app make a prediction for a new technology?** No. It reads saved rows.
+**Does opening Live Technology Intelligence query external APIs?** No. Use its explicit background collection button or the independent daily scheduler.
+**Are live API observations used by the model?** No. They are stored separately until a separate temporal and measurement validation establishes suitability.
+**Does the official PyPI JSON endpoint provide package downloads?** Its deprecated downloads field is always unusable; the dashboard does not report it.
+**Why does the same technology have a target label and predicted class?** The target is derived from observed future activity in the labeled dataset; the prediction is the model output. They must not be treated as interchangeable.
+**Does a risk value of 97 mean a 97% chance of decline?** No. It is a complement of the Growing class score.
+**Why is there a Development Data badge?** The local CSV mode includes development-derived tables and is not research-grade evidence.
+**Why does the metrics page warn about perfect scores?** Run metadata is missing, the metrics do not align with current labels, and the current comparison has no baseline row.
 **Can I run the twelve queries now?** Only after the target PostgreSQL schema and data lineage are reconciled with the SQL assumptions.

@@ -1,0 +1,142 @@
+{
+  "audit_date": "2026-11-13",
+  "repository": {
+    "path": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main",
+    "git_metadata_present": false,
+    "application_entrypoint": "dashboard/app.py",
+    "page_count": 11,
+    "pages": [
+      "Executive Overview",
+      "Technology Explorer",
+      "Kenya Technology Landscape",
+      "Technology Rankings",
+      "Community Health",
+      "Market and Skills Signals",
+      "Prediction Explorer",
+      "Model Performance",
+      "Live Technology Intelligence",
+      "Data Provenance and Quality",
+      "About and Responsible Use"
+    ]
+  },
+  "database": {
+    "connection_verified": true,
+    "database": "TechPulse-Database",
+    "server_version": "PostgreSQL 18.3",
+    "migrations_applied": 2,
+    "required_relations_missing": 0,
+    "latest_successful_ingestion_utc": "2026-11-08T20:55:58.167530Z",
+    "canonical_counts": {
+      "technologies": 267,
+      "global_or_unspecified_survey_observations": 684,
+      "company_profiles": 497,
+      "community_monthly_metrics": 0,
+      "kenya_observations": 0,
+      "live_observations": 0,
+      "model_runs": 0,
+      "predictions": 0,
+      "class_metrics": 0,
+      "baselines": 0
+    }
+  },
+  "datasets": [
+    {
+      "path": "data/stackexchange.csv",
+      "records": 45238,
+      "columns": 6,
+      "distinct_tags": 53,
+      "distinct_dates": 987,
+      "date_start": "2016-01-01",
+      "date_end": "2018-09-25",
+      "null_cells_pct": 0.0,
+      "duplicate_rows": 0,
+      "critical_quality_status": "blocked",
+      "critical_issue": "ios on 2018-02-21 has question_count=0 and unanswered_count=181334"
+    },
+    {
+      "path": "data/stackexchange (1).csv",
+      "records": 45238,
+      "critical_quality_status": "alternate copy, differs from primary, same impossible row"
+    },
+    {
+      "path": "data/developer_survey_usage.csv",
+      "records": 685,
+      "technologies": 267,
+      "survey_years": [2021, 2022, 2023, 2024],
+      "null_cells_pct": 0.0,
+      "duplicate_rows": 0,
+      "geographic_scope": "global_or_unspecified",
+      "db_record_count": 684,
+      "reconciliation": "one-row difference unresolved"
+    },
+    {
+      "path": "data/fortune.csv",
+      "records": 500,
+      "missing_pct": {
+        "ticker": 6.4,
+        "industry": 2.6,
+        "revenues": 1.0,
+        "profits": 0.2,
+        "profits_change": 12.6
+      },
+      "evidence_class": "company profile, not technology adoption evidence",
+      "db_record_count": 497
+    },
+    {
+      "path": "data/ev311.csv",
+      "records": 36431,
+      "missing_pct": {
+        "street": 4.7,
+        "house_num": 11.6,
+        "zip": 15.2,
+        "description": 30.1
+      },
+      "relevance": "unrelated operational service dataset, excluded from TechPulse research"
+    },
+    {
+      "path": "data/files.csv",
+      "records": 0,
+      "status": "empty"
+    }
+  ],
+  "model_artifacts": {
+    "filesystem_run_manifests_inspected": 46,
+    "synthetic_fixture_runs": 46,
+    "auditable_research_runs": 0,
+    "synthetic_perfect_metrics_are_research_evidence": false,
+    "research_feature_matrix_present": false,
+    "canonical_prediction_rows": 0
+  },
+  "validation": {
+    "pytest": {
+      "command": "python -m pytest -q",
+      "passed": 59,
+      "failed": 0,
+      "warnings": 16,
+      "duration_seconds": 70.48
+    },
+    "database_health": "passed",
+    "dashboard_page_smoke": {
+      "method": "Streamlit AppTest on every dashboard/views/*.py wrapper against the live database",
+      "pages_passed": 11,
+      "pages_failed": 0,
+      "uncaught_exceptions": 0
+    },
+    "validate_data": {
+      "command": "python -m techpulse.cli validate-data",
+      "exit_code": 1,
+      "status": "blocked_by_one_critical_source_record",
+      "report": "outputs/runs/data_quality_20261113T124957254945Z.json"
+    },
+    "model_retraining_on_research_data": "not run; no curated community facts or verified research feature matrix"
+  },
+  "limitations": [
+    "No Kenya-scoped observations are loaded.",
+    "Survey file has incomplete file-level provenance and is not Kenya-specific.",
+    "Stack Exchange source is stale and blocked by an impossible count row.",
+    "Company profiles do not constitute verified technology adoption.",
+    "No canonical model evaluation, saved predictions, or explanations exist.",
+    "CSV survey and canonical survey row counts differ by one; not reconciled.",
+    "The supplied project directory has no Git metadata."
+  ]
+}
