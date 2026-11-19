@@ -17,8 +17,9 @@ LABEL_ENCODING = {"Growing": 0, "Stable": 1, "Declining": 2}
 TARGET_LEAKAGE_COLUMNS = [
     "future_volume",
     "future_avg_monthly_volume",
-    "recent_avg_monthly_volume",
     "future_growth_ratio",
+    "target_end_date",
+    "trajectory_label",
 ]
 FEATURE_COLUMNS = [
     "technology_health_score",
@@ -33,8 +34,8 @@ LABEL_COLUMN = "trajectory_label"
 TECH_COLUMN = "technology_name"
 CATEGORY_COLUMN = "category"
 DISCLAIMER = (
-    "TechPulse predictions are for informational purposes only and should not be "
-    "used as the sole basis for technology investment decisions."
+    "TechPulse is an academic research and decision-support tool. Its analyses are "
+    "not investment, hiring, procurement, migration, or guaranteed career advice."
 )
 
 

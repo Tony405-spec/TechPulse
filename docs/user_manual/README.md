@@ -10,7 +10,7 @@ The manual covers the application workflow, data-quality messages, Synthetic dem
 
 ## Compatibility note
 
-This manual was produced from the local TechPulse application copy inspected for the project. Its dashboard files differ from the files currently on the GitHub `main` branch. Review that version difference before merging the manual into `main` or treating it as instructions for the application currently on `main`.
+This manual was produced from the TechPulse application version included on the `codex/techpulse-manual-v1.2` review branch. The repository's `main` branch remains unchanged until this branch is reviewed and merged. Merge the application and manual together so their versions stay aligned.
 
 ## Rebuild
 

@@ -37,20 +37,27 @@ def test_model_comparison_includes_baselines(labelled_matrix):
     """Assert baseline rows are reported beside ML models."""
     artifacts = train_all_models(labelled_matrix)
     comparison = compare_and_select_best_model(artifacts)
-    assert {"baseline_majority_class", "baseline_momentum_rule"}.issubset(set(comparison["Model"]))
+    assert {"baseline_majority_class", "baseline_momentum_rule"}.issubset(
+        set(comparison["Model"])
+    )
 
 
 def test_invalid_multiclass_auc_is_marked_unavailable(tmp_path):
     """Assert incomplete test classes produce ROC-AUC warnings instead of fake scores."""
     rows = []
-    for month_index, month in enumerate(pd.date_range("2025-01-01", periods=12, freq="MS")):
+    for month_index, month in enumerate(
+        pd.date_range("2025-01-01", periods=12, freq="MS")
+    ):
         label = "Growing" if month_index % 3 == 0 else "Stable"
         for tech_index in range(4):
             rows.append(
                 {
                     "technology_name": f"tech-{tech_index}",
                     "observation_month": month.date().isoformat(),
-                    **{feature: 0.7 if label == "Growing" else 0.4 for feature in FEATURE_COLUMNS},
+                    **{
+                        feature: 0.7 if label == "Growing" else 0.4
+                        for feature in FEATURE_COLUMNS
+                    },
                     LABEL_COLUMN: label,
                 }
             )
@@ -58,7 +65,9 @@ def test_invalid_multiclass_auc_is_marked_unavailable(tmp_path):
     pd.DataFrame(rows).to_csv(path, index=False)
     artifacts = train_all_models(path)
     comparison = compare_and_select_best_model(artifacts)
-    summary = json.loads((OUTPUTS_DIR / "evaluation_summary.json").read_text(encoding="utf-8"))
+    run_id = next(iter(artifacts.values())).parent.name
+    summary_path = OUTPUTS_DIR / "runs" / run_id / "evaluation_summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
     assert comparison["Macro_ROC_AUC"].isna().all()
     assert summary["is_multiclass_test_valid"] is False
     assert summary["warnings"]
@@ -73,5 +82,7 @@ def test_random_state_reproducibility(labelled_matrix):
     X1 = first_artifact["imputer"].transform(first_artifact["X_test"])
     X2 = second_artifact["imputer"].transform(second_artifact["X_test"])
     acc1 = accuracy_score(first_artifact["y_test"], first_artifact["model"].predict(X1))
-    acc2 = accuracy_score(second_artifact["y_test"], second_artifact["model"].predict(X2))
+    acc2 = accuracy_score(
+        second_artifact["y_test"], second_artifact["model"].predict(X2)
+    )
     assert acc1 == acc2

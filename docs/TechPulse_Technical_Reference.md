@@ -1,7 +1,11 @@
+# Historical technical reference - superseded on 2026-11-08
+
+This reference describes an earlier six-table schema, seven-feature contract, and random split workflow. Preserve it as project history. The current additive contract and time-aware guardrails are in docs/ARCHITECTURE.md and docs/MODEL_METHODOLOGY.md.
+
 # TechPulse Technical Reference
 
-**Implementation audit for assessors**  
-Repository: `C:\Users\Administrator\OneDrive\GitHub\projects\TechPulse`  
+**Implementation audit for assessors**
+Repository: `C:\Users\Administrator\OneDrive\GitHub\projects\TechPulse`
 Review date: 1 November 2026
 
 ## Contents
@@ -89,7 +93,7 @@ The following appendix reproduces the repository SQL as checked in. Each query's
 
 ```sql
 -- Find which technologies generate the most developer questions
-SELECT 
+SELECT
     tag,
     SUM(question_count) AS total_questions,
     SUM(unanswered_count) AS total_unanswered,
@@ -111,7 +115,7 @@ LIMIT 10;
 
 ```sql
 -- Hardest technologies based on unanswered question percentage
-SELECT 
+SELECT
     tag,
     SUM(question_count) AS total_questions,
     SUM(unanswered_count) AS unanswered_count,
@@ -133,7 +137,7 @@ LIMIT 10;
 
 ```sql
 -- Monthly adoption/community trend analysis for all observed technologies.
-SELECT 
+SELECT
     tag,
     DATE_TRUNC('month', date) AS month,
     SUM(question_count) AS monthly_questions,
@@ -158,7 +162,7 @@ ORDER BY tag, month;
 
 ```sql
 -- Find companies that own/manage the most technologies
-SELECT 
+SELECT
     c.name AS company_name,
     c.ticker,
     COUNT(DISTINCT tc.tag) AS number_of_technologies
@@ -179,7 +183,7 @@ LIMIT 10;
 
 ```sql
 -- Compare difficulty across different technology types
-SELECT 
+SELECT
     tt.type AS technology_category,
     COUNT(DISTINCT tt.tag) AS num_technologies,
     SUM(s.question_count) AS total_questions,
@@ -202,7 +206,7 @@ ORDER BY total_questions DESC;
 ```sql
 -- For each company, find their hardest technology
 WITH company_tech_difficulty AS (
-    SELECT 
+    SELECT
         c.name AS company_name,
         tc.tag,
         SUM(s.question_count) AS total_questions,
@@ -214,14 +218,14 @@ WITH company_tech_difficulty AS (
     HAVING SUM(s.question_count) >= 50
 ),
 ranked_difficulty AS (
-    SELECT 
+    SELECT
         company_name,
         tag,
         unanswered_pct,
         ROW_NUMBER() OVER (PARTITION BY company_name ORDER BY unanswered_pct DESC) AS difficulty_rank
     FROM company_tech_difficulty
 )
-SELECT 
+SELECT
     company_name,
     tag AS hardest_technology,
     unanswered_pct AS unanswered_percentage
@@ -242,29 +246,29 @@ LIMIT 15;
 ```sql
 -- Growth momentum using the latest 30-day window versus the previous 30-day window.
 WITH date_range AS (
-    SELECT 
+    SELECT
         MIN(date) as earliest,
         MAX(date) as latest
     FROM stackoverflow
 ),
 tech_comparison AS (
-    SELECT 
+    SELECT
         s.tag,
-        SUM(CASE WHEN s.date >= (SELECT latest - INTERVAL '30 days' FROM date_range) 
+        SUM(CASE WHEN s.date >= (SELECT latest - INTERVAL '30 days' FROM date_range)
                  THEN s.question_count ELSE 0 END) AS recent_questions,
         SUM(CASE WHEN s.date < (SELECT latest - INTERVAL '30 days' FROM date_range)
-                  AND s.date >= (SELECT latest - INTERVAL '60 days' FROM date_range) 
+                  AND s.date >= (SELECT latest - INTERVAL '60 days' FROM date_range)
                  THEN s.question_count ELSE 0 END) AS past_questions
     FROM stackoverflow s
     CROSS JOIN date_range
     GROUP BY s.tag
 )
-SELECT 
+SELECT
     tag,
     recent_questions,
     past_questions,
-    CASE 
-        WHEN past_questions > 0 
+    CASE
+        WHEN past_questions > 0
         THEN (100.0 * (recent_questions - past_questions) / past_questions)::numeric(10,2)
         ELSE 0
     END AS growth_percentage
@@ -285,7 +289,7 @@ LIMIT 20;
 ```sql
 -- Compare parent companies vs their subsidiaries' tech portfolios
 WITH company_techs AS (
-    SELECT 
+    SELECT
         c.id,
         c.name,
         c.parent_id,
@@ -296,7 +300,7 @@ WITH company_techs AS (
     LEFT JOIN stackoverflow s ON tc.tag = s.tag
     GROUP BY c.id, c.name, c.parent_id
 )
-SELECT 
+SELECT
     parent.name AS parent_company,
     COUNT(child.id) AS num_subsidiaries,
     SUM(child.tech_count) AS total_technologies_across_subsidiaries,
@@ -322,7 +326,7 @@ LIMIT 10;
 ```sql
 -- Identify technologies at risk of decline based on multiple factors
 WITH tech_health AS (
-    SELECT 
+    SELECT
         tag,
         SUM(question_count) AS total_questions,
         ROUND(AVG(unanswered_pct)::numeric, 2) AS avg_difficulty,
@@ -333,22 +337,22 @@ WITH tech_health AS (
     GROUP BY tag
     HAVING SUM(question_count) > 500
 )
-SELECT 
+SELECT
     tag,
     total_questions,
     avg_difficulty         AS difficulty_pct,
     active_days,
     last_activity,
     health_score,
-    CASE 
+    CASE
         WHEN last_activity < CURRENT_DATE - INTERVAL '90 days' THEN 'CRITICAL - No recent activity'
         WHEN avg_difficulty > 40                                THEN 'HIGH - Too difficult'
         WHEN health_score < 1000                               THEN 'MEDIUM - Low engagement'
         ELSE 'HEALTHY'
     END AS risk_status
 FROM tech_health
-ORDER BY 
-    CASE 
+ORDER BY
+    CASE
         WHEN last_activity < CURRENT_DATE - INTERVAL '90 days' THEN 1
         WHEN avg_difficulty > 40                                THEN 2
         WHEN health_score < 1000                               THEN 3
@@ -368,13 +372,13 @@ LIMIT 20;
 
 ```sql
 -- Analyze the relationship between question volume and answer quality
-SELECT 
+SELECT
     tag,
     SUM(question_count) AS total_questions,
     (AVG(question_pct))::numeric(10,2) AS avg_question_share,
     (AVG(unanswered_pct))::numeric(10,2) AS avg_unanswered_rate,
     (100.0 * SUM(unanswered_count) / NULLIF(SUM(question_count), 0))::numeric(10,2) AS overall_unanswered_rate,
-    CASE 
+    CASE
         WHEN SUM(question_count) > 10000 AND (100.0 * SUM(unanswered_count) / NULLIF(SUM(question_count), 0)) < 20 THEN 'High Volume, High Quality'
         WHEN SUM(question_count) > 10000 AND (100.0 * SUM(unanswered_count) / NULLIF(SUM(question_count), 0)) > 30 THEN 'High Volume, Poor Quality'
         WHEN SUM(question_count) < 1000 AND (100.0 * SUM(unanswered_count) / NULLIF(SUM(question_count), 0)) < 20 THEN 'Low Volume, High Quality'
@@ -398,7 +402,7 @@ LIMIT 20;
 
 ```sql
 -- Analyze which days of week have highest developer activity
-SELECT 
+SELECT
     EXTRACT(DOW FROM date) AS day_of_week,
     CASE EXTRACT(DOW FROM date)
         WHEN 0 THEN 'Sunday'
@@ -427,13 +431,13 @@ ORDER BY avg_daily_questions DESC;
 
 ```sql
 -- Calculate technology diversity score for each company
-SELECT 
+SELECT
     c.name AS company_name,
     COUNT(DISTINCT tc.tag) AS num_technologies,
     COUNT(DISTINCT tt.type) AS num_tech_categories,
     SUM(s.question_count) AS total_developer_questions,
     ROUND((SUM(s.question_count) * 1.0 / NULLIF(COUNT(DISTINCT tc.tag), 0))::numeric, 2) AS avg_questions_per_tech,
-    CASE 
+    CASE
         WHEN COUNT(DISTINCT tt.type) >= 3 THEN 'High Diversity'
         WHEN COUNT(DISTINCT tt.type) >= 2 THEN 'Medium Diversity'
         ELSE 'Low Diversity'

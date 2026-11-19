@@ -1,4 +1,6 @@
-# Schema Diagram (Logical)
+# Superseded: Legacy Schema Diagram
+
+This describes the historical descriptive schema (company, fortune500, stackoverflow, tag_company, tag_type). The current additive canonical contract is migrations/001_canonical_schema.sql; see docs/ARCHITECTURE.md. This file is retained as project history and must not be confused with the current ingestion contract.
 
 ```sql
 -- Table: public.company

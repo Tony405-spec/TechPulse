@@ -1,7 +1,9 @@
 # TechPulse
 
-**Assessing developer technology trajectories with community signals and transparent validation**
+**Predicting Developer Technology Decline Using Community Signals and Enterprise Adoption Patterns: A Machine Learning Approach**
 Final-year BSc Data Science project · KCA University · 2026
+
+This is the approved project title. The current supplied evidence does not support a validated decline prediction; the implementation and presentation materials state that limitation rather than changing the research question or presenting unsupported results.
 
 TechPulse is a research prototype that combines community activity, developer-survey summaries, SQL analytics and a Streamlit dashboard to explore `Growing`, `Stable` and `Declining` technology-trajectory labels. It is designed to make the data flow and evaluation visible, not to make investment or hiring decisions.
 
@@ -14,24 +16,34 @@ TechPulse is a research prototype that combines community activity, developer-su
 - Streamlit views for overview, rankings, model performance and methodology.
 - Explainability outputs and Docker packaging.
 
-## Evaluation snapshot and interpretation
+## Historical evaluation records
 
-The committed local development snapshot in `outputs/model_comparison.md` reports:
-
-| Model | Accuracy | Weighted F1 |
-|---|---:|---:|
-| Random Forest | 0.966 | 0.955 |
-| Majority-class baseline | 0.966 | 0.949 |
-
-The Random Forest matches the simple baseline on accuracy and is only modestly higher on weighted F1. Macro ROC-AUC is unavailable in this snapshot because the held-out split does not support the calculation. This is not evidence of reliable real-world forecasting; inspect the per-class results and data limitations before interpreting the model.
+The current files contain conflicting prior-run metrics: this README had Random Forest accuracy 0.966 / weighted F1 0.955, while outputs/model_comparison.md records XGBoost accuracy 1.000 / weighted F1 1.000. The run artifacts needed to reconcile those figures are absent from this supplied folder. Neither is a current, independently auditable result. See docs/DATA_LINEAGE_AUDIT.md; new runs are stored under versioned outputs/runs directories.
 
 ## Data and limitations
 
-The repository includes a local CSV development fallback. The pipeline can also use PostgreSQL when `DATABASE_URL` is configured. Official Stack Overflow Developer Survey data can be acquired with `scripts/acquire_public_data.py` and is aggregated into technology-year usage, interest and admiration shares.
+The repository includes local CSV development files. The new canonical CLI uses PostgreSQL only when DATABASE_URL is configured; connection failure is explicit. Official Stack Overflow Developer Survey data is represented by a pre-aggregated local summary with incomplete file-level provenance.
 
 The current local fallback also contains deterministic development proxies for company adoption, metadata and mappings. Those proxies are useful for exercising the application and pipeline, but they are not evidence of actual enterprise technology use. The local community observations predate the 2021–2024 survey summaries, so those survey shares are not valid as-of features for the local historical prediction rows. Survey responses are self-selected and do not represent all developers.
 
 Treat the dashboard as an academic research aid. Do not use its predictions as the basis for technology investment, hiring, platform migration or strategy decisions. See [methodology](docs/methodology.md), [data provenance](outputs/data_provenance.json) and the [architecture diagram](docs/architecture-simple.mmd).
+
+## Canonical PostgreSQL workflow
+
+The legacy SQL files and six-table ingestion adapter are retained for historical comparison. The canonical, additive PostgreSQL contract is in the numbered `migrations/` directory. It separates raw payloads, staging, curated facts, analytics, ML runs, and audit lineage. No tables are dropped or renamed.
+
+```bash
+python -m pip install -r requirements.txt
+# Set DATABASE_URL in an ignored local .env or environment variable.
+python -m techpulse.cli db-migrate
+python -m techpulse.cli db-health
+python -m techpulse.cli validate-data
+python -m techpulse.cli ingest --source survey --from-year 2021
+```
+
+db-migrate, db-health, and ingest require a reachable configured PostgreSQL database. They never fall back to CSV. Ingestion records raw payloads and promotes Stack Exchange monthly aggregates, global/unspecified survey reports, and company profiles into their matching canonical tables. The supplied Stack Exchange rows end in 2018, so --from-year 2021 produces no community rows. The company file does not produce adoption claims. Use --source survey or --source fortune while the Stack Exchange source is under review; --source all correctly fails the critical data gate. See the PostgreSQL/pgAdmin4 setup, ingestion notes, and lineage audit in docs/.
+
+The source register records a checksum-verified DataCamp-hosted Stack Overflow question-count download used during the local audit. That exact audit copy is not redistributed in this repository because its reuse terms were not established. The repository's existing `data/stackexchange.csv` remains unchanged; its validation identifies an impossible `ios` snapshot (0 questions and 181,334 unanswered) on 2018-02-21. These are cumulative tag-count snapshots, not daily new-question counts. `validate-data` rejects the source and canonical ingestion does not promote it. A presentation feasibility audit is documented in `docs/THREE_DAY_PRESENTATION_RESCUE.md`.
 
 ## Run locally
 
@@ -47,15 +59,16 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Run the tests, pipeline, then dashboard:
+Run the tests and dashboard:
 
 ```bash
 python -m pytest tests/ -v
-python pipeline/run_pipeline.py
 python -m streamlit run dashboard/app.py
 ```
 
-With no `DATABASE_URL`, the app uses the local development CSVs. For database mode, configure `DATABASE_URL` in the environment. Do not commit credentials or copy the development-only placeholder secret from `.env.example` into a real deployment.
+Fresh Streamlit sessions start in **Synthetic demonstration · separate SQLite** for a populated walkthrough. Select **Research data · PostgreSQL** explicitly for genuine research records; the modes use separate databases and never fall back into each other. Initialize or idempotently refresh the isolated seeded SQLite store with `python -m dashboard.demo_store --build`. It lives at `outputs/synthetic_demo/techpulse_demo.sqlite` and is populated with 210 technologies, 15,120 monthly community rows, 8,400 fictional discussions, 3,360 survey-like observations, 300 fictional company profiles, 2,000 adoption scenarios, 1,260 geographic scenarios (630 Kenya-labelled fictional examples), 8,820 feature snapshots, four trained synthetic model runs, 840 persisted predictions, probabilities and 1,470 SHAP explanations. All records carry `SYNTHETIC_DEMONSTRATION_NOT_RESEARCH_EVIDENCE` and must not be cited as research evidence. A controlled reset makes a backup first: `python -m dashboard.demo_store --reset-demo --confirm-reset "RESET SYNTHETIC DEMO ONLY"`.
+
+The historical research pipeline in pipeline/run_pipeline.py still follows the older six-table contract and is not the canonical ingestion workflow. The Streamlit application now uses the PostgreSQL canonical schemas only; if PostgreSQL is unavailable, it displays an error instead of reading CSV artifacts. See [the dashboard data guide](docs/DASHBOARD_POSTGRESQL.md).
 
 To build and run the container:
 
@@ -80,6 +93,14 @@ models/       generated model artifacts
 ```
 
 Detailed references: [SQL schema](docs/schema_diagram.md) · [methodology](docs/methodology.md) · [research proposal and design documents](docs/) · [model comparison](outputs/model_comparison.md).
+
+## Presentation readiness and current evidence status
+
+The current checked state and limitations are in [the final audit](docs/FINAL_AUDIT_REPORT.md), [data lineage and quality](docs/DATA_LINEAGE_AND_QUALITY.md), [model evaluation status](docs/MODEL_EVALUATION_REPORT.md), and the [three-day rescue and implementation status](docs/THREE_DAY_PRESENTATION_RESCUE.md). Use the [presentation route](docs/PRESENTATION_DEMO_GUIDE.md) for research mode and the [final presentation runbook](docs/FINAL_PRESENTATION_RUNBOOK.md) for the explicitly synthetic walkthrough. PostgreSQL has 2 migrations and 267 technologies, but no curated community rows, Kenya observations, live observations, or valid canonical model runs/predictions. The local Stack Exchange validation is intentionally blocked by two impossible zero-total source records; synthetic model results are not research metrics.
+
+To prepare the presentation in PowerShell, run `python -m techpulse.cli db-health` and then `python -m streamlit run dashboard/app.py`. See [pgAdmin 4 and database setup](docs/POSTGRESQL_PGADMIN4.md) if health reports a connection or schema issue.
+
+Current design references: architecture, model methodology, source register, and responsible use documents in docs/.
 
 ## Data use
 

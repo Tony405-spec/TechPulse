@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import json
 from pathlib import Path
 
 import numpy as np
@@ -86,7 +87,14 @@ def _date_col(frame: pd.DataFrame) -> str | None:
     """
     return _column(
         frame,
-        ["date_col", "creation_date", "created_at", "question_date", "date", "adoption_date"],
+        [
+            "date_col",
+            "creation_date",
+            "created_at",
+            "question_date",
+            "date",
+            "adoption_date",
+        ],
     )
 
 
@@ -129,7 +137,9 @@ def _base_technologies(datasets: dict[str, pd.DataFrame]) -> pd.DataFrame:
         category = _column(frame, ["category", "technology_category", "type"])
         if category:
             for _, row in frame[[tech, category]].dropna(subset=[tech]).iterrows():
-                categories[str(row[tech])] = str(row[category]) if pd.notna(row[category]) else "Other"
+                categories[str(row[tech])] = (
+                    str(row[category]) if pd.notna(row[category]) else "Other"
+                )
     return pd.DataFrame(
         {
             TECH_COLUMN: sorted(names),
@@ -147,7 +157,9 @@ def _category_lookup(datasets: dict[str, pd.DataFrame]) -> dict[str, str]:
         if tech is None or category is None:
             continue
         for _, row in frame[[tech, category]].dropna(subset=[tech]).iterrows():
-            lookup[str(row[tech])] = str(row[category]) if pd.notna(row[category]) else "Other"
+            lookup[str(row[tech])] = (
+                str(row[category]) if pd.notna(row[category]) else "Other"
+            )
     return lookup
 
 
@@ -177,15 +189,20 @@ def _so_features(so_questions: pd.DataFrame, logger: logging.Logger) -> pd.DataF
     unanswered_col = _column(frame, ["unanswered_count", "unanswered"])
     unanswered_pct_col = _column(frame, ["unanswered_pct", "unanswered_percentage"])
     frame["_volume"] = (
-        pd.to_numeric(frame[volume_col], errors="coerce").fillna(0).clip(lower=0)
+        pd.to_numeric(frame[volume_col], errors="coerce").clip(lower=0)
         if volume_col
         else 1.0
     )
-    frame["_answers"] = pd.to_numeric(frame[answer_col], errors="coerce") if answer_col else np.nan
+    frame["_answers"] = (
+        pd.to_numeric(frame[answer_col], errors="coerce") if answer_col else np.nan
+    )
     if answer_col is None and unanswered_col:
         frame["_answers"] = (
-            frame["_volume"] - pd.to_numeric(frame[unanswered_col], errors="coerce").fillna(0)
+            frame["_volume"]
+            - pd.to_numeric(frame[unanswered_col], errors="coerce").fillna(0)
         ).clip(lower=0)
+    if answer_col is not None:
+        frame["_answers"] = frame["_answers"].clip(lower=0).clip(upper=frame["_volume"])
     if closed_col:
         frame["_closed"] = frame[closed_col].notna()
         if frame[closed_col].dropna().isin([0, 1, True, False]).all():
@@ -277,7 +294,9 @@ def _static_signal_maps(
         datasets.get("company_profiles", pd.DataFrame()),
         logger,
     )
-    sentiment = _sentiment_features(datasets.get("dev_sentiment", pd.DataFrame()), logger)
+    sentiment = _sentiment_features(
+        datasets.get("dev_sentiment", pd.DataFrame()), logger
+    )
     base = pd.DataFrame({TECH_COLUMN: sorted(set(_category_lookup(datasets)))})
     for part in (enterprise, sentiment):
         if not part.empty:
@@ -286,40 +305,57 @@ def _static_signal_maps(
             base = base.merge(part, on=TECH_COLUMN, how="outer")
     if base.empty:
         base = pd.DataFrame(columns=[TECH_COLUMN])
-    diversity = dict(zip(base.get(TECH_COLUMN, []), pd.to_numeric(base.get("company_diversity_score", pd.Series(dtype=float)), errors="coerce")))
-    adoption = dict(zip(base.get(TECH_COLUMN, []), pd.to_numeric(base.get("adoption_velocity", pd.Series(dtype=float)), errors="coerce")))
-    sentiment_delta = dict(zip(base.get(TECH_COLUMN, []), pd.to_numeric(base.get("sentiment_delta", pd.Series(dtype=float)), errors="coerce")))
+    diversity = dict(
+        zip(
+            base.get(TECH_COLUMN, []),
+            pd.to_numeric(
+                base.get("company_diversity_score", pd.Series(dtype=float)),
+                errors="coerce",
+            ),
+        )
+    )
+    adoption = dict(
+        zip(
+            base.get(TECH_COLUMN, []),
+            pd.to_numeric(
+                base.get("adoption_velocity", pd.Series(dtype=float)), errors="coerce"
+            ),
+        )
+    )
+    sentiment_delta = dict(
+        zip(
+            base.get(TECH_COLUMN, []),
+            pd.to_numeric(
+                base.get("sentiment_delta", pd.Series(dtype=float)), errors="coerce"
+            ),
+        )
+    )
     return base, diversity, adoption, sentiment_delta
 
 
 def _survey_signal_lookup(sentiment: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Prepare developer-survey signal history by normalized technology name."""
+    """Prepare satisfaction history; popularity shares are not sentiment."""
     tech = _tech_col(sentiment)
-    score = _column(
-        sentiment,
-        [
-            "developer_usage_share",
-            "usage_share",
-            "satisfaction_score",
-            "satisfaction",
-            "sentiment_score",
-        ],
-    )
+    score = _column(sentiment, ["satisfaction_score"])
     period = _column(sentiment, ["survey_year", "year", "period", "date_col", "date"])
     if tech is None or score is None or period is None:
         return {}
     frame = sentiment[[tech, score, period]].copy()
-    frame["_tech_key"] = frame[tech].map(lambda value: normalise_name(normalize_technology_name(value)))
+    frame["_tech_key"] = frame[tech].map(
+        lambda value: normalise_name(normalize_technology_name(value))
+    )
     frame["_score"] = pd.to_numeric(frame[score], errors="coerce")
     frame["_year"] = pd.to_numeric(frame[period], errors="coerce")
     frame = frame.dropna(subset=["_tech_key", "_score", "_year"])
-    return {key: group.sort_values("_year") for key, group in frame.groupby("_tech_key")}
+    return {
+        key: group.sort_values("_year") for key, group in frame.groupby("_tech_key")
+    }
 
 
-def _sentiment_delta_as_of(
+def _satisfaction_delta_as_of(
     lookup: dict[str, pd.DataFrame], technology: str, observation_year: int
 ) -> float:
-    """Return survey usage-share delta available by an observation year."""
+    """Return satisfaction-score delta available by an observation year."""
     key = normalise_name(normalize_technology_name(technology))
     history = lookup.get(key)
     if history is None:
@@ -333,7 +369,12 @@ def _sentiment_delta_as_of(
 def _enterprise_as_of(
     datasets: dict[str, pd.DataFrame], technology: str, observation_month: pd.Timestamp
 ) -> tuple[float, float]:
-    """Compute enterprise proxy signals using only dates up to observation month."""
+    """Return sector breadth and new-adoption velocity from cited evidence only.
+
+    The local development adapter is blocked from research training by the
+    pipeline provenance gate. If provenance columns are present here, only
+    observed/reported records with a registered citation are considered.
+    """
     stacks = datasets.get("fortune500_stacks", pd.DataFrame())
     profiles = datasets.get("company_profiles", pd.DataFrame())
     tech = _tech_col(stacks)
@@ -344,31 +385,43 @@ def _enterprise_as_of(
     group = stacks.loc[stacks[tech].astype(str) == str(technology)].copy()
     if group.empty:
         return np.nan, np.nan
+    source_class = _column(group, ["source_class", "evidence_type"])
+    source_reference = _column(group, ["source_url", "source_key", "source_document_id", "source_reference", "citation"])
+    if source_class is None or source_reference is None:
+        return np.nan, np.nan
+    group = group.loc[
+        group[source_class].astype(str).str.casefold().isin({"observed", "reported"})
+    ].copy()
+    group = group.loc[
+        group[source_reference].notna()
+        & group[source_reference].astype(str).str.strip().ne("")
+    ].copy()
+    if group.empty:
+        return np.nan, np.nan
     group[date] = pd.to_datetime(group[date], errors="coerce")
-    observed = group.loc[group[date] <= observation_month].copy()
+    observed = group.loc[group[date].notna() & (group[date] <= observation_month)].copy()
     if observed.empty:
         return np.nan, np.nan
     sector = _column(profiles, ["sector", "industry"])
     profile_company = _column(profiles, ["company_id", "company", "company_name"])
+    # The approved material does not define a technology-level diversity
+    # formula. Keep the required feature missing until that definition is
+    # approved; do not substitute an unapproved sector breadth measure.
     diversity = np.nan
-    if sector and profile_company:
-        merged = observed.merge(
-            profiles[[profile_company, sector]],
-            left_on=company,
-            right_on=profile_company,
-            how="left",
-        )
-        diversity = float(merged[sector].nunique())
-    trailing = observed.loc[observed[date] >= observation_month - pd.DateOffset(months=12)]
-    quarters = pd.to_datetime(trailing[date], errors="coerce").dt.to_period("Q")
-    velocity = float(quarters.groupby(quarters).size().mean()) if not trailing.empty else 0.0
+    # Count first documented company/technology appearances per quarter, then
+    # average over the trailing four calendar quarters (including zeros).
+    first_events = observed.sort_values(date).drop_duplicates(subset=[company], keep="first")
+    quarter_counts = pd.to_datetime(first_events[date]).dt.to_period("Q").value_counts()
+    current_quarter = observation_month.to_period("Q")
+    quarters = [current_quarter - offset for offset in range(4)]
+    velocity = float(sum(int(quarter_counts.get(q, 0)) for q in quarters) / 4)
     return diversity, velocity
 
 
 def _temporal_so_panel(
     datasets: dict[str, pd.DataFrame],
     logger: logging.Logger,
-    history_months: int = 6,
+    history_months: int = 12,
     future_months: int = 3,
 ) -> pd.DataFrame:
     """Build technology-month features from past data only.
@@ -382,39 +435,52 @@ def _temporal_so_panel(
     tech = _tech_col(so_questions)
     date = _date_col(so_questions)
     if tech is None or date is None:
-        logger.warning("Temporal panel skipped because SO technology/date columns are missing.")
+        logger.warning(
+            "Temporal panel skipped because SO technology/date columns are missing."
+        )
         return pd.DataFrame()
 
     frame = so_questions.copy()
     frame[date] = pd.to_datetime(frame[date], errors="coerce")
     frame = frame.dropna(subset=[tech, date])
     if frame.empty:
-        logger.warning("Temporal panel skipped because SO data has no valid dated rows.")
+        logger.warning(
+            "Temporal panel skipped because SO data has no valid dated rows."
+        )
         return pd.DataFrame()
     volume_col = _column(frame, ["question_count", "questions", "count"])
     answer_col = _column(frame, ["answer_count", "answers", "num_answers"])
     unanswered_col = _column(frame, ["unanswered_count", "unanswered"])
     unanswered_pct_col = _column(frame, ["unanswered_pct", "unanswered_percentage"])
     frame["_volume"] = (
-        pd.to_numeric(frame[volume_col], errors="coerce").fillna(0).clip(lower=0)
+        pd.to_numeric(frame[volume_col], errors="coerce").clip(lower=0)
         if volume_col
         else 1.0
     )
     if answer_col:
-        frame["_answers"] = pd.to_numeric(frame[answer_col], errors="coerce").fillna(0)
+        frame["_answers"] = pd.to_numeric(frame[answer_col], errors="coerce").clip(
+            lower=0
+        )
     elif unanswered_col:
         frame["_answers"] = (
-            frame["_volume"] - pd.to_numeric(frame[unanswered_col], errors="coerce").fillna(0)
+            frame["_volume"] - pd.to_numeric(frame[unanswered_col], errors="coerce")
         ).clip(lower=0)
     else:
-        frame["_answers"] = frame["_volume"]
+        frame["_answers"] = np.nan
+    if answer_col:
+        frame["_answers"] = frame["_answers"].clip(upper=frame["_volume"])
     if unanswered_pct_col:
-        frame["_unanswered"] = pd.to_numeric(frame[unanswered_pct_col], errors="coerce").fillna(0)
-        frame["_unanswered"] = np.where(frame["_unanswered"] > 1, frame["_unanswered"] / 100, frame["_unanswered"])
+        frame["_unanswered"] = pd.to_numeric(frame[unanswered_pct_col], errors="coerce")
+        frame["_unanswered"] = np.where(
+            frame["_unanswered"] > 1, frame["_unanswered"] / 100, frame["_unanswered"]
+        )
     elif unanswered_col:
-        frame["_unanswered"] = pd.to_numeric(frame[unanswered_col], errors="coerce").fillna(0) / frame["_volume"].replace(0, np.nan)
+        frame["_unanswered"] = pd.to_numeric(
+            frame[unanswered_col], errors="coerce"
+        ) / frame["_volume"].replace(0, np.nan)
     else:
-        frame["_unanswered"] = 0.0
+        frame["_unanswered"] = np.nan
+    frame = frame.dropna(subset=["_volume", "_answers", "_unanswered"])
     frame["_month"] = frame[date].dt.to_period("M").dt.to_timestamp()
 
     categories = _category_lookup(datasets)
@@ -423,41 +489,65 @@ def _temporal_so_panel(
     for technology, group in frame.groupby(tech):
         monthly = (
             group.groupby("_month", as_index=True)
-            .agg(volume=("_volume", "sum"), answers=("_answers", "sum"), unanswered_rate=("_unanswered", "mean"))
+            .agg(
+                volume=("_volume", "sum"),
+                answers=("_answers", "sum"),
+                unanswered_rate=("_unanswered", "mean"),
+            )
             .sort_index()
         )
         full_index = pd.date_range(monthly.index.min(), monthly.index.max(), freq="MS")
-        monthly = monthly.reindex(full_index, fill_value=0.0)
+        monthly = monthly.reindex(full_index)
         if len(monthly) < history_months + future_months + 1:
             continue
         for position in range(history_months - 1, len(monthly) - future_months):
             obs_month = monthly.index[position]
-            history = monthly.iloc[position - history_months + 1: position + 1]
-            recent = history.tail(3)
-            previous = history.head(max(history_months - 3, 1))
-            future = monthly.iloc[position + 1: position + 1 + future_months]
+            history = monthly.iloc[position - history_months + 1 : position + 1]
+            recent = history.tail(6)
+            previous = history.head(6)
+            future = monthly.iloc[position + 1 : position + 1 + future_months]
+            if history.isna().any().any() or future.isna().any().any():
+                continue
             recent_volume = float(recent["volume"].sum())
             previous_volume = float(previous["volume"].sum())
             future_volume = float(future["volume"].sum())
             recent_avg = recent_volume / max(len(recent), 1)
             future_avg = future_volume / max(len(future), 1)
-            quality_denominator = float(history["volume"].sum()) or 1.0
-            answer_rate = float(history["answers"].sum()) / quality_denominator
-            unanswered_penalty = float(history["unanswered_rate"].mean())
-            diversity, adoption_velocity = _enterprise_as_of(datasets, str(technology), obs_month)
+            quality_denominator = float(history["volume"].sum())
+            answer_rate = (
+                float(history["answers"].sum()) / quality_denominator
+                if quality_denominator > 0 else np.nan
+            )
+            prior_month_volume = float(history["volume"].iloc[-2])
+            current_month_volume = float(history["volume"].iloc[-1])
+            prior_30d_momentum = (
+                100.0 * (current_month_volume - prior_month_volume) / prior_month_volume
+                if prior_month_volume > 0 else np.nan
+            )
+            health_score = (
+                quality_denominator * answer_rate if pd.notna(answer_rate) else np.nan
+            )
+            company_diversity, adoption_velocity = _enterprise_as_of(
+                datasets, str(technology), obs_month
+            )
             rows.append(
                 {
                     TECH_COLUMN: str(technology),
                     CATEGORY_COLUMN: categories.get(str(technology), "Other"),
                     OBSERVATION_MONTH_COLUMN: obs_month.date().isoformat(),
-                    "growth_momentum_index": recent_volume / max(float(history["volume"].sum()), 1.0),
-                    "question_quality_score": max(answer_rate * (1 - unanswered_penalty), 0.0),
-                    "community_decay_rate": max((previous_volume - recent_volume) / max(previous_volume, 1.0), 0.0),
-                    "company_diversity_score": diversity,
-                    "sentiment_delta": _sentiment_delta_as_of(
+                    "growth_momentum_index": prior_30d_momentum,
+                    "question_quality_score": answer_rate,
+                    "company_diversity_score": company_diversity,
+                    "sentiment_delta": _satisfaction_delta_as_of(
                         survey_lookup, str(technology), int(obs_month.year)
                     ),
                     "adoption_velocity": adoption_velocity,
+                    "community_decay_rate": max(
+                        (previous_volume - recent_volume) / previous_volume
+                        if previous_volume > 0 else np.nan,
+                        0.0,
+                    ),
+                    "technology_health_score": health_score,
                     "so_volume_trend_slope": _trend_slope(history["volume"]),
                     "so_months_observed": int(len(history)),
                     "so_question_volume": int(history["volume"].sum()),
@@ -483,10 +573,24 @@ def _enterprise_features(
     Returns:
         DataFrame keyed by technology name.
     """
+    source_class = _column(stacks, ["source_class", "evidence_type"])
+    source_ref = _column(stacks, ["source_key", "source_reference", "source_url", "citation"])
+    if source_class is None or source_ref is None:
+        logger.warning("Enterprise adoption requires source class and a traceable citation.")
+        return pd.DataFrame(columns=[TECH_COLUMN])
+    stacks = stacks.loc[
+        stacks[source_class].astype(str).str.casefold().isin({"observed", "reported"})
+    ].copy()
+    stacks = stacks.loc[
+        stacks[source_ref].notna() & stacks[source_ref].astype(str).str.strip().ne("")
+    ].copy()
     tech = _tech_col(stacks)
     company = _column(stacks, ["company_id", "company", "company_name"])
     if tech is None or company is None:
         logger.warning("Enterprise features missing technology or company column.")
+        return pd.DataFrame(columns=[TECH_COLUMN])
+    if stacks.empty:
+        logger.warning("No source-supported observed/reported company technology evidence is available.")
         return pd.DataFrame(columns=[TECH_COLUMN])
     sector = _column(profiles, ["sector", "industry"])
     profile_company = _column(profiles, ["company_id", "company", "company_name"])
@@ -503,13 +607,22 @@ def _enterprise_features(
     for technology, group in merged.groupby(tech):
         row: dict[str, float | str] = {
             TECH_COLUMN: str(technology),
-            "company_diversity_score": float(group[sector].nunique()) if sector else np.nan,
+            # The SRS names this indicator but does not define how sector
+            # breadth should be normalized into a technology-level score.
+            # Leave it unavailable until the supervisor approves a formula.
+            "company_diversity_score": np.nan,
         }
         if date:
             adoption_dates = pd.to_datetime(group[date], errors="coerce")
             reference_date = adoption_dates.max()
-            logger.info("Enterprise REFERENCE_DATE=%s from fortune500_stacks.%s", reference_date, date)
-            trailing = group[adoption_dates >= reference_date - pd.DateOffset(months=12)]
+            logger.info(
+                "Enterprise REFERENCE_DATE=%s from fortune500_stacks.%s",
+                reference_date,
+                date,
+            )
+            trailing = group[
+                adoption_dates >= reference_date - pd.DateOffset(months=12)
+            ]
             quarters = pd.to_datetime(trailing[date], errors="coerce").dt.to_period("Q")
             row["adoption_velocity"] = quarters.groupby(quarters).size().mean()
         else:
@@ -518,7 +631,9 @@ def _enterprise_features(
     return pd.DataFrame(rows)
 
 
-def _sentiment_features(sentiment: pd.DataFrame, logger: logging.Logger) -> pd.DataFrame:
+def _sentiment_features(
+    sentiment: pd.DataFrame, logger: logging.Logger
+) -> pd.DataFrame:
     """Compute developer sentiment delta by technology.
 
     Args:
@@ -529,16 +644,7 @@ def _sentiment_features(sentiment: pd.DataFrame, logger: logging.Logger) -> pd.D
         DataFrame keyed by technology name.
     """
     tech = _tech_col(sentiment)
-    score = _column(
-        sentiment,
-        [
-            "developer_usage_share",
-            "usage_share",
-            "satisfaction_score",
-            "satisfaction",
-            "sentiment_score",
-        ],
-    )
+    score = _column(sentiment, ["satisfaction_score"])
     period = _column(sentiment, ["survey_year", "year", "period", "date_col", "date"])
     if tech is None or score is None or period is None:
         logger.warning("Sentiment delta missing technology, score, or period column.")
@@ -554,7 +660,9 @@ def _sentiment_features(sentiment: pd.DataFrame, logger: logging.Logger) -> pd.D
         rows.append(
             {
                 TECH_COLUMN: str(technology),
-                "sentiment_delta": float(ordered["_score"].iloc[-1] - ordered["_score"].iloc[0]),
+                "sentiment_delta": float(
+                    ordered["_score"].iloc[-1] - ordered["_score"].iloc[0]
+                ),
             }
         )
     return pd.DataFrame(rows)
@@ -593,37 +701,45 @@ def compute_feature_matrix(
             if not part.empty:
                 features = features.merge(part, on=TECH_COLUMN, how="left")
 
-    raw_features = features[FEATURE_COLUMNS].copy() if set(FEATURE_COLUMNS).issubset(features.columns) else None
-    if raw_features is None:
-        for column in FEATURE_COLUMNS:
-            if column not in features:
-                logger.warning("%s missing; setting individual values to NaN.", column)
-                features[column] = np.nan
+    for column in FEATURE_COLUMNS:
+        if column not in features:
+            logger.warning("%s missing; setting values to unavailable (NaN).", column)
+            features[column] = np.nan
 
-    health_parts = [
-        features["growth_momentum_index"],
-        features["question_quality_score"],
-        features["company_diversity_score"],
-        features["sentiment_delta"],
-        1 - features["community_decay_rate"],
-    ]
-    features["technology_health_score"] = pd.concat(health_parts, axis=1).mean(axis=1)
+    # The SRS specifies 0-1 min-max normalization. Fit each cross-sectional
+    # scale within its own as-of month, avoiding use of future months' ranges.
+    if OBSERVATION_MONTH_COLUMN in features:
+        for _, indices in features.groupby(OBSERVATION_MONTH_COLUMN).groups.items():
+            for column in FEATURE_COLUMNS:
+                features.loc[indices, column] = _minmax(features.loc[indices, column])
 
     missing_counts = features[FEATURE_COLUMNS].isna().sum(axis=1)
     excluded = features.loc[missing_counts > 3, TECH_COLUMN].tolist()
     for technology in excluded:
         logger.info("Excluding %s because more than 3 of 7 features are missing.", technology)
     features = features.loc[missing_counts <= 3].copy()
+    # Values already have interpretable rate/ratio units. Scaling across the
+    # full time series before a split would leak held-out distribution data.
     for column in FEATURE_COLUMNS:
         missing = int(features[column].isna().sum())
         if missing:
             logger.info("%s has %s missing values retained as NaN.", column, missing)
-        features[column] = _minmax(features[column])
 
     features.to_csv(output_path, index=False)
     (OUTPUTS_DIR / "feature_schema.json").write_text(
         pd.Series(FEATURE_COLUMNS).to_json(orient="values"), encoding="utf-8"
     )
+    (OUTPUTS_DIR / "feature_definitions.json").write_text(json.dumps({
+        "technology_health_score": "Query 9 form: historical question volume multiplied by answer fraction; normalized within as-of month.",
+        "growth_momentum_index": "Query 7 form: percent change in monthly question volume versus prior month; normalized within as-of month.",
+        "question_quality_score": "Query 10 form: answered questions / observed question volume over the trailing 12-month feature window.",
+        "company_diversity_score": "Unavailable until supervisor approves the technology-level formula; sector breadth is not silently adopted.",
+        "sentiment_delta": "Difference between earliest and latest satisfaction_score available on or before as-of year; usage/interest/admiration shares are excluded.",
+        "adoption_velocity": "Mean count of first source-supported company/technology appearances per quarter over the current and prior three quarters.",
+        "community_decay_rate": "Positive fractional decline in observed question volume in the recent six months versus the preceding six months; growth is floored at zero.",
+        "normalization": "Numeric features are min-max normalized within each as-of month to avoid using later months to scale earlier observations.",
+        "missingness": "Unsupported features remain NaN; no zeros or proxies are substituted. Technologies with more than three missing indicators are excluded from model input.",
+    }, indent=2), encoding="utf-8")
     (OUTPUTS_DIR / "target_leakage_columns.json").write_text(
         pd.Series(TARGET_LEAKAGE_COLUMNS).to_json(orient="values"), encoding="utf-8"
     )

@@ -89,6 +89,13 @@ def test_stackexchange_api_error_is_reported(monkeypatch):
 
 
 def test_pypi_metadata_and_release_timestamps(monkeypatch):
+    # Freeze collection time so the rolling 30-day assertion is independent
+    # of the date on which the suite is executed.
+    monkeypatch.setattr(
+        collectors,
+        "utc_now",
+        lambda: datetime(2026, 10, 20, tzinfo=timezone.utc),
+    )
     payload = {
         "info": {"version": "2.0"},
         "releases": {

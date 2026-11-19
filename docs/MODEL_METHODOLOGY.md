@@ -1,0 +1,11 @@
+# Feature and label methodology
+
+The user-facing three-class trajectory may be retained only where source coverage supports it. At each `as_of_date`, predictors use information available on or before that date. Candidate community features are observed rolling 3-, 6- and 12-month activity, prior-period momentum, unanswered share/answer quality, persistence, and explicit coverage/missingness. Survey shares may only be joined when their survey year is no later than the snapshot and their source/geography is comparable. Global signals remain global comparison evidence.
+
+Labels compare a recent window with a later outcome window. A configurable ratio threshold defines Growing/Declining; values between thresholds are Stable. Missing/incomplete outcome windows are unlabeled, not Stable. Future-window columns, collection-time API snapshots, post-outcome values, IDs, and proxy adoption/mappings are prohibited predictors. Every persisted feature needs a snapshot, as-of date, and source lineage.
+
+The existing single feature matrix and run artifacts cannot be reconciled in this checkout. They are not overwritten. New runs must be versioned and bind code version, config hash, input snapshot, definitions, label thresholds, date ranges, split membership, random seed, class support, candidate parameters, per-class metrics, calibration, baselines and artifact checksum.
+
+Use chronological rolling-origin evaluation, including month-grouped expanding folds within the training era; technology-grouped tests may complement it. Compare majority and momentum rules with regularized logistic regression, random forest, and an appropriate gradient-boosting candidate. A class absent from a held-out period makes that class's metric ineligible, not zero evidence of skill. Report support, per-class precision/recall/F1, confusion matrices, calibration and uncertainty. Keep forecasts separate from trajectory classes and do not describe a high score as reliability without independent support.
+
+The currently supplied historical community observations end in 2018 and cannot validate current Kenyan trajectories. The 2021–2024 survey aggregate cannot be joined backward as a predictor. There is not enough verified current Kenyan data to report new model metrics in this audit.

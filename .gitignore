@@ -1,8 +1,11 @@
-# Environment
+# Environment and credentials
 .env
+.env.*
+!.env.example
 *.env
+.streamlit/secrets.toml
 
-# Python
+# Python and test caches
 __pycache__/
 *.py[cod]
 *.pyo
@@ -10,34 +13,38 @@ __pycache__/
 .coverage
 coverage.xml
 .pylint.d/
+.ipynb_checkpoints/
 
-# Logs (never commit)
+# Logs
 logs/
+*.log
 
-# Models (large binary files)
-models/*.joblib
-models/*.pkl
+# Local databases and generated model binaries
+*.db
+*.sqlite
+*.sqlite3
+*.joblib
+*.pkl
+*.pickle
+models/runs/
 
-# Data (may be large)
-data/feature_matrix.csv
-data/raw_external/
-
-# Outputs (generated)
+# Generated outputs and demonstrations
+outputs/runs/
+outputs/synthetic_demo/
+outputs/live_data/
+outputs/presentation_rescue/
 outputs/*.png
 outputs/*.csv
 outputs/*.json
 !outputs/data_provenance.json
 outputs/*.html
 outputs/*.npy
-outputs/live_data/
 
-# OS
+# Large or external data
+data/feature_matrix.csv
+data/raw_external/
+
+# OS and review artifacts
 .DS_Store
 Thumbs.db
-
-# Notebooks checkpoints
-.ipynb_checkpoints/
-
-# Streamlit
-.streamlit/secrets.toml
 .pdf_review/

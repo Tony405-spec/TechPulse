@@ -44,17 +44,41 @@ def load_predictions() -> tuple[pd.DataFrame, bool]:
 
     The boolean is true only when probability-bearing prediction artifacts exist.
     """
-    path = OUTPUTS / "technology_predictions.csv"
+    versioned = (
+        sorted((OUTPUTS / "runs").glob("*/technology_predictions.csv"))
+        if (OUTPUTS / "runs").exists()
+        else []
+    )
+    fixture_info = read_json_artifact(str(OUTPUTS / "test_fixture_runs.json"))
+    fixture_ids = set(fixture_info.get("run_ids", []))
+    versioned = [
+        path
+        for path in versioned
+        if path.parent.name not in fixture_ids
+        and not read_json_artifact(str(path.parent / "model_run.json")).get(
+            "synthetic_fixture", False
+        )
+    ]
+    path = versioned[-1] if versioned else OUTPUTS / "technology_predictions.csv"
     saved = path.exists()
     if not saved:
         path = DATA / "feature_matrix.csv"
     frame = read_csv_artifact(str(path)).copy()
     if "technology_name" in frame:
         frame["technology_name"] = frame["technology_name"].fillna("").astype(str)
-    for col in ["risk_score", "confidence", "prob_Growing", "prob_Stable", "prob_Declining"]:
+    for col in [
+        "risk_score",
+        "confidence",
+        "prob_Growing",
+        "prob_Stable",
+        "prob_Declining",
+    ]:
         if col in frame:
             frame[col] = pd.to_numeric(frame[col], errors="coerce")
-    return frame, bool(saved and {"prob_Growing", "prob_Stable", "prob_Declining"}.issubset(frame.columns))
+    return frame, bool(
+        saved
+        and {"prob_Growing", "prob_Stable", "prob_Declining"}.issubset(frame.columns)
+    )
 
 
 def load_community() -> pd.DataFrame:
@@ -97,15 +121,44 @@ def artifact_consistency() -> list[str]:
     summary = read_json_artifact(str(OUTPUTS / "labelling_summary.json"))
     if not feature.empty and "trajectory_label" in feature and summary:
         actual = feature["trajectory_label"].value_counts(dropna=False).to_dict()
-        declared = {k: int(v.get("count", -1)) for k, v in summary.items() if isinstance(v, dict) and "count" in v}
-        if declared and any(actual.get(label, 0) != count for label, count in declared.items()):
-            issues.append("The label summary does not match the label counts in the current feature matrix.")
-    if not (OUTPUTS / "evaluation_summary.json").exists():
-        issues.append("The run-level evaluation summary is missing, so split dates and held-out class coverage cannot be confirmed from this checkout.")
-    predictions = read_csv_artifact(str(OUTPUTS / "technology_predictions.csv"))
-    if not predictions.empty and {"trajectory_label", "predicted_label"}.issubset(predictions.columns):
-        if predictions["trajectory_label"].notna().sum() and not predictions["trajectory_label"].equals(predictions["predicted_label"]):
-            issues.append("The saved table contains both target labels and predicted labels; they are not interchangeable.")
+        declared = {
+            k: int(v.get("count", -1))
+            for k, v in summary.items()
+            if isinstance(v, dict) and "count" in v
+        }
+        if declared and any(
+            actual.get(label, 0) != count for label, count in declared.items()
+        ):
+            issues.append(
+                "The label summary does not match the label counts in the current feature matrix."
+            )
+    versioned_eval = (
+        sorted((OUTPUTS / "runs").glob("*/evaluation_summary.json"))
+        if (OUTPUTS / "runs").exists()
+        else []
+    )
+    if not versioned_eval and not (OUTPUTS / "evaluation_summary.json").exists():
+        issues.append(
+            "The run-level evaluation summary is missing, so split dates and held-out class coverage cannot be confirmed from this checkout."
+        )
+    versioned = (
+        sorted((OUTPUTS / "runs").glob("*/technology_predictions.csv"))
+        if (OUTPUTS / "runs").exists()
+        else []
+    )
+    predictions_path = (
+        versioned[-1] if versioned else OUTPUTS / "technology_predictions.csv"
+    )
+    predictions = read_csv_artifact(str(predictions_path))
+    if not predictions.empty and {"trajectory_label", "predicted_label"}.issubset(
+        predictions.columns
+    ):
+        if predictions["trajectory_label"].notna().sum() and not predictions[
+            "trajectory_label"
+        ].equals(predictions["predicted_label"]):
+            issues.append(
+                "The saved table contains both target labels and predicted labels; they are not interchangeable."
+            )
     return issues
 
 
@@ -113,7 +166,10 @@ def data_mode() -> str:
     """Describe the source mode recorded by the most recent pipeline run."""
     manifest = read_json_artifact(str(OUTPUTS / "data_sources.json"))
     mode = str(manifest.get("source_mode", "not recorded"))
-    return {"local_development_csv": "Local development CSV", "postgresql": "PostgreSQL warehouse"}.get(mode, mode)
+    return {
+        "local_development_csv": "Local development CSV",
+        "postgresql": "PostgreSQL warehouse",
+    }.get(mode, mode)
 
 
 def source_manifest() -> dict[str, Any]:
@@ -134,4 +190,3 @@ def load_live_status() -> dict[str, Any]:
     from src.live_data.storage import read_status
 
     return read_status()
-

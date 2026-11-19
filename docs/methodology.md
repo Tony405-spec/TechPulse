@@ -1,4 +1,6 @@
-# Methodology
+# Superseded: Legacy Query Methodology
+
+This document explains the historical SQL analytics and includes company-adoption assumptions unsupported by the current local source files. Use docs/MODEL_METHODOLOGY.md for current feature/target guardrails and docs/RESPONSIBLE_USE.md for interpretation. Retained for query history.
 
 The queries are designed to be composable and to avoid hard-coded thresholds. Where possible they normalize metrics using percentiles (via `NTILE`) so that rankings remain stable even as data volume changes.
 

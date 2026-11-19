@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from src.data_ingestion import TABLES, _validate_frame, load_local_development_datasets
 from src.common import OUTPUTS_DIR
+from src.research_readiness import ResearchReadinessError, require_research_source_manifest
 
 
 def test_all_six_tables_loaded(sample_datasets):
@@ -36,3 +39,5 @@ def test_local_manifest_marks_proxy_tables():
     assert manifest["research_grade"] is False
     assert manifest["tables"]["fortune500_stacks"]["is_proxy"] is True
     assert "is_proxy" in manifest["tables"]["dev_sentiment"]
+    with pytest.raises(ResearchReadinessError, match="not exclusively PostgreSQL"):
+        require_research_source_manifest(OUTPUTS_DIR / "data_sources.json")

@@ -18,7 +18,7 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, StratifiedKFold, train_test_split
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, TimeSeriesSplit
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
 
@@ -149,7 +149,14 @@ def _class_counts(values: np.ndarray) -> dict[str, int]:
 
 def _split(
     frame: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.DataFrame, np.ndarray, np.ndarray, OrderedLabelEncoder, dict[str, Any]]:
+) -> tuple[
+    pd.DataFrame,
+    pd.DataFrame,
+    np.ndarray,
+    np.ndarray,
+    OrderedLabelEncoder,
+    dict[str, Any],
+]:
     """Create a chronological split when observation months are available.
 
     Args:
@@ -159,48 +166,51 @@ def _split(
         X_train, X_test, y_train, y_test, encoder, and split metadata.
     """
     encoder = OrderedLabelEncoder()
+    frame = frame.dropna(subset=[LABEL_COLUMN]).copy()
     leakage = [column for column in TARGET_LEAKAGE_COLUMNS if column in FEATURE_COLUMNS]
     if leakage:
-        raise ValueError(f"Target leakage columns must not be model features: {leakage}")
+        raise ValueError(
+            f"Target leakage columns must not be model features: {leakage}"
+        )
     X = frame[FEATURE_COLUMNS].apply(pd.to_numeric, errors="coerce")
     y = encoder.transform(frame[LABEL_COLUMN])
-    if OBSERVATION_MONTH_COLUMN in frame.columns:
-        months = pd.to_datetime(frame[OBSERVATION_MONTH_COLUMN], errors="coerce")
-        ordered_months = sorted(months.dropna().unique())
-        if len(ordered_months) >= 5:
-            cutoff_position = max(int(len(ordered_months) * 0.8), 1)
-            cutoff = ordered_months[min(cutoff_position, len(ordered_months) - 1)]
-            train_mask = months < cutoff
-            test_mask = months >= cutoff
-            if train_mask.any() and test_mask.any() and len(np.unique(y[train_mask])) >= 2:
-                metadata = {
-                    "split_strategy": "chronological",
-                    "train_start": str(months[train_mask].min().date()),
-                    "train_end": str(months[train_mask].max().date()),
-                    "test_start": str(months[test_mask].min().date()),
-                    "test_end": str(months[test_mask].max().date()),
-                }
-                return (
-                    X.loc[train_mask],
-                    X.loc[test_mask],
-                    y[train_mask],
-                    y[test_mask],
-                    encoder,
-                    metadata,
-                )
-    stratify = y if min(np.unique(y, return_counts=True)[1]) >= 2 else None
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.2,
-        stratify=stratify,
-        random_state=RANDOM_STATE,
+    if OBSERVATION_MONTH_COLUMN not in frame.columns:
+        raise ValueError(
+            "Chronological evaluation requires observation_month; random splitting is disabled."
+        )
+    months = pd.to_datetime(frame[OBSERVATION_MONTH_COLUMN], errors="coerce")
+    ordered_months = sorted(months.dropna().unique())
+    if len(ordered_months) < 5:
+        raise ValueError(
+            "Chronological evaluation requires at least five distinct observation months."
+        )
+    cutoff_position = max(int(len(ordered_months) * 0.8), 1)
+    cutoff = ordered_months[min(cutoff_position, len(ordered_months) - 1)]
+    train_mask, test_mask = months < cutoff, months >= cutoff
+    if not train_mask.any() or not test_mask.any() or len(np.unique(y[train_mask])) < 2:
+        raise ValueError("Chronological split has insufficient training class support.")
+    metadata = {
+        "split_strategy": "chronological_holdout",
+        "train_start": str(months[train_mask].min().date()),
+        "train_end": str(months[train_mask].max().date()),
+        "test_start": str(months[test_mask].min().date()),
+        "test_end": str(months[test_mask].max().date()),
+        "train_class_counts": _class_counts(y[train_mask]),
+        "test_class_counts": _class_counts(y[test_mask]),
+    }
+    return (
+        X.loc[train_mask],
+        X.loc[test_mask],
+        y[train_mask],
+        y[test_mask],
+        encoder,
+        metadata,
     )
-    metadata = {"split_strategy": "stratified_random" if stratify is not None else "random"}
-    return X_train, X_test, y_train, y_test, encoder, metadata
 
 
-def _fit_logistic(X_train: pd.DataFrame, y_train: np.ndarray, logger: logging.Logger) -> LogisticRegression:
+def _fit_logistic(
+    X_train: pd.DataFrame, y_train: np.ndarray, logger: logging.Logger
+) -> LogisticRegression:
     """Fit Logistic Regression with convergence retry.
 
     Args:
@@ -238,7 +248,12 @@ def _fit_logistic(X_train: pd.DataFrame, y_train: np.ndarray, logger: logging.Lo
     return model
 
 
-def _fit_knn(X_train: pd.DataFrame, y_train: np.ndarray, cv: StratifiedKFold, logger: logging.Logger) -> KNeighborsClassifier:
+def _fit_knn(
+    X_train: pd.DataFrame,
+    y_train: np.ndarray,
+    cv: list[tuple[np.ndarray, np.ndarray]],
+    logger: logging.Logger,
+) -> KNeighborsClassifier:
     """Fit KNN with grid search over k.
 
     Args:
@@ -267,22 +282,36 @@ def _fit_knn(X_train: pd.DataFrame, y_train: np.ndarray, cv: StratifiedKFold, lo
     return grid.best_estimator_
 
 
-def _cv_splitter(y_train: np.ndarray, logger: logging.Logger) -> StratifiedKFold:
-    """Create a stratified CV splitter that respects small local datasets."""
-    _, counts = np.unique(y_train, return_counts=True)
-    min_class_count = int(counts.min())
-    if min_class_count < 2:
+def _cv_splitter(
+    y_train: np.ndarray, months: pd.Series, logger: logging.Logger
+) -> list[tuple[np.ndarray, np.ndarray]]:
+    """Create expanding, month-grouped validation folds within the train era."""
+    month_values = pd.to_datetime(months, errors="coerce").reset_index(drop=True)
+    if month_values.isna().any():
         raise ValueError(
-            "At least two training records per class are required for stratified cross-validation."
+            "Walk-forward model selection requires valid training observation months."
         )
-    n_splits = min(5, min_class_count)
-    if n_splits < 5:
-        logger.warning(
-            "Using %s-fold stratified CV because the least-populated class has only %s training rows.",
-            n_splits,
-            min_class_count,
+    unique_months = np.array(sorted(month_values.unique()))
+    if len(unique_months) < 4:
+        raise ValueError(
+            "Walk-forward model selection requires at least four training months."
         )
-    return StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=RANDOM_STATE)
+    splitter = TimeSeriesSplit(n_splits=min(3, len(unique_months) - 2))
+    folds: list[tuple[np.ndarray, np.ndarray]] = []
+    for train_month_idx, validation_month_idx in splitter.split(unique_months):
+        train_mask = month_values.isin(unique_months[train_month_idx]).to_numpy()
+        validation_mask = month_values.isin(
+            unique_months[validation_month_idx]
+        ).to_numpy()
+        if len(np.unique(y_train[train_mask])) < 2:
+            continue
+        folds.append((np.flatnonzero(train_mask), np.flatnonzero(validation_mask)))
+    if len(folds) < 2:
+        raise ValueError(
+            "Fewer than two supported chronological validation folds are available."
+        )
+    logger.info("Using %s expanding chronological validation folds.", len(folds))
+    return folds
 
 
 def _artifact(
@@ -345,6 +374,18 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
     """
     logger = _configure_logger()
     production_run = feature_path is None
+    if production_run:
+        # The default pipeline path must never train from stale artifacts,
+        # proxy CSVs, or a partially validated PostgreSQL extraction.
+        from src.research_readiness import (
+            require_research_source_manifest,
+            require_validated_research_datasets,
+        )
+
+        require_research_source_manifest(DATA_DIR.parent / "outputs" / "data_sources.json")
+        require_validated_research_datasets(
+            DATA_DIR.parent / "outputs" / "data_quality_report.json"
+        )
     frame = load_feature_matrix(feature_path)
     X_train, X_test, y_train, y_test, encoder, split_metadata = _split(frame)
     if TECH_COLUMN in frame:
@@ -354,8 +395,12 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
         train_technologies = X_train.index.astype(str).tolist()
         test_technologies = X_test.index.astype(str).tolist()
     if OBSERVATION_MONTH_COLUMN in frame:
-        train_months = frame.loc[X_train.index, OBSERVATION_MONTH_COLUMN].astype(str).tolist()
-        test_months = frame.loc[X_test.index, OBSERVATION_MONTH_COLUMN].astype(str).tolist()
+        train_months = (
+            frame.loc[X_train.index, OBSERVATION_MONTH_COLUMN].astype(str).tolist()
+        )
+        test_months = (
+            frame.loc[X_test.index, OBSERVATION_MONTH_COLUMN].astype(str).tolist()
+        )
     else:
         train_months = []
         test_months = []
@@ -369,10 +414,19 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
         X_test = X_test.fillna({column: 0.5 for column in empty_feature_columns})
         split_metadata["empty_feature_columns_filled"] = empty_feature_columns
     imputer = SimpleImputer(strategy="median")
-    X_train_imp = pd.DataFrame(imputer.fit_transform(X_train), columns=FEATURE_COLUMNS, index=X_train.index)
-    X_test_imp = pd.DataFrame(imputer.transform(X_test), columns=FEATURE_COLUMNS, index=X_test.index)
-    cv = _cv_splitter(y_train, logger)
-    date_stamp = datetime.now().strftime("%Y%m%d")
+    X_train_imp = pd.DataFrame(
+        imputer.fit_transform(X_train), columns=FEATURE_COLUMNS, index=X_train.index
+    )
+    X_test_imp = pd.DataFrame(
+        imputer.transform(X_test), columns=FEATURE_COLUMNS, index=X_test.index
+    )
+    training_months = pd.to_datetime(
+        frame.loc[X_train.index, OBSERVATION_MONTH_COLUMN], errors="coerce"
+    )
+    cv = _cv_splitter(y_train, training_months, logger)
+    date_stamp = datetime.now().strftime("%Y%m%dT%H%M%S%fZ")
+    artifact_dir = MODELS_DIR / "runs" / date_stamp
+    artifact_dir.mkdir(parents=True, exist_ok=True)
     artifacts: dict[str, Path] = {}
 
     models: dict[str, Any] = {}
@@ -396,9 +450,14 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
         )
         rf_search.fit(X_train_imp, y_train)
         models["random_forest"] = rf_search.best_estimator_
-        logger.info("RF feature importances: %s", models["random_forest"].feature_importances_.tolist())
+        logger.info(
+            "RF feature importances: %s",
+            models["random_forest"].feature_importances_.tolist(),
+        )
     else:
-        logger.warning("Skipping Random Forest because the least-populated training class has fewer than 5 rows.")
+        logger.warning(
+            "Skipping Random Forest because the least-populated training class has fewer than 5 rows."
+        )
 
     if int(train_class_counts.min()) >= 5:
         xgb_search = RandomizedSearchCV(
@@ -438,9 +497,11 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
         models["xgboost"].fit(X_train_imp.astype("float32"), y_train)
 
     for name, model in models.items():
-        preds = model.predict(X_test_imp.astype("float32") if name == "xgboost" else X_test_imp)
+        preds = model.predict(
+            X_test_imp.astype("float32") if name == "xgboost" else X_test_imp
+        )
         logger.info("%s held-out accuracy: %.4f", name, accuracy_score(y_test, preds))
-        path = MODELS_DIR / f"techpulse_{name}_{date_stamp}.joblib"
+        path = artifact_dir / f"techpulse_{name}_{date_stamp}.joblib"
         joblib.dump(
             _artifact(
                 model,

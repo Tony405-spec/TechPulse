@@ -49,3 +49,14 @@ def test_future_window_labels_drive_temporal_targets(tmp_path):
     labels = dict(zip(frame["technology_name"], frame["trajectory_label"]))
     assert labels["future-growth"] == "Growing"
     assert labels["future-decline"] == "Declining"
+
+
+def test_incomplete_target_window_stays_unlabelled(tmp_path):
+    import pandas as pd
+
+    path = tmp_path / "missing_target.csv"
+    pd.DataFrame([{"technology_name": "unknown", "growth_momentum_index": 0.9}]).to_csv(
+        path, index=False
+    )
+    result = assign_trajectory_labels(path, path)
+    assert pd.isna(result.loc[0, LABEL_COLUMN])
