@@ -1,0 +1,290 @@
+[
+  {
+    "chapter": 1,
+    "title": "What TechPulse is"
+  },
+  {
+    "chapter": 1,
+    "title": "Research question and intended users"
+  },
+  {
+    "chapter": 1,
+    "title": "What the application can and cannot do"
+  },
+  {
+    "chapter": 2,
+    "title": "System requirements"
+  },
+  {
+    "chapter": 2,
+    "title": "Prepare the local project"
+  },
+  {
+    "chapter": 2,
+    "title": "Check Research database health"
+  },
+  {
+    "chapter": 2,
+    "title": "Understand the two operating modes"
+  },
+  {
+    "chapter": 3,
+    "title": "Open the application"
+  },
+  {
+    "chapter": 3,
+    "title": "Check the first screen"
+  },
+  {
+    "chapter": 3,
+    "title": "Use sidebar navigation"
+  },
+  {
+    "chapter": 3,
+    "title": "Read page banners and warnings"
+  },
+  {
+    "chapter": 3,
+    "title": "Understand common controls"
+  },
+  {
+    "chapter": 4,
+    "title": "Command Center overview"
+  },
+  {
+    "chapter": 4,
+    "title": "Interpret overview coverage"
+  },
+  {
+    "chapter": 5,
+    "title": "Technology Explorer overview"
+  },
+  {
+    "chapter": 5,
+    "title": "Search for a technology"
+  },
+  {
+    "chapter": 5,
+    "title": "Technology Profile overview"
+  },
+  {
+    "chapter": 5,
+    "title": "Inspect feature values in a profile"
+  },
+  {
+    "chapter": 5,
+    "title": "Inspect saved class probabilities"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 1: Technology Health Score"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 2: Growth Momentum Index"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 3: Question Quality Score"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 4: Company Diversity Score"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 5: Sentiment Delta"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 6: Adoption Velocity"
+  },
+  {
+    "chapter": 5,
+    "title": "Indicator 7: Community Decay Rate"
+  },
+  {
+    "chapter": 5,
+    "title": "Research Technology Explorer status"
+  },
+  {
+    "chapter": 6,
+    "title": "Global Rankings overview"
+  },
+  {
+    "chapter": 6,
+    "title": "Choose a ranking metric"
+  },
+  {
+    "chapter": 6,
+    "title": "Export and explain a ranking"
+  },
+  {
+    "chapter": 6,
+    "title": "Research Technology Rankings status"
+  },
+  {
+    "chapter": 7,
+    "title": "Community Health in Synthetic mode"
+  },
+  {
+    "chapter": 7,
+    "title": "Research Community Health and blocked validation"
+  },
+  {
+    "chapter": 7,
+    "title": "Handle missing community evidence"
+  },
+  {
+    "chapter": 8,
+    "title": "Enterprise Adoption in Synthetic mode"
+  },
+  {
+    "chapter": 8,
+    "title": "Research adoption evidence boundary"
+  },
+  {
+    "chapter": 8,
+    "title": "Developer Sentiment in Synthetic mode"
+  },
+  {
+    "chapter": 8,
+    "title": "Research survey and skills signals"
+  },
+  {
+    "chapter": 9,
+    "title": "Kenya Technology Landscape in Synthetic mode"
+  },
+  {
+    "chapter": 9,
+    "title": "Kenya evidence in Research mode"
+  },
+  {
+    "chapter": 10,
+    "title": "Model Laboratory overview"
+  },
+  {
+    "chapter": 10,
+    "title": "Retrain the synthetic model suite"
+  },
+  {
+    "chapter": 10,
+    "title": "Select a saved model to inspect"
+  },
+  {
+    "chapter": 10,
+    "title": "Understand accuracy, precision, and recall"
+  },
+  {
+    "chapter": 10,
+    "title": "Understand weighted and macro F1"
+  },
+  {
+    "chapter": 10,
+    "title": "Read the confusion matrix"
+  },
+  {
+    "chapter": 11,
+    "title": "Research Model Performance status"
+  },
+  {
+    "chapter": 11,
+    "title": "Research Prediction Explorer status"
+  },
+  {
+    "chapter": 11,
+    "title": "Synthetic saved predictions"
+  },
+  {
+    "chapter": 11,
+    "title": "SHAP global explanation"
+  },
+  {
+    "chapter": 11,
+    "title": "SHAP individual explanation"
+  },
+  {
+    "chapter": 12,
+    "title": "Data Observatory in Synthetic mode"
+  },
+  {
+    "chapter": 12,
+    "title": "Data Provenance and Quality in Research mode"
+  },
+  {
+    "chapter": 12,
+    "title": "Understand source validation"
+  },
+  {
+    "chapter": 12,
+    "title": "Methodology and feature definitions"
+  },
+  {
+    "chapter": 13,
+    "title": "Export available results"
+  },
+  {
+    "chapter": 13,
+    "title": "Practical workflow: research readiness review"
+  },
+  {
+    "chapter": 13,
+    "title": "Practical workflow: synthetic application walkthrough"
+  },
+  {
+    "chapter": 13,
+    "title": "Live Technology Intelligence status"
+  },
+  {
+    "chapter": 14,
+    "title": "Common errors: database and launch"
+  },
+  {
+    "chapter": 14,
+    "title": "Common warnings: source validation and missing inputs"
+  },
+  {
+    "chapter": 14,
+    "title": "Training action fails"
+  },
+  {
+    "chapter": 14,
+    "title": "Export and display troubleshooting"
+  },
+  {
+    "chapter": 14,
+    "title": "Frequently asked questions"
+  },
+  {
+    "chapter": 14,
+    "title": "FAQ: model and ranking questions"
+  },
+  {
+    "chapter": 14,
+    "title": "Messages and meanings quick reference"
+  },
+  {
+    "chapter": 14,
+    "title": "About and responsible use"
+  },
+  {
+    "chapter": 0,
+    "title": "Reference: seven indicator definitions"
+  },
+  {
+    "chapter": 0,
+    "title": "Reference: enterprise and sentiment indicators"
+  },
+  {
+    "chapter": 0,
+    "title": "Reference: community decay indicator"
+  },
+  {
+    "chapter": 0,
+    "title": "Reference: current evidence boundary"
+  },
+  {
+    "chapter": 0,
+    "title": "Safe repeated startup and reset"
+  }
+]
