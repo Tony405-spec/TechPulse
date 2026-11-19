@@ -1,0 +1,245 @@
+[
+  {
+    "name": "01_command_center",
+    "caption": "Figure 1.1. Synthetic Command Center. A: page navigation. B: synthetic scope banner. C: coverage metrics and class chart.",
+    "notes": [
+      "The page shows fictional catalogue counts and synthetic model metrics. It reports zero research predictions."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\01_command_center.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\01_command_center_annotated.png"
+  },
+  {
+    "name": "02_technology_explorer",
+    "caption": "Figure 5.1. Technology Explorer. A: search field. B: category filter. C: result table.",
+    "notes": [
+      "The default table is a fictional synthetic catalogue."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\02_technology_explorer.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\02_technology_explorer_annotated.png"
+  },
+  {
+    "name": "03_explorer_search_results",
+    "caption": "Figure 5.2. Search result for DemoLang. A: exact text filter. B: filtered result. C: profile preview.",
+    "notes": [
+      "Search uses case-insensitive literal text; no match displays a helpful empty state."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\03_explorer_search_results.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\03_explorer_search_results_annotated.png"
+  },
+  {
+    "name": "04_technology_profile_overview",
+    "caption": "Figure 5.3. Technology Profile. A: selected fictional technology. B: synthetic label. C: monthly activity history.",
+    "notes": [
+      "The chart and label are generated demonstration outputs."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\04_technology_profile_overview.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\04_technology_profile_overview_annotated.png"
+  },
+  {
+    "name": "05_profile_features",
+    "caption": "Figure 5.4. Seven feature values. A: Health Score. B: Growth Momentum Index. C: question and enterprise measures.",
+    "notes": [
+      "Read values using the nearby units. These demo formulae are not approved empirical definitions."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\05_profile_features.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\05_profile_features_annotated.png"
+  },
+  {
+    "name": "06_profile_predictions",
+    "caption": "Figure 5.5. Synthetic profile inference. A: model selector. B: generated class. C: class score table.",
+    "notes": [
+      "There is no separate live prediction-generation page; this saved inference is attached to the selected synthetic profile."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\06_profile_predictions.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\06_profile_predictions_annotated.png"
+  },
+  {
+    "name": "07_global_rankings",
+    "caption": "Figure 6.1. Global Rankings. A: metric selector. B: category filter. C: ranked result. D: CSV download.",
+    "notes": [
+      "Ranks describe the internally consistent synthetic scenario, not real-world technology leadership."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\07_global_rankings.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\07_global_rankings_annotated.png"
+  },
+  {
+    "name": "08_community_health",
+    "caption": "Figure 7.1. Community Health. A: fictional technology selector. B: generated activity timeline. C: discussion sample.",
+    "notes": [
+      "No generated post is a real Stack Overflow post or research observation."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\08_community_health.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\08_community_health_annotated.png"
+  },
+  {
+    "name": "09_enterprise_adoption",
+    "caption": "Figure 8.1. Enterprise Adoption. A: technology filter. B: sector filter. C: organization search. D: synthetic records.",
+    "notes": [
+      "Company names and relationships are fabricated examples, explicitly not verified adoption evidence."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\09_enterprise_adoption.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\09_enterprise_adoption_annotated.png"
+  },
+  {
+    "name": "10_developer_sentiment",
+    "caption": "Figure 8.2. Developer Sentiment. A: technology selector. B: measure selector. C: generated time series.",
+    "notes": [
+      "The monthly values and sample counts are simulated, not survey responses."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\10_developer_sentiment.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\10_developer_sentiment_annotated.png"
+  },
+  {
+    "name": "11_kenya_landscape",
+    "caption": "Figure 9.1. Kenya-labelled synthetic scenarios. A: explicit warning. B: location filter. C: exported scenario rows.",
+    "notes": [
+      "These are invented Kenya-labelled examples; the research database has no verified Kenya-specific technology observations."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\11_kenya_landscape.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\11_kenya_landscape_annotated.png"
+  },
+  {
+    "name": "12_model_laboratory",
+    "caption": "Figure 10.1. Model Laboratory. A: retraining action. B: metric selector. C: model selector. D: aggregate scores.",
+    "notes": [
+      "Four saved synthetic model runs are displayed. Use class-level metrics before interpreting aggregate scores."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\12_model_laboratory.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\12_model_laboratory_annotated.png"
+  },
+  {
+    "name": "13_model_class_metrics",
+    "caption": "Figure 10.2. Per-class evaluation and confusion matrix. A: class precision/recall/F1. B: confusion matrix. C: CV folds.",
+    "notes": [
+      "Declining recall is low on this imbalanced synthetic holdout."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\13_model_class_metrics.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\13_model_class_metrics_annotated.png"
+  },
+  {
+    "name": "14_explainability_global",
+    "caption": "Figure 11.1. Explainability overview. A: global mean absolute SHAP chart. B: synthetic scope warning.",
+    "notes": [
+      "This explanation is for a generated feature panel and synthetic Random Forest only."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\14_explainability_global.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\14_explainability_global_annotated.png"
+  },
+  {
+    "name": "15_explainability_local",
+    "caption": "Figure 11.2. Individual synthetic explanation. A: technology selector. B: local feature contributions.",
+    "notes": [
+      "Feature contributions are model associations, not causes."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\15_explainability_local.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\15_explainability_local_annotated.png"
+  },
+  {
+    "name": "16_data_observatory",
+    "caption": "Figure 12.1. Data Observatory. A: synthetic table counts. B: source and seed audit records.",
+    "notes": [
+      "The page exposes generated lineage and table counts from the isolated SQLite store."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\16_data_observatory.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\16_data_observatory_annotated.png"
+  },
+  {
+    "name": "17_methodology",
+    "caption": "Figure 12.2. Methodology and feature definitions. A: seven synthetic formula descriptions. B: label-rule boundary.",
+    "notes": [
+      "The SRS research rule and demo label rule are visibly distinguished."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\17_methodology.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\17_methodology_annotated.png"
+  },
+  {
+    "name": "18_research_overview",
+    "caption": "Figure 2.1. Research-mode overview. A: PostgreSQL status. B: real source coverage. C: prediction empty state.",
+    "notes": [
+      "This is genuine research mode. Counts describe recorded source coverage; the page says research predictions are not currently available."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\18_research_overview.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\18_research_overview_annotated.png"
+  },
+  {
+    "name": "20_research_rankings",
+    "caption": "Figure 6.2. Research rankings metric selector and evidence boundary.",
+    "notes": [
+      "The app withholds unsupported momentum values when the required time-aware community series is absent."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\20_research_rankings.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\20_research_rankings_annotated.png"
+  },
+  {
+    "name": "21_research_community_validation",
+    "caption": "Figure 7.2. Research community validation state. A: failed critical check. B: offending source evidence.",
+    "notes": [
+      "The two invalid cumulative Stack Exchange rows block ingestion rather than being silently removed."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\21_research_community_validation.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\21_research_community_validation_annotated.png"
+  },
+  {
+    "name": "22_research_prediction_empty",
+    "caption": "Figure 11.3. Research Prediction Explorer. A: accurate message when no valid model run and feature snapshot exist.",
+    "notes": [
+      "No research predictions are persisted; the warning is an intentional empty state."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\22_research_prediction_empty.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\22_research_prediction_empty_annotated.png"
+  },
+  {
+    "name": "23_research_model_empty",
+    "caption": "Figure 10.3. Research Model Performance. A: no valid PostgreSQL research run.",
+    "notes": [
+      "Historical fixtures and synthetic demo scores are excluded from current research results."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\23_research_model_empty.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\23_research_model_empty_annotated.png"
+  },
+  {
+    "name": "24_research_provenance",
+    "caption": "Figure 12.3. Research Data Provenance and Quality. A: source registry. B: canonical row estimates. C: blocked-source record.",
+    "notes": [
+      "The app is showing PostgreSQL provenance and status, not local synthetic SQLite rows."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\24_research_provenance.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\24_research_provenance_annotated.png"
+  },
+  {
+    "name": "25_research_market_signals",
+    "caption": "Figure 13.1. Research survey and skills view. A: year. B: geography. C: global-vs-Kenya evidence boundary.",
+    "notes": [
+      "Global/unspecified survey information is not presented as Kenya-specific behavior; no verified training/job evidence is reported."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\25_research_market_signals.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\25_research_market_signals_annotated.png"
+  },
+  {
+    "name": "26_research_live_empty",
+    "caption": "Figure 13.2. Research live-intelligence empty state. A: explicit message when no live observations are recorded.",
+    "notes": [
+      "No live technology observations are recorded in PostgreSQL."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\26_research_live_empty.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\26_research_live_empty_annotated.png"
+  },
+  {
+    "name": "27_research_responsible_use",
+    "caption": "Figure 13.3. Research interpretation and responsible-use notes.",
+    "notes": [
+      "The page distinguishes observations, derived measures, missing evidence, predictions, and limits."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\27_research_responsible_use.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\27_research_responsible_use_annotated.png"
+  },
+  {
+    "name": "19_research_technology_search",
+    "caption": "Figure 5.6. Research technology search. A: canonical name search. B: stored evidence and prediction status.",
+    "notes": [
+      "Searches the canonical PostgreSQL technology catalogue. Missing evidence remains unavailable."
+    ],
+    "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\19_research_technology_search.png",
+    "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\19_research_technology_search_annotated.png"
+  }
+]
