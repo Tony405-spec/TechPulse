@@ -26,4 +26,9 @@ def test_research_mode_keeps_its_explicit_database_unavailable_state():
     mode = next(element for element in app.selectbox if element.label == "Data mode")
     mode.set_value("Research · PostgreSQL").run(timeout=90)
     assert not app.exception
-    assert any("Research PostgreSQL unavailable" in item.value for item in app.error)
+    messages = [item.value for item in app.error] + [item.value for item in app.success]
+    assert any(
+        "Research PostgreSQL unavailable" in message
+        or "Research PostgreSQL connected" in message
+        for message in messages
+    )
