@@ -23,9 +23,10 @@ jobs:
           --health-timeout 5s
           --health-retries 12
     env:
-      DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/techpulse_sim
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/TechPulse-Database
+      TECHPULSE_SIM_DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/techpulse_sim
       TECHPULSE_DATABASE_NAME: techpulse_sim
-      TECHPULSE_EXPECTED_DATABASE: techpulse_sim
+      TECHPULSE_EXPECTED_DATABASE: TechPulse-Database
       TECHPULSE_TEST_DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/techpulse_sim_test
       TECHPULSE_TEST_DATABASE_NAME: techpulse_sim_test
       MPLBACKEND: Agg
@@ -41,11 +42,14 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Create isolated application and test databases
         run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -c 'CREATE DATABASE "TechPulse-Database"'
           PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE techpulse_sim"
           PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE techpulse_sim_test"
       - name: Apply research schema migrations
         run: python -m techpulse.cli db-migrate
       - name: Build and persist the reproducible simulation experiment
+        env:
+          DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/techpulse_sim
         run: python -m src.run_all
       - name: Apply isolated simulation test migrations
         run: python -m src.db.migrate --test
