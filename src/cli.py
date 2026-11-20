@@ -267,11 +267,13 @@ def _validate_ingest_input(
         # remain safely deduplicable above, but conflicting values must not be
         # silently resolved by row order during an upsert.
         natural_key = ["technology_name", "survey_year"]
-        conflicts = clean.loc[
-            clean.duplicated(natural_key, keep=False)
-        ].sort_values(natural_key)
+        conflicts = clean.loc[clean.duplicated(natural_key, keep=False)].sort_values(
+            natural_key
+        )
         if not conflicts.empty:
-            examples = conflicts[natural_key].drop_duplicates().head(10).to_dict("records")
+            examples = (
+                conflicts[natural_key].drop_duplicates().head(10).to_dict("records")
+            )
             raise ValueError(
                 "survey contains conflicting source rows for the canonical "
                 f"technology/year key; resolve source categories or schema mapping before ingest; keys={examples}"

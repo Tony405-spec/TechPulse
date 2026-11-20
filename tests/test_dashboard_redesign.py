@@ -62,32 +62,44 @@ def test_indicator_readiness_responds_to_valid_community_periods():
 
 
 def test_indicator_readiness_requires_sourced_company_evidence():
-    result = indicator_readiness({
-        "sourced_adoption_rows": 4,
-        "sourced_adoption_companies": 2,
-        "adoption_start": "2023-01-01",
-        "adoption_end": "2023-12-31",
-    }).set_index("Research indicator")
+    result = indicator_readiness(
+        {
+            "sourced_adoption_rows": 4,
+            "sourced_adoption_companies": 2,
+            "adoption_start": "2023-01-01",
+            "adoption_end": "2023-12-31",
+        }
+    ).set_index("Research indicator")
     assert result.loc["Company Diversity Score", "Input readiness"] == "Available"
     assert result.loc["Adoption Velocity", "Input readiness"] == "Available"
 
 
 def test_indicator_readiness_surfaces_failed_community_source():
-    result = indicator_readiness({
-        "stackexchange_failed_runs": 1,
-        "stackexchange_critical_failures": 1,
-    }).set_index("Research indicator")
-    assert result.loc["Growth Momentum Index", "Input readiness"] == "Invalid source data"
-    assert result.loc["Community Decay Rate", "Input readiness"] == "Invalid source data"
+    result = indicator_readiness(
+        {
+            "stackexchange_failed_runs": 1,
+            "stackexchange_critical_failures": 1,
+        }
+    ).set_index("Research indicator")
+    assert (
+        result.loc["Growth Momentum Index", "Input readiness"] == "Invalid source data"
+    )
+    assert (
+        result.loc["Community Decay Rate", "Input readiness"] == "Invalid source data"
+    )
 
 
 def test_indicator_readiness_detects_invalid_records_and_missing_periods():
-    result = indicator_readiness({
-        "community_rows": 3,
-        "valid_community_rows": 0,
-        "valid_community_months": 0,
-    }).set_index("Research indicator")
-    assert result.loc["Growth Momentum Index", "Input readiness"] == "Invalid source data"
+    result = indicator_readiness(
+        {
+            "community_rows": 3,
+            "valid_community_rows": 0,
+            "valid_community_months": 0,
+        }
+    ).set_index("Research indicator")
+    assert (
+        result.loc["Growth Momentum Index", "Input readiness"] == "Invalid source data"
+    )
     assert result.loc["Growth Momentum Index", "Evidence period"] == "Unavailable"
 
 
@@ -99,10 +111,17 @@ def test_research_explorer_search_filters_the_canonical_catalogue():
     app.selectbox[0].set_value("Technology Explorer").run()
     if not app.text_input:
         import pytest
-        pytest.skip("Development PostgreSQL database has no research technology catalogue.")
-    search = next(element for element in app.text_input if element.label == "Search technologies")
+
+        pytest.skip(
+            "Development PostgreSQL database has no research technology catalogue."
+        )
+    search = next(
+        element for element in app.text_input if element.label == "Search technologies"
+    )
     search.set_value("Python").run()
-    technology = next(element for element in app.selectbox if element.label == "Technology")
+    technology = next(
+        element for element in app.selectbox if element.label == "Technology"
+    )
     assert "Python" in technology.options
     assert all("python" in name.casefold() for name in technology.options)
 
@@ -115,7 +134,14 @@ def test_research_explorer_reports_an_empty_search_clearly():
     app.selectbox[0].set_value("Technology Explorer").run()
     if not app.text_input:
         import pytest
-        pytest.skip("Development PostgreSQL database has no research technology catalogue.")
-    search = next(element for element in app.text_input if element.label == "Search technologies")
+
+        pytest.skip(
+            "Development PostgreSQL database has no research technology catalogue."
+        )
+    search = next(
+        element for element in app.text_input if element.label == "Search technologies"
+    )
     search.set_value("no-such-techpulse-technology").run()
-    assert any("No technology matches that search." in element.value for element in app.info)
+    assert any(
+        "No technology matches that search." in element.value for element in app.info
+    )
