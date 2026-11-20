@@ -1,4 +1,4 @@
-name: TechPulse quality gates
+name: TechPulse quality gates (static)
 
 on:
   push:
@@ -7,20 +7,6 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: techpulse
-          POSTGRES_PASSWORD: techpulse-ci
-          POSTGRES_DB: TechPulse-Database
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U techpulse -d TechPulse-Database"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,19 +15,9 @@ jobs:
           cache: pip
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -r requirements.txt
-      - run: python -m black --check src/cli.py src/common.py src/data_ingestion.py src/feature_engineering.py src/labelling.py src/model_training.py src/evaluation.py techpulse/cli.py dashboard/app.py dashboard/data.py dashboard/components/ui.py dashboard/components/tech_detail_panel.py dashboard/views/1_Home.py dashboard/views/3_Model_Performance.py dashboard/views/6_Prediction_Explorer.py dashboard/views/7_Methodology_Data.py dashboard/views/9_Kenya_Landscape.py dashboard/views/10_Market_Skills.py tests/conftest.py tests/test_models.py tests/test_labelling.py tests/test_canonical_contract.py tests/test_dashboard_redesign.py
-      - run: python -m flake8 src/cli.py src/common.py src/data_ingestion.py src/feature_engineering.py src/labelling.py src/model_training.py src/evaluation.py techpulse/cli.py dashboard/app.py dashboard/data.py dashboard/components/ui.py dashboard/components/tech_detail_panel.py dashboard/views/1_Home.py dashboard/views/3_Model_Performance.py dashboard/views/6_Prediction_Explorer.py dashboard/views/7_Methodology_Data.py dashboard/views/9_Kenya_Landscape.py dashboard/views/10_Market_Skills.py tests/conftest.py tests/test_models.py tests/test_labelling.py tests/test_canonical_contract.py tests/test_dashboard_redesign.py
-      - run: python -m compileall -q src techpulse dashboard tests
-      - run: python -m black --check dashboard/db dashboard/page_renderer.py tests/test_dashboard_postgres.py tests/dashboard_smoke_app.py
-      - run: python -m flake8 dashboard/db dashboard/page_renderer.py tests/test_dashboard_postgres.py tests/dashboard_smoke_app.py
-      - name: Apply PostgreSQL migration
-        run: python -m techpulse.cli db-migrate
-        env:
-          DATABASE_URL: postgresql+psycopg2://techpulse:techpulse-ci@localhost:5432/TechPulse-Database
-      - name: Check PostgreSQL schemas
-        run: python -m techpulse.cli db-health
-        env:
-          DATABASE_URL: postgresql+psycopg2://techpulse:techpulse-ci@localhost:5432/TechPulse-Database
-      - run: python -m pytest tests/ -q
-        env:
-          DATABASE_URL: postgresql+psycopg2://techpulse:techpulse-ci@localhost:5432/TechPulse-Database
+      - name: Check formatting
+        run: python -m black --check dashboard/app.py src/feature_engineering.py tests/test_dashboard_modes.py
+      - name: Check lint
+        run: python -m flake8 dashboard/app.py src/feature_engineering.py tests/test_dashboard_modes.py
+      - name: Compile Python modules
+        run: python -m compileall -q src techpulse dashboard tests

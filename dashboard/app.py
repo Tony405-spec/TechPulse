@@ -1,27 +1,14 @@
-"""TechPulse application with explicit, isolated Research and Demo modes."""
+"""TechPulse application with separate Research and Simulation modes."""
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 import streamlit as st
-
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-from dashboard.db.health import check_database  # noqa: E402
+from dashboard.db.health import check_database
 from dashboard.page_renderer import (
     PAGES as RESEARCH_PAGES,
     render_page as render_research_page,
-)  # noqa: E402
-from dashboard.demo_renderer import (
-    PAGES as DEMO_PAGES,
-    render_page as render_demo_page,
-)  # noqa: E402
-from dashboard.demo_store import demo_schema_available  # noqa: E402
-from dashboard.simulation_renderer import render_simulation_app  # noqa: E402
+)
+from dashboard.simulation_renderer import render_simulation_app
 
 st.set_page_config(
     page_title="TechPulse | Evidence Dashboard", page_icon="TP", layout="wide"
@@ -33,12 +20,11 @@ with st.sidebar:
         "Data mode",
         [
             "Research · PostgreSQL",
-            "Legacy demo · PostgreSQL",
             "Simulation · PostgreSQL",
         ],
         key="techpulse_data_mode_v2",
-        index=2,
-        help="Research records, the legacy synthetic demo, and the versioned simulation experiment use separate database schemas and disclosures.",
+        index=1,
+        help="Research evidence and the versioned synthetic simulation are separate modes with separate disclosures.",
     )
 
 if mode == "Research · PostgreSQL":
@@ -74,21 +60,6 @@ if mode == "Research · PostgreSQL":
         st.caption("Research mode · canonical PostgreSQL only · no CSV/demo fallback")
     active_pages = RESEARCH_PAGES
     page_renderer = render_research_page
-elif mode == "Legacy demo · PostgreSQL":
-    with st.sidebar:
-        st.warning("SYNTHETIC DEMONSTRATION DATA", icon="⚠️")
-        st.caption(
-            "PostgreSQL demo schema; fictional records and synthetic-only metrics."
-        )
-        st.caption("Database: configured PostgreSQL · schema: demo")
-    if not demo_schema_available():
-        st.error("The PostgreSQL demo schema is unavailable.")
-        st.code(
-            "python -m dashboard.postgres_demo_migration --source outputs/synthetic_demo/techpulse_demo.sqlite"
-        )
-        st.stop()
-    active_pages = DEMO_PAGES
-    page_renderer = render_demo_page
 else:
     render_simulation_app()
     st.stop()

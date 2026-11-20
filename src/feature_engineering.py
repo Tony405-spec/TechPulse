@@ -376,7 +376,6 @@ def _enterprise_as_of(
     observed/reported records with a registered citation are considered.
     """
     stacks = datasets.get("fortune500_stacks", pd.DataFrame())
-    profiles = datasets.get("company_profiles", pd.DataFrame())
     tech = _tech_col(stacks)
     date = _date_col(stacks)
     company = _column(stacks, ["company_id", "company", "company_name"])
@@ -413,8 +412,6 @@ def _enterprise_as_of(
     ].copy()
     if observed.empty:
         return np.nan, np.nan
-    sector = _column(profiles, ["sector", "industry"])
-    profile_company = _column(profiles, ["company_id", "company", "company_name"])
     # The approved material does not define a technology-level diversity
     # formula. Keep the required feature missing until that definition is
     # approved; do not substitute an unapproved sector breadth measure.
