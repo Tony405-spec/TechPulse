@@ -6,13 +6,13 @@ From PowerShell in the project root:
 
 ```powershell
 python -m techpulse.cli db-health
-python -m dashboard.demo_store --build
+python -m dashboard.postgres_demo_migration --source outputs/synthetic_demo/techpulse_demo.sqlite
 python -m streamlit run dashboard/app.py
 ```
 
-The build/seed command is safe to repeat and idempotently updates the existing isolated demo store: `python -m dashboard.demo_store --build`. Destructive reset is not used for ordinary refreshes; it requires an SQLite backup and explicit confirmation: `python -m dashboard.demo_store --reset-demo --confirm-reset "RESET SYNTHETIC DEMO ONLY"`. Open the local Streamlit URL, normally `http://localhost:8501`.
+The migration command verifies the checksum and row counts when repeated; it will not replace existing PostgreSQL records: `python -m dashboard.postgres_demo_migration --source outputs/synthetic_demo/techpulse_demo.sqlite`. Destructive reset is not used for ordinary refreshes; it requires an SQLite backup and explicit confirmation: `python -m dashboard.demo_store --reset-demo --confirm-reset "RESET SYNTHETIC DEMO ONLY"`. Open the local Streamlit URL, normally `http://localhost:8501`.
 
-Fresh sidebar sessions default to **Synthetic demonstration · separate SQLite** for a populated walkthrough. Choose **Research data · PostgreSQL** explicitly to inspect genuine research evidence. If PostgreSQL is unavailable, research mode reports the error and stays in research mode. It never falls back to the demo database. Synthetic pages display a persistent synthetic-data notice.
+Fresh sidebar sessions default to **Synthetic demonstration · PostgreSQL** for a populated walkthrough. Choose **Research data · PostgreSQL** explicitly to inspect genuine research evidence. If PostgreSQL is unavailable, research mode reports the error and stays in research mode. It never falls back to the demo database. Synthetic pages display a persistent synthetic-data notice.
 
 ## Ten-minute walkthrough
 
@@ -30,7 +30,7 @@ Open Technology Explorer and search for Python. Show available survey records an
 
 ### 4:00–4:20 — Make the mode change explicit
 
-Use the sidebar selector to choose **Synthetic demonstration · separate SQLite**. Pause on the banner. Say that all subsequent charts, records, company examples, model metrics, predictions, and explanations are fictional demonstration outputs, not research evidence.
+Use the sidebar selector to choose **Synthetic demonstration · PostgreSQL**. Pause on the banner. Say that all subsequent charts, records, company examples, model metrics, predictions, and explanations are fictional demonstration outputs, not research evidence.
 
 ### 4:20–6:00 — Synthetic technology profile
 
@@ -63,5 +63,5 @@ Switch back to **Research data · PostgreSQL**. Close by restating that the inte
 ## Safe recovery during the presentation
 
 - If PostgreSQL is down, stay in Research mode long enough to state the connection issue, then explicitly select Synthetic demonstration mode. Do not let the app switch modes without the presenter choosing it.
-- If the synthetic store is missing, run `python -m dashboard.demo_store --build` and refresh the page.
+- If the synthetic store is missing, run `python -m dashboard.postgres_demo_migration --source outputs/synthetic_demo/techpulse_demo.sqlite` and refresh the page.
 - If port 8501 is already serving this TechPulse checkout, use the existing local URL. Otherwise start Streamlit with `python -m streamlit run dashboard/app.py --server.port 8502`.

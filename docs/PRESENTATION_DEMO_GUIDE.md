@@ -15,56 +15,56 @@ The app has no validated model predictions or Kenya-specific records today. Its 
 
 ## Minute 0–1: Introduction
 
-**Open:** **Executive Overview** (default page).
-**Show:** technology and observation counts, source-health state, freshness and limitations.
-**Say:** “TechPulse studies whether historical developer-community signals can help describe technology trajectories as Growing, Stable or Declining. It brings source lineage and time-aware validation into one inspectable system. A trajectory label is not a technology-quality or investment recommendation.”
+**Open:** **Executive Overview** (default page).  
+**Show:** technology and observation counts, source-health state, freshness and limitations.  
+**Say:** “TechPulse studies whether historical developer-community signals can help describe technology trajectories as Growing, Stable or Declining. It brings source lineage and time-aware validation into one inspectable system. A trajectory label is not a technology-quality or investment recommendation.”  
 **Highlight:** 267 catalogue technologies; the overview's observation counts are source records, not unique developers or adoption.
 
 ## Minute 1–2: Data and Sources
 
-**Open:** **Data Provenance and Quality**.
-**Click:** inspect the source registry and ingestion/quality rows; point to the failed `local_stackexchange` run and the successful survey source.
-**Say:** “The survey aggregate is global/unspecified. The official DataCamp course CSV verifies the source and confirms two invalid zero-total rows: an `ios` row reports zero questions but 181,334 unanswered, and an `amazon-mws` row reports zero for both. We preserve the raw rows and block ingestion rather than guessing replacements.”
+**Open:** **Data Provenance and Quality**.  
+**Click:** inspect the source registry and ingestion/quality rows; point to the failed `local_stackexchange` run and the successful survey source.  
+**Say:** “The survey aggregate is global/unspecified. The official DataCamp course CSV verifies the source and confirms two invalid zero-total rows: an `ios` row reports zero questions but 181,334 unanswered, and an `amazon-mws` row reports zero for both. We preserve the raw rows and block ingestion rather than guessing replacements.”  
 **Highlight:** `docs/THREE_DAY_PRESENTATION_RESCUE.md` and the newest `outputs/runs/data_quality_*.json` report record the current check. The 2016–2018 data contain cumulative snapshots, not daily arrivals.
 
 ## Minute 2–4: Technology Intelligence
 
-**Open:** **Technology Explorer**.
-**Click:** search/select **Python** in the technology control; review aliases/categories, source coverage, and the global survey rows. Then show the explicit no-community-evidence and no-prediction states.
-**Say:** “This page joins the canonical catalogue to each evidence type while preserving its geography and time. Missing community history is shown as unavailable, not as zero activity. The survey is a reported global measure, not a Kenya measure.”
+**Open:** **Technology Explorer**.  
+**Click:** search/select **Python** in the technology control; review aliases/categories, source coverage, and the global survey rows. Then show the explicit no-community-evidence and no-prediction states.  
+**Say:** “This page joins the canonical catalogue to each evidence type while preserving its geography and time. Missing community history is shown as unavailable, not as zero activity. The survey is a reported global measure, not a Kenya measure.”  
 **Highlight:** coverage table and survey year/usage-interest columns. Do not describe the survey's reported share as live usage or causal evidence.
 
 ## Minute 4–6: Predictive Modelling
 
-**Open:** **About and Responsible Use**, then **Prediction Explorer**.
-**Click:** show the methodology description and the prediction page's unavailable state.
-**Say:** “This database has no validated model run or saved predictions, so selecting a technology does not create an inference. The source ends in 2018; a source-aware three-month feasibility check contains no Declining examples in either the training or latest holdout period. No three-class model is reported.”
+**Open:** **About and Responsible Use**, then **Prediction Explorer**.  
+**Click:** show the methodology description and the prediction page's unavailable state.  
+**Say:** “This database has no validated model run or saved predictions, so selecting a technology does not create an inference. The source ends in 2018; a source-aware three-month feasibility check contains no Declining examples in either the training or latest holdout period. No three-class model is reported.”  
 **Highlight:** zero canonical model runs/predictions and the statement of the limitations. Explain Growing, Stable and Declining as future-vs-recent activity categories only when their underlying windows are complete.
 
 ## Minute 6–7: Model Evaluation
 
-**Open:** **Model Performance**.
-**Click:** show the explicit no-run/no-metrics state, then open `docs/MODEL_EVALUATION_REPORT.md` if the page needs supplementary explanation.
-**Say:** “Accuracy and F1 are unavailable for a valid research run. The saved perfect-looking comparison artifacts are synthetic test fixtures. Reporting them as research performance would be false. The valid next evaluation is chronological and compares majority and momentum baselines with suitable models.”
+**Open:** **Model Performance**.  
+**Click:** show the explicit no-run/no-metrics state, then open `docs/MODEL_EVALUATION_REPORT.md` if the page needs supplementary explanation.  
+**Say:** “Accuracy and F1 are unavailable for a valid research run. The saved perfect-looking comparison artifacts are synthetic test fixtures. Reporting them as research performance would be false. The valid next evaluation is chronological and compares majority and momentum baselines with suitable models.”  
 **Highlight:** no valid confusion matrix or per-class metric exists. Do not quote the synthetic scores.
 
 ## Minute 7–8: Explainability
 
-**Open:** return to **Prediction Explorer** and point to the unavailable explanation state; optionally show the methodology's explanation section.
-**Say:** “The schema and code can store feature contributions, and SHAP is available where compatible. There is no validated model prediction to explain in this database. Once generated, contributions would describe model associations, not causes.”
+**Open:** return to **Prediction Explorer** and point to the unavailable explanation state; optionally show the methodology's explanation section.  
+**Say:** “The schema and code can store feature contributions, and SHAP is available where compatible. There is no validated model prediction to explain in this database. Once generated, contributions would describe model associations, not causes.”  
 **Highlight:** no fabricated SHAP plot; explain that the explanation is linked to a specific saved prediction and model-run ID.
 
 ## Minute 8–9: Kenyan Context
 
-**Open:** **Kenya Technology Landscape**.
-**Click:** show the no-verified-Kenya-records state; return to **Market and Skills Signals** to show global survey coverage separately.
-**Say:** “The canonical Kenya query returns no verified local technology observations. We do not turn a global survey or company-profile file into Kenyan adoption statistics. Reliable local indicators would need dated, source-linked observations and documented coverage.”
+**Open:** **Kenya Technology Landscape**.  
+**Click:** show the no-verified-Kenya-records state; return to **Market and Skills Signals** to show global survey coverage separately.  
+**Say:** “The canonical Kenya query returns no verified local technology observations. We do not turn a global survey or company-profile file into Kenyan adoption statistics. Reliable local indicators would need dated, source-linked observations and documented coverage.”  
 **Highlight:** explicit zero available records means evidence unavailable, not a zero adoption rate.
 
 ## Minute 9–10: Limitations and Conclusion
 
-**Open:** **Data Provenance and Quality** or **About and Responsible Use**.
-**Say:** “The working contribution today is a reproducible evidence pipeline, canonical PostgreSQL model, data-quality gate, and dashboard that exposes the limits of its evidence. The next step is to verify and reconcile sources, rebuild time-aligned features, then persist an independently auditable chronological evaluation. TechPulse should support research discussion, not high-stakes technology decisions.”
+**Open:** **Data Provenance and Quality** or **About and Responsible Use**.  
+**Say:** “The working contribution today is a reproducible evidence pipeline, canonical PostgreSQL model, data-quality gate, and dashboard that exposes the limits of its evidence. The next step is to verify and reconcile sources, rebuild time-aligned features, then persist an independently auditable chronological evaluation. TechPulse should support research discussion, not high-stakes technology decisions.”  
 **Close:** invite questions and leave time for one.
 
 ## If something fails

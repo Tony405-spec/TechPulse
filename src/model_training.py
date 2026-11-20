@@ -382,7 +382,9 @@ def train_all_models(feature_path: Path | None = None) -> dict[str, Path]:
             require_validated_research_datasets,
         )
 
-        require_research_source_manifest(DATA_DIR.parent / "outputs" / "data_sources.json")
+        require_research_source_manifest(
+            DATA_DIR.parent / "outputs" / "data_sources.json"
+        )
         require_validated_research_datasets(
             DATA_DIR.parent / "outputs" / "data_quality_report.json"
         )

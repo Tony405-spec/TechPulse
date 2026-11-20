@@ -1,0 +1,36 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/python:1-3.11-bookworm
+    init: true
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/TechPulse:cached
+    working_dir: /workspaces/TechPulse
+    environment:
+      DATABASE_URL: postgresql+psycopg2://techpulse_sim_app@postgres:5432/techpulse_sim
+      TECHPULSE_DATABASE_NAME: techpulse_sim
+      DATA_BACKEND: postgres
+      PYTHONUNBUFFERED: "1"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: techpulse_sim
+      POSTGRES_USER: techpulse_sim_app
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - techpulse-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U techpulse_sim_app -d techpulse_sim"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # Intentionally no host-published port: this disposable dev database is
+    # reachable only by the app container on the private Compose network.
+
+volumes:
+  techpulse-postgres:

@@ -12,6 +12,7 @@ from dashboard.components.ui import apply_theme, disclaimer_panel, render_shell
 from dashboard.db.connection import DatabaseUnavailable
 from dashboard.db import repositories as repo
 from dashboard.readiness import indicator_readiness
+from dashboard.model_selection import select_best_model
 
 KENYA_WARNING = "Kenya-specific technology-market evidence is currently limited. Global survey data is shown separately and must not be interpreted as Kenyan developer behaviour."
 
@@ -55,6 +56,45 @@ def _freshness(value: Any) -> str:
     if value is None or pd.isna(value):
         return "Unavailable"
     return pd.Timestamp(value).strftime("%Y-%m-%d %H:%M UTC")
+
+
+def _best_model_section() -> None:
+    """Render only a model winner supported by eligible PostgreSQL records."""
+    st.subheader("Best Performing Model")
+    selection = select_best_model(repo.model_runs(), repo.model_class_metrics())
+    if selection is None:
+        st.info(
+            "No best model can be established. PostgreSQL does not currently contain a comparable, recent evaluation with a feature snapshot, a defined label, and supported results for all three lifecycle classes."
+        )
+        return
+    columns = st.columns(4)
+    columns[0].metric("Selected model", selection["model_name"])
+    columns[1].metric("Macro F1", f"{selection['macro_f1']:.3f}")
+    columns[2].metric(
+        "Weighted F1",
+        f"{selection['weighted_f1']:.3f}" if pd.notna(selection.get("weighted_f1")) else "Unavailable",
+    )
+    columns[3].metric(
+        "Accuracy",
+        f"{selection['accuracy']:.3f}" if pd.notna(selection.get("accuracy")) else "Unavailable",
+    )
+    st.caption(
+        "Selected by macro F1 within one matching PostgreSQL evaluation cohort. Ties use the weakest class recall and F1, then weighted F1 and accuracy. This criterion differs from SRS FR-10 and requires supervisor confirmation."
+    )
+    class_frame = pd.DataFrame(selection["class_metrics"])
+    if not class_frame.empty:
+        st.markdown("#### Lifecycle classification performance")
+        st.dataframe(
+            class_frame[["class_name", "precision", "recall", "f1", "support"]],
+            width="stretch",
+            hide_index=True,
+        )
+    st.markdown("#### Strongest model by class F1")
+    class_winners = pd.DataFrame(
+        [{"Lifecycle category": label, "Model": model or "Inconclusive"}
+         for label, model in selection["class_winners"].items()]
+    )
+    st.dataframe(class_winners, width="stretch", hide_index=True)
 
 
 def _download(frame: pd.DataFrame, key: str) -> None:
@@ -163,6 +203,7 @@ def _overview() -> None:
     st.info(
         "Research status: no validated lifecycle labels, model run, or persisted predictions are currently available. Counts on this page describe source coverage, not technology health or adoption."
     )
+    _best_model_section()
     with st.expander("Research indicator readiness and definitions"):
         readiness_facts = repo.indicator_evidence()
         if readiness_facts.empty:
@@ -620,6 +661,7 @@ def _predictions() -> None:
 
 
 def _models() -> None:
+    _best_model_section()
     data = repo.model_runs()
     if data.empty:
         st.info(

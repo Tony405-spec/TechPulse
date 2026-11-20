@@ -46,7 +46,7 @@ def test_database_url_handles_hyphen_and_psycopg2():
 def test_successful_postgres_connectivity_and_health():
     result = check_database()
     assert result["connected"] is True, result["error"]
-    assert result["database_name"] == "TechPulse-Database"
+    assert result["database_name"] == os.getenv("TECHPULSE_EXPECTED_DATABASE", "TechPulse-Database")
     assert "PostgreSQL" in result["postgres_version"]
     assert result["migration_count"] >= 1
     assert result["missing_relations"] == []
@@ -75,7 +75,7 @@ def test_invalid_connection_renders_explicit_error_state(monkeypatch):
         timeout=45
     )
     next(element for element in app.selectbox if element.label == "Data mode").set_value(
-        "Research data · PostgreSQL"
+        "Research · PostgreSQL"
     ).run(timeout=45)
     assert not app.exception
     rendered = " ".join(

@@ -61,7 +61,9 @@ def _validate_frame(table: str, frame: pd.DataFrame) -> dict[str, Any]:
         issues.append({"type": "minimum_rows", "message": message})
 
     missingness = {
-        str(column): (round(float(frame[column].isna().mean() * 100), 2) if row_count else None)
+        str(column): (
+            round(float(frame[column].isna().mean() * 100), 2) if row_count else None
+        )
         for column in frame.columns
     }
     date_ranges: dict[str, dict[str, str | None]] = {}
@@ -102,10 +104,12 @@ def _validate_frame(table: str, frame: pd.DataFrame) -> dict[str, Any]:
             )
 
     if table == "dev_sentiment" and "satisfaction_score" not in frame.columns:
-        issues.append({
-            "type": "semantic_gap",
-            "message": "No satisfaction_score is present; usage, interest and admiration are not developer satisfaction sentiment.",
-        })
+        issues.append(
+            {
+                "type": "semantic_gap",
+                "message": "No satisfaction_score is present; usage, interest and admiration are not developer satisfaction sentiment.",
+            }
+        )
 
     quality_passed = (
         row_count >= 50
@@ -147,7 +151,9 @@ def load_and_validate_datasets() -> dict[str, pd.DataFrame]:
     load_dotenv()
     database_url = os.environ.get("DATABASE_URL")
     if not database_url:
-        if os.environ.get("TECHPULSE_ALLOW_LOCAL_DEVELOPMENT_DATA", "").strip().lower() in {"1", "true", "yes"}:
+        if os.environ.get(
+            "TECHPULSE_ALLOW_LOCAL_DEVELOPMENT_DATA", ""
+        ).strip().lower() in {"1", "true", "yes"}:
             return load_local_development_datasets()
         raise EnvironmentError(
             "DATABASE_URL is required for the research pipeline. The CSV development adapter creates proxy tables and is disabled by default; set TECHPULSE_ALLOW_LOCAL_DEVELOPMENT_DATA=true only for non-research exploration."
@@ -190,14 +196,36 @@ def load_and_validate_datasets() -> dict[str, pd.DataFrame]:
                     datasets = _load_canonical_dataset_compatibility(connection, text)
                     source_mode = "postgresql_canonical_compatibility"
                     table_lineage = {
-                        "so_questions": {"relation": "core.community_questions; analytics.community_monthly_metrics", "is_proxy": False},
-                        "dev_sentiment": {"relation": "analytics.developer_survey_observations", "is_proxy": False, "semantic_note": "Usage/interest/admiration only; satisfaction is absent."},
-                        "fortune500_stacks": {"relation": "analytics.company_technology_evidence with source lineage", "is_proxy": False},
-                        "company_profiles": {"relation": "core.company_profiles", "is_proxy": False},
-                        "tech_metadata": {"relation": "core.technologies and category memberships", "is_proxy": False},
-                        "question_company_mapping": {"relation": None, "is_proxy": False, "status": "not represented in canonical schema"},
+                        "so_questions": {
+                            "relation": "core.community_questions; analytics.community_monthly_metrics",
+                            "is_proxy": False,
+                        },
+                        "dev_sentiment": {
+                            "relation": "analytics.developer_survey_observations",
+                            "is_proxy": False,
+                            "semantic_note": "Usage/interest/admiration only; satisfaction is absent.",
+                        },
+                        "fortune500_stacks": {
+                            "relation": "analytics.company_technology_evidence with source lineage",
+                            "is_proxy": False,
+                        },
+                        "company_profiles": {
+                            "relation": "core.company_profiles",
+                            "is_proxy": False,
+                        },
+                        "tech_metadata": {
+                            "relation": "core.technologies and category memberships",
+                            "is_proxy": False,
+                        },
+                        "question_company_mapping": {
+                            "relation": None,
+                            "is_proxy": False,
+                            "status": "not represented in canonical schema",
+                        },
                     }
-            report = {name: _validate_frame(name, frame) for name, frame in datasets.items()}
+            report = {
+                name: _validate_frame(name, frame) for name, frame in datasets.items()
+            }
             if source_mode == "postgresql_canonical_compatibility":
                 with connection.begin():
                     connection.execute(text("SET TRANSACTION READ ONLY"))
@@ -213,16 +241,24 @@ def load_and_validate_datasets() -> dict[str, pd.DataFrame]:
                 critical_community_failures = 0
             report["_pipeline_readiness"] = {
                 "source_mode": source_mode,
-                "all_datasets_passed": all(value["passed"] for value in report.values()),
+                "all_datasets_passed": all(
+                    value["passed"] for value in report.values()
+                ),
                 "critical_community_validation_failures": critical_community_failures,
                 "note": "A structurally loaded dataset can still be inadequate for modeling; labels and temporal coverage require independent checks.",
             }
             report_path = OUTPUTS_DIR / "data_quality_report.json"
-            report_path.write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
+            report_path.write_text(
+                json.dumps(report, indent=2, default=str), encoding="utf-8"
+            )
             for name, frame in datasets.items():
                 table_lineage[name]["rows"] = int(len(frame))
                 table_lineage[name]["validation_passed"] = report[name]["passed"]
-            _write_source_manifest(source_mode, "Read-only PostgreSQL source extraction through the legacy or documented canonical compatibility mapping.", table_lineage)
+            _write_source_manifest(
+                source_mode,
+                "Read-only PostgreSQL source extraction through the legacy or documented canonical compatibility mapping.",
+                table_lineage,
+            )
     except RuntimeError:
         raise
     except SQLAlchemyError as exc:
@@ -233,7 +269,9 @@ def load_and_validate_datasets() -> dict[str, pd.DataFrame]:
     return datasets
 
 
-def _load_canonical_dataset_compatibility(connection: Any, text: Any) -> dict[str, pd.DataFrame]:
+def _load_canonical_dataset_compatibility(
+    connection: Any, text: Any
+) -> dict[str, pd.DataFrame]:
     """Map canonical read-only relations to the six SRS dataset contracts.
 
     The adapter does not infer company adoption or developer satisfaction.
@@ -302,10 +340,7 @@ def _load_canonical_dataset_compatibility(connection: Any, text: Any) -> dict[st
                    NULL::text AS technology WHERE false
         """,
     }
-    return {
-        name: pd.read_sql(text(sql), connection)
-        for name, sql in queries.items()
-    }
+    return {name: pd.read_sql(text(sql), connection) for name, sql in queries.items()}
 
 
 def load_local_development_datasets() -> dict[str, pd.DataFrame]:

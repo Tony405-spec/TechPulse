@@ -1,104 +1,52 @@
-# Run TechPulse in GitHub Codespaces
+# Run the new TechPulse app in GitHub Codespaces
 
-This guide starts the Streamlit app inside a GitHub Codespace with its own PostgreSQL database. A Codespace does not include the PostgreSQL database from your computer, and the project does not commit database credentials or populated database files.
+The current app on `main` is the presentation-ready PostgreSQL Streamlit app. It is not the older SQLite demo. Codespaces uses a Linux development container even if you open it from a Windows computer, so do not run Windows PowerShell commands or enter a Windows/PostgreSQL password at a Linux `sudo` prompt.
 
-> **Simulation notice:** The presentation-ready Simulation mode uses generated profiles and generated activity, adoption, sentiment, labels and model outputs. It is for demonstrating the workflow; it is not evidence about the real named technologies, actual company adoption, developer sentiment, or Kenya. The separate Research mode may show empty or blocked evidence states.
+> **Research integrity:** The app’s Simulation mode uses generated technology profiles, activity, enterprise events, survey-like values, labels and model results. These demonstrate the software workflow; they are not verified facts about the named technologies, companies, developers, or Kenya. The Research mode is separate and may report missing or blocked evidence.
 
-## 1. Create the Codespace
+## Recommended: create a fresh Codespace after the update merges
 
-1. Open the TechPulse repository on GitHub.
-2. Select **Code → Codespaces → Create codespace on `codex/techpulse-presentation-ready`**. If GitHub has a newer default branch, choose the branch containing this guide and deck.
-3. Wait for the Codespace to finish building, then open its terminal.
+1. Open the repository on GitHub and select branch **`main`**.
+2. Choose **Code → Codespaces → Create codespace on main**.
+3. Wait for the first setup to finish. The repository’s dev-container configuration automatically:
+   - starts a private PostgreSQL service for this Codespace;
+   - installs the Python requirements;
+   - applies the database migrations and runs the deterministic simulation pipeline if the database is empty; and
+   - starts Streamlit and forwards port **8501**.
+4. When GitHub offers the forwarded port, click **Open in Browser**. If it does not open automatically, use the Codespaces **Ports** panel and open **TechPulse Streamlit (8501)**.
 
-## 2. Install and start PostgreSQL
+The initial build and model run can take several minutes. Keep the Codespace open while it prepares. No `sudo`, local Windows PostgreSQL service, `.env` edit, or password is needed for this Codespaces setup.
 
-Run in the Codespace terminal:
+## Update an existing Codespace on `main`
 
-```bash
-sudo apt-get update
-sudo apt-get install -y postgresql postgresql-contrib
-sudo service postgresql start
-pg_isready
-```
-
-Create a dedicated database and application role. Choose a strong URL-safe password and keep it private:
+In its terminal, run:
 
 ```bash
-sudo -u postgres psql
+git pull origin main
 ```
 
-At the `psql` prompt, enter:
+Then open the Command Palette with **Ctrl+Shift+P**, run **Codespaces: Rebuild Container**, and wait for the setup to finish. The new configuration is only applied after the rebuild. Then open forwarded port **8501**.
 
-```sql
-CREATE ROLE techpulse_sim_app LOGIN;
-\password techpulse_sim_app
-CREATE DATABASE techpulse_sim OWNER techpulse_sim_app;
-\q
-```
+## Start Streamlit manually
 
-The `\password` command prompts you privately; it avoids putting the password in shell history or the SQL command.
-
-## 3. Install Python dependencies and configure the connection
-
-From the repository root:
+The configured Codespace starts the app automatically. If you need to start it yourself, use the Codespace terminal (Linux shell):
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-cp .env.example .env
-nano .env
-```
-
-In `.env`, set `DATABASE_URL` to the dedicated Codespace database, replacing the placeholder with the password you just created:
-
-```dotenv
-DATABASE_URL=postgresql+psycopg2://techpulse_sim_app:YOUR_URL_SAFE_PASSWORD@localhost:5432/techpulse_sim
-```
-
-Keep `.env` private. It is ignored by Git. Save and exit nano with **Ctrl+O**, **Enter**, then **Ctrl+X**. Restrict its permissions:
-
-```bash
-chmod 600 .env
-```
-
-If the password contains reserved URL characters, percent-encode them in `DATABASE_URL`; choosing a strong password using only letters and numbers avoids that extra step.
-
-## 4. Initialize the simulation database (first run only)
-
-Run the reproducible pipeline once in this new database:
-
-```bash
-python -m src.db.migrate
-python -m src.run_all
-```
-
-This applies versioned migrations, generates and loads the configured simulation, creates features and labels, and runs the grouped model experiment. It may take several minutes. The app requires the resulting PostgreSQL tables and saved model outputs; it does not silently substitute CSV files. Do not rerun the full experiment every time you start Streamlit.
-
-## 5. Start the app
-
-For each Codespace session, start PostgreSQL and Streamlit:
-
-```bash
-sudo service postgresql start
+cd /workspaces/TechPulse
 source .venv/bin/activate
 python -m streamlit run dashboard/app.py --server.address 0.0.0.0 --server.port 8501
 ```
 
-When Codespaces prompts about port **8501**, choose **Open in Browser**. If the prompt does not appear, open the **Ports** panel and follow the forwarded link for port 8501. Leave the terminal process running while presenting.
+Do not run `sudo -u postgres psql` here. PostgreSQL is already running as a separate, private Codespaces service. The disposable database is not exposed as a forwarded port and is intended only for this development demonstration, not production use.
 
-A stopped Codespace normally preserves its workspace and database files. If you rebuild or delete the Codespace, its PostgreSQL data may be lost; repeat the first-run initialization for a fresh database. Do not create or commit a database dump as a shortcut.
+## If setup or the app fails
 
-## Troubleshooting
-
-- **Connection refused / database unavailable:** start PostgreSQL with `sudo service postgresql start`, check `pg_isready`, then verify the database name, role, password and port in `.env`.
-- **Authentication failed:** reset the role password with `sudo -u postgres psql` followed by `\password techpulse_sim_app`, then update the private `.env` URL.
-- **Simulation tables or model results missing:** run `python -m src.db.migrate` and `python -m src.run_all` against the dedicated `techpulse_sim` database. This is the first-run initialization step and can take several minutes.
-- **Streamlit page is blank or inaccessible:** confirm the terminal still shows Streamlit running on port 8501 and open that port from the Codespaces **Ports** panel.
-- **App opens in Research mode:** use the sidebar **Data mode** selector and explicitly choose **Simulation · PostgreSQL** for the generated demonstration.
-- **Prediction missing for a technology:** saved held-out predictions exist only for some simulated profiles. The app does not invent a live prediction when one is absent.
+- **Setup still running:** check the Codespaces build/setup output; the first-time dependency install and model training are expected to take several minutes.
+- **Port 8501 is not open:** use the Ports panel. If the app is stopped, run the manual Streamlit command above.
+- **Database connection error:** use **Codespaces: Rebuild Container** so the private PostgreSQL service starts with the app container. Do not paste a password into the `sudo` prompt.
+- **No saved prediction for a selected technology:** the app only shows persisted held-out predictions; it does not create an unsupported live prediction.
+- **Research pages are empty or blocked:** select **Simulation · PostgreSQL** for the generated demonstration. Research evidence remains separate.
 
 ## Presentation files
 
-The annotated PowerPoint walkthrough is [TechPulse_Demo_Walkthrough.pptx](final_presentation/TechPulse_Demo_Walkthrough.pptx). It identifies the demo profile selection rule, shows the app click path, and labels the actual saved model metrics and simulation limitations.
+The [annotated walkthrough](final_presentation/TechPulse_Demo_Walkthrough.pptx) shows the click path, selected demo examples, actual saved simulation metrics and limitations. Familiar technology names in Simulation mode are display labels attached to generated profiles; they do not make the simulated histories real-world evidence.

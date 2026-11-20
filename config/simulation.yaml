@@ -1,0 +1,66 @@
+version: techpulse-simulator-v1
+seed: 42
+technology_count: 300
+company_count: 500
+start_month: '2015-01-01'
+months: 120
+anchor_every_months: 6
+minimum_history_months: 6
+low_confidence_below_history_months: 24
+categories:
+  Languages: 0.25
+  Frameworks: 0.25
+  Databases: 0.25
+  Tools: 0.25
+# These are scenario assumptions, not empirical class quotas. The realized
+# class distribution is measured after the shared future-window labeller runs.
+curve_families:
+  plateau: 0.48
+  logistic_growth: 0.20
+  post_peak_decay: 0.16
+  late_surge: 0.09
+  hype_then_collapse: 0.07
+curve_parameters:
+  growth_rate_log_mean: 7.0
+  growth_rate_log_sigma: 0.28
+  peak_time_min: 0.35
+  peak_time_max: 0.78
+  category_amplitude_sigma: 0.20
+  decay_rate_min: 1.0
+  decay_rate_max: 2.6
+  latent_floor: 0.18
+  latent_scale_min: 0.75
+  latent_scale_max: 1.45
+community:
+  baseline_volume_log_mean: 3.9
+  baseline_volume_log_sigma: 0.55
+  overdispersion: 18.0
+  seasonal_amplitude: 0.12
+  noise_ar1: 0.55
+  noise_sigma: 0.18
+  shock_probability: 0.018
+  shock_log_sigma: 0.75
+  answer_rate_logit_mean: 1.2
+  closure_rate_logit_mean: -1.7
+  engagement_noise_sigma: 0.30
+enterprise:
+  monthly_adoption_hazard: 0.012
+  latent_sensitivity: 1.15
+  latent_midpoint: 0.82
+  lag_months_min: 6
+  lag_months_max: 24
+  depth_beta_alpha: 2.5
+  depth_beta_beta: 5.0
+  sector_effect_sigma: 0.45
+  company_effect_sigma: 0.55
+sentiment:
+  annual_respondents_min: 250
+  annual_respondents_max: 4200
+  missing_rate: 0.12
+  noise_sigma: 12.0
+  hype_sigma: 15.0
+  lead_months_min: -9
+  lead_months_max: 9
+  intent_noise_sigma: 0.16
+mapping:
+  adoption_event_mapping_rate: 0.35

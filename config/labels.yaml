@@ -1,0 +1,10 @@
+version: future-window-ratio-v1
+recent_window_months: 3
+future_horizon_months: 6
+growing_ratio_threshold: 1.20
+declining_ratio_threshold: 0.80
+minimum_recent_mean: 1.0
+# Ambiguity affects measurement noise before labeling; labels are never flipped afterwards.
+ambiguous_threshold_band_ratio: 0.06
+ambiguous_noise_probability: 0.03
+ambiguous_future_measurement_log_sigma: 0.12

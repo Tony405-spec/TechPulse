@@ -1,7 +1,7 @@
 # TechPulse three-day presentation rescue and implementation status
 
-**Checked:** 2026-11-17 (audit artifacts generated 2026-11-16)
-**Repository:** `C:\Users\Administrator\Downloads\TechPulse-main (4)\TechPulse-main`
+**Checked:** 2026-11-17 (audit artifacts generated 2026-11-16)  
+**Repository:** `C:\Users\Administrator\Downloads\TechPulse-main (4)\TechPulse-main`  
 **Approved project title:** *Predicting Developer Technology Decline Using Community Signals and Enterprise Adoption Patterns: A Machine Learning Approach*
 
 > **Latest implementation amendment (2026-11-17):** The later expanded SQLite demo and populated synthetic walkthrough supersede the earlier demo counts, model scores, and interface-default descriptions below. The separate demo now contains 210 technologies, saved synthetic observations/features, four executed synthetic model runs, predictions/probabilities, and RF SHAP records. Fresh sessions default to Synthetic demonstration mode; select Research mode deliberately to show genuine PostgreSQL evidence. The research limitations, approved title, zero verified Kenya observations, blocked Stack Exchange source, and absence of a valid research model remain unchanged. See [the current implementation report and presentation script](FINAL_IMPLEMENTATION_REPORT.md#current-synthetic-demonstration-implementation-update--2026-11-17) for verified counts, model metrics, tests, startup, and examiner questions.
@@ -16,7 +16,7 @@ The most defensible presentation in the remaining time is a reproducible source-
 
 ## Final application implementation update (2026-11-17)
 
-The sidebar now requires an explicit mode choice. **Research data · PostgreSQL** remains the default and reads only the existing canonical PostgreSQL schemas. **Synthetic demonstration · separate SQLite** reads `outputs/synthetic_demo/techpulse_demo.sqlite`. A database error never changes modes automatically.
+The sidebar now requires an explicit mode choice. **Research data · PostgreSQL** remains the default and reads only the existing canonical PostgreSQL schemas. **Synthetic demonstration · PostgreSQL** reads `outputs/synthetic_demo/techpulse_demo.sqlite`. A database error never changes modes automatically.
 
 The separate synthetic database is relational and includes keys, foreign keys, unique constraints, indexes, source metadata, observation dates, model-run metadata, quality checks, model metrics, predictions, and explanations. It contains 12 fictional technologies, 864 simulated community rows, 72 survey-like rows, 45 fictional company examples, 492 feature/label snapshots, four model runs, 12 synthetic-only predictions, 84 SHAP explanation rows, and zero Kenya indicators. Every demo table carries `SYNTHETIC DEMONSTRATION DATA`; fictional company records say `NOT VERIFIED - SYNTHETIC ONLY` and use `synthetic://` source references.
 
@@ -144,7 +144,7 @@ From PowerShell at the repository root:
 
 ```powershell
 python -m techpulse.cli db-health
-python -m dashboard.demo_store --build
+python -m dashboard.postgres_demo_migration --source outputs/synthetic_demo/techpulse_demo.sqlite
 python -m streamlit run dashboard/app.py
 ```
 
@@ -169,28 +169,28 @@ In research mode, do not demonstrate an unsupported predicted class, research mo
 
 ## Likely examiner questions
 
-**Why is there no model result?**
+**Why is there no model result?**  
 The verified historical source contains cumulative relative-share snapshots with two upstream zero-total anomalies. After preserving those rows and using complete-window candidate outcomes, the purged panel has no Declining examples; the longer 12-month setup has zero training rows after overlap purging. A three-class result would therefore be unsupported.
 
-**Why not delete the bad rows or replace them?**
+**Why not delete the bad rows or replace them?**  
 They are present in the publisher-hosted source and no authoritative correction was found. Removing them from the raw file would damage provenance. The derived feasibility analysis flags and excludes them while retaining the originals.
 
-**What is being predicted in the feasibility audit?**
+**What is being predicted in the feasibility audit?**  
 Nothing is predicted. It compares future and recent mean Stack Overflow tag question-share as a label-support probe. It does not measure technology lifecycle, enterprise adoption, or Kenyan usage, and no classifier is trained.
 
-**Why not use the earlier 100% score?**
+**Why not use the earlier 100% score?**  
 The prior comparison is a synthetic fixture or lacks a reproducible research input/run record. It is not a valid test result and is excluded from claims.
 
-**Does the Fortune file show enterprise adoption?**
+**Does the Fortune file show enterprise adoption?**  
 No. It contains company profiles and lacks verified company-technology evidence, observation dates, and adoption provenance.
 
-**Does the survey show Kenyan developer sentiment?**
+**Does the survey show Kenyan developer sentiment?**  
 No. It is a global/unspecified self-selected survey aggregate. It cannot be presented as a Kenya sample.
 
-**Why does the dashboard show unavailable values?**
+**Why does the dashboard show unavailable values?**  
 The application queries canonical tables, which currently contain no eligible observations or model outputs for those functions. Unavailable is different from zero and safer than a fabricated value.
 
-**What is the next defensible research action?**
+**What is the next defensible research action?**  
 Ask the supervisor whether to amend the evidence scope and label definition. Then acquire dated, reproducible community observations and verified company-technology evidence, document source terms, construct time-aligned feature snapshots/labels, and use leakage-controlled chronological evaluation.
 
 ## Supervisor clarification required

@@ -376,7 +376,6 @@ def _enterprise_as_of(
     observed/reported records with a registered citation are considered.
     """
     stacks = datasets.get("fortune500_stacks", pd.DataFrame())
-    profiles = datasets.get("company_profiles", pd.DataFrame())
     tech = _tech_col(stacks)
     date = _date_col(stacks)
     company = _column(stacks, ["company_id", "company", "company_name"])
@@ -386,7 +385,16 @@ def _enterprise_as_of(
     if group.empty:
         return np.nan, np.nan
     source_class = _column(group, ["source_class", "evidence_type"])
-    source_reference = _column(group, ["source_url", "source_key", "source_document_id", "source_reference", "citation"])
+    source_reference = _column(
+        group,
+        [
+            "source_url",
+            "source_key",
+            "source_document_id",
+            "source_reference",
+            "citation",
+        ],
+    )
     if source_class is None or source_reference is None:
         return np.nan, np.nan
     group = group.loc[
@@ -399,18 +407,20 @@ def _enterprise_as_of(
     if group.empty:
         return np.nan, np.nan
     group[date] = pd.to_datetime(group[date], errors="coerce")
-    observed = group.loc[group[date].notna() & (group[date] <= observation_month)].copy()
+    observed = group.loc[
+        group[date].notna() & (group[date] <= observation_month)
+    ].copy()
     if observed.empty:
         return np.nan, np.nan
-    sector = _column(profiles, ["sector", "industry"])
-    profile_company = _column(profiles, ["company_id", "company", "company_name"])
     # The approved material does not define a technology-level diversity
     # formula. Keep the required feature missing until that definition is
     # approved; do not substitute an unapproved sector breadth measure.
     diversity = np.nan
     # Count first documented company/technology appearances per quarter, then
     # average over the trailing four calendar quarters (including zeros).
-    first_events = observed.sort_values(date).drop_duplicates(subset=[company], keep="first")
+    first_events = observed.sort_values(date).drop_duplicates(
+        subset=[company], keep="first"
+    )
     quarter_counts = pd.to_datetime(first_events[date]).dt.to_period("Q").value_counts()
     current_quarter = observation_month.to_period("Q")
     quarters = [current_quarter - offset for offset in range(4)]
@@ -516,13 +526,15 @@ def _temporal_so_panel(
             quality_denominator = float(history["volume"].sum())
             answer_rate = (
                 float(history["answers"].sum()) / quality_denominator
-                if quality_denominator > 0 else np.nan
+                if quality_denominator > 0
+                else np.nan
             )
             prior_month_volume = float(history["volume"].iloc[-2])
             current_month_volume = float(history["volume"].iloc[-1])
             prior_30d_momentum = (
                 100.0 * (current_month_volume - prior_month_volume) / prior_month_volume
-                if prior_month_volume > 0 else np.nan
+                if prior_month_volume > 0
+                else np.nan
             )
             health_score = (
                 quality_denominator * answer_rate if pd.notna(answer_rate) else np.nan
@@ -543,8 +555,11 @@ def _temporal_so_panel(
                     ),
                     "adoption_velocity": adoption_velocity,
                     "community_decay_rate": max(
-                        (previous_volume - recent_volume) / previous_volume
-                        if previous_volume > 0 else np.nan,
+                        (
+                            (previous_volume - recent_volume) / previous_volume
+                            if previous_volume > 0
+                            else np.nan
+                        ),
                         0.0,
                     ),
                     "technology_health_score": health_score,
@@ -574,9 +589,13 @@ def _enterprise_features(
         DataFrame keyed by technology name.
     """
     source_class = _column(stacks, ["source_class", "evidence_type"])
-    source_ref = _column(stacks, ["source_key", "source_reference", "source_url", "citation"])
+    source_ref = _column(
+        stacks, ["source_key", "source_reference", "source_url", "citation"]
+    )
     if source_class is None or source_ref is None:
-        logger.warning("Enterprise adoption requires source class and a traceable citation.")
+        logger.warning(
+            "Enterprise adoption requires source class and a traceable citation."
+        )
         return pd.DataFrame(columns=[TECH_COLUMN])
     stacks = stacks.loc[
         stacks[source_class].astype(str).str.casefold().isin({"observed", "reported"})
@@ -590,7 +609,9 @@ def _enterprise_features(
         logger.warning("Enterprise features missing technology or company column.")
         return pd.DataFrame(columns=[TECH_COLUMN])
     if stacks.empty:
-        logger.warning("No source-supported observed/reported company technology evidence is available.")
+        logger.warning(
+            "No source-supported observed/reported company technology evidence is available."
+        )
         return pd.DataFrame(columns=[TECH_COLUMN])
     sector = _column(profiles, ["sector", "industry"])
     profile_company = _column(profiles, ["company_id", "company", "company_name"])
@@ -716,7 +737,9 @@ def compute_feature_matrix(
     missing_counts = features[FEATURE_COLUMNS].isna().sum(axis=1)
     excluded = features.loc[missing_counts > 3, TECH_COLUMN].tolist()
     for technology in excluded:
-        logger.info("Excluding %s because more than 3 of 7 features are missing.", technology)
+        logger.info(
+            "Excluding %s because more than 3 of 7 features are missing.", technology
+        )
     features = features.loc[missing_counts <= 3].copy()
     # Values already have interpretable rate/ratio units. Scaling across the
     # full time series before a split would leak held-out distribution data.
@@ -729,17 +752,23 @@ def compute_feature_matrix(
     (OUTPUTS_DIR / "feature_schema.json").write_text(
         pd.Series(FEATURE_COLUMNS).to_json(orient="values"), encoding="utf-8"
     )
-    (OUTPUTS_DIR / "feature_definitions.json").write_text(json.dumps({
-        "technology_health_score": "Query 9 form: historical question volume multiplied by answer fraction; normalized within as-of month.",
-        "growth_momentum_index": "Query 7 form: percent change in monthly question volume versus prior month; normalized within as-of month.",
-        "question_quality_score": "Query 10 form: answered questions / observed question volume over the trailing 12-month feature window.",
-        "company_diversity_score": "Unavailable until supervisor approves the technology-level formula; sector breadth is not silently adopted.",
-        "sentiment_delta": "Difference between earliest and latest satisfaction_score available on or before as-of year; usage/interest/admiration shares are excluded.",
-        "adoption_velocity": "Mean count of first source-supported company/technology appearances per quarter over the current and prior three quarters.",
-        "community_decay_rate": "Positive fractional decline in observed question volume in the recent six months versus the preceding six months; growth is floored at zero.",
-        "normalization": "Numeric features are min-max normalized within each as-of month to avoid using later months to scale earlier observations.",
-        "missingness": "Unsupported features remain NaN; no zeros or proxies are substituted. Technologies with more than three missing indicators are excluded from model input.",
-    }, indent=2), encoding="utf-8")
+    (OUTPUTS_DIR / "feature_definitions.json").write_text(
+        json.dumps(
+            {
+                "technology_health_score": "Query 9 form: historical question volume multiplied by answer fraction; normalized within as-of month.",
+                "growth_momentum_index": "Query 7 form: percent change in monthly question volume versus prior month; normalized within as-of month.",
+                "question_quality_score": "Query 10 form: answered questions / observed question volume over the trailing 12-month feature window.",
+                "company_diversity_score": "Unavailable until supervisor approves the technology-level formula; sector breadth is not silently adopted.",
+                "sentiment_delta": "Difference between earliest and latest satisfaction_score available on or before as-of year; usage/interest/admiration shares are excluded.",
+                "adoption_velocity": "Mean count of first source-supported company/technology appearances per quarter over the current and prior three quarters.",
+                "community_decay_rate": "Positive fractional decline in observed question volume in the recent six months versus the preceding six months; growth is floored at zero.",
+                "normalization": "Numeric features are min-max normalized within each as-of month to avoid using later months to scale earlier observations.",
+                "missingness": "Unsupported features remain NaN; no zeros or proxies are substituted. Technologies with more than three missing indicators are excluded from model input.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     (OUTPUTS_DIR / "target_leakage_columns.json").write_text(
         pd.Series(TARGET_LEAKAGE_COLUMNS).to_json(orient="values"), encoding="utf-8"
     )

@@ -271,6 +271,7 @@ ORDER BY p.predicted_at DESC
 MODEL_RUNS = """
 SELECT r.model_run_id, r.started_at, r.finished_at, r.status, r.code_version,
        r.config_hash, r.dataset_snapshot, r.feature_snapshot_id,
+       r.label_definition_id,
        fs.as_of_date AS feature_snapshot_date, fs.source_snapshot,
        ld.name AS label_name, ld.version AS label_version, r.seed,
        r.split_metadata, r.feature_definitions, r.hyperparameters,

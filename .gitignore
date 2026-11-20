@@ -1,11 +1,11 @@
-# Environment and credentials
+# Environment
 .env
+*.env
 .env.*
 !.env.example
-*.env
-.streamlit/secrets.toml
 
-# Python and test caches
+# Python
+.venv/
 __pycache__/
 *.py[cod]
 *.pyo
@@ -13,38 +13,65 @@ __pycache__/
 .coverage
 coverage.xml
 .pylint.d/
-.ipynb_checkpoints/
 
-# Logs
+# Logs (never commit)
 logs/
-*.log
 
-# Local databases and generated model binaries
-*.db
-*.sqlite
-*.sqlite3
-*.joblib
-*.pkl
-*.pickle
-models/runs/
+# Models (large binary files)
+models/*.joblib
+models/*.pkl
 
-# Generated outputs and demonstrations
-outputs/runs/
-outputs/synthetic_demo/
-outputs/live_data/
-outputs/presentation_rescue/
+# Data (may be large)
+data/feature_matrix.csv
+data/raw_external/
+
+# Outputs (generated)
 outputs/*.png
 outputs/*.csv
 outputs/*.json
 !outputs/data_provenance.json
 outputs/*.html
 outputs/*.npy
+outputs/live_data/
 
-# Large or external data
-data/feature_matrix.csv
-data/raw_external/
-
-# OS and review artifacts
+# OS
 .DS_Store
 Thumbs.db
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/secrets.toml
 .pdf_review/
+
+# Generated data bundles and ML artifacts
+data/bundles/
+bundles/
+*.parquet
+models/*.json
+models/*.ubj
+models/*.bin
+models/*.model
+
+**/node_modules/
+.codex-build/
+models/runs/
+*.sqlite
+*.sqlite3
+*.db
+
+outputs/runs/
+outputs/synthetic_demo/
+outputs/*.log
+*.joblib
+*.pkl
+*.onnx
+*.pt
+*.h5
+*.keras
+*.safetensors
+
+~$*
+outputs/*.log
+

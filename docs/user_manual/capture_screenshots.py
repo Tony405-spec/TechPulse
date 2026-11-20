@@ -99,7 +99,7 @@ with sync_playwright() as p:
     page.locator('main').evaluate('(e)=>e.scrollTo(0,1100)'); page.wait_for_timeout(400)
     capture(page,'15_explainability_local','Figure 11.2. Individual synthetic explanation. A: technology selector. B: local feature contributions.', ['Feature contributions are model associations, not causes.'])
     go(page,'Data Observatory','Data Observatory')
-    capture(page,'16_data_observatory','Figure 12.1. Data Observatory. A: synthetic table counts. B: source and seed audit records.', ['The page exposes generated lineage and table counts from the isolated SQLite store.'])
+    capture(page,'16_data_observatory','Figure 12.1. Data Observatory. A: synthetic table counts. B: source and seed audit records.', ['The page exposes generated lineage and table counts from the isolated PostgreSQL demo schema.'])
     go(page,'Methodology & About','Methodology & About')
     capture(page,'17_methodology','Figure 12.2. Methodology and feature definitions. A: seven synthetic formula descriptions. B: label-rule boundary.', ['The SRS research rule and demo label rule are visibly distinguished.'])
     # Switch to genuine Research mode using the mode selector.
