@@ -1,0 +1,98 @@
+{
+  "generated_at_utc": "2026-11-16T20:51:38.494520+00:00",
+  "source": {
+    "source_url": "https://assets.datacamp.com/production/repositories/3567/datasets/1e9257c9d86e03a979124c6d99a0ff154da953fd/stackexchange.csv",
+    "source_file": "data\\stackexchange (1).csv",
+    "source_sha256": "2f3404dc403331a3be28ce4e40ae6d92adf5f86daa02b0c5eee695d535ec08f1",
+    "primary_file": "data\\stackexchange.csv",
+    "primary_sha256": "399e605b062480664d1989e12c98b57c282c158201903d60e55cfa37d3598e26",
+    "primary_matches_source": true
+  },
+  "quality": {
+    "rows": 45238,
+    "tags": 53,
+    "date_start": "2016-01-01",
+    "date_end": "2018-09-25",
+    "exact_duplicate_rows": 0,
+    "invalid_rows_union": 2,
+    "invalid_counts_by_rule": {
+      "invalid_date": 0,
+      "missing_count": 0,
+      "non_positive_cumulative_total": 2,
+      "negative_count": 0,
+      "unanswered_exceeds_total": 1,
+      "invalid_question_share": 0,
+      "invalid_unanswered_share": 0
+    },
+    "invalid_examples": [
+      {
+        "tag": "amazon-mws",
+        "date": "2018-02-21 00:00:00",
+        "question_count": 0,
+        "question_pct": 0.0,
+        "unanswered_count": 0,
+        "unanswered_pct": 0.0,
+        "quality_flags": "non_positive_cumulative_total"
+      },
+      {
+        "tag": "ios",
+        "date": "2018-02-21 00:00:00",
+        "question_count": 0,
+        "question_pct": 0.0,
+        "unanswered_count": 181334,
+        "unanswered_pct": 0.040964614,
+        "quality_flags": "non_positive_cumulative_total, unanswered_exceeds_total"
+      }
+    ]
+  },
+  "monthly_snapshot_rows": 1515,
+  "monthly_tags": 53,
+  "monthly_rows_per_tag": {
+    "min": 19,
+    "median": 25.0,
+    "max": 33
+  },
+  "candidate_definition": {
+    "signal": "question_pct, the source's relative share of questions by tag",
+    "history_months": 6,
+    "recent_window_months": 3,
+    "outcome_window_months": 3,
+    "growing_ratio": 1.2,
+    "declining_ratio": 0.8,
+    "limitation": "candidate historical relative-share label only; not enterprise adoption or technology lifecycle decline"
+  },
+  "three_month_panel": {
+    "rows": 1091,
+    "origin_months": 25,
+    "first_origin": "2016-06-01",
+    "last_origin": "2018-06-01",
+    "all_panel_class_counts": {
+      "Growing": 30,
+      "Stable": 1061,
+      "Declining": 0
+    },
+    "purged_training_rows": 879,
+    "purged_training_end": "2018-02-01",
+    "purged_training_class_counts": {
+      "Growing": 22,
+      "Stable": 857,
+      "Declining": 0
+    },
+    "latest_holdout_rows": 53,
+    "latest_holdout_class_counts": {
+      "Growing": 4,
+      "Stable": 49,
+      "Declining": 0
+    },
+    "model_status": "not trained: Declining has zero support in the purged training set and zero support in the latest holdout"
+  },
+  "twelve_month_horizon": {
+    "panel_rows": 308,
+    "origin_months": 10,
+    "latest_origin": "2017-09-01",
+    "purged_training_rows": 0,
+    "holdout_rows": 50,
+    "decision": "no training history remains after purging all training outcomes that overlap the latest holdout's feature period"
+  },
+  "research_scope": "global Stack Overflow tag-relative question-share feasibility only; not Kenya-specific, not verified enterprise adoption, and not a validated technology-decline prediction"
+}

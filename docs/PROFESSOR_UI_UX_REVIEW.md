@@ -1,7 +1,7 @@
 # TechPulse UI/UX and functional quality review
 
-**Review date:** 2026-11-17
-**Application:** Streamlit research mode backed by PostgreSQL `TechPulse-Database`
+**Review date:** 2026-11-17  
+**Application:** Streamlit research mode backed by PostgreSQL `TechPulse-Database`  
 **Scope:** Interface and workflow improvements only. No research data, database rows, schema, model artifacts, or research objectives were changed.
 
 ## Initial findings

@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 import json
-import sqlite3
-
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
 from dashboard.components.ui import apply_theme
-from dashboard.demo_store import DATABASE_PATH, FEATURES, read_demo_table
+from dashboard.demo_store import read_demo_table
+from dashboard.model_selection import select_best_synthetic_model
 
 PAGES = [
     "Command Center",
@@ -77,7 +76,7 @@ def _techs() -> pd.DataFrame:
 
 
 def _command_center() -> None:
-    _banner("Command Center", "A guided walkthrough of the application using a separate synthetic data store.")
+    _banner("Command Center", "A guided walkthrough of fictional demonstration data stored in PostgreSQL.")
     tech = _techs()
     evidence = _table("enterprise_evidence")
     metrics = _table("model_metrics")
@@ -95,10 +94,22 @@ def _command_center() -> None:
         fig = px.bar(counts.rename_axis("scenario").reset_index(name="fictional technologies"), x="scenario", y="fictional technologies", color="scenario", color_discrete_map={"Growing": "#89A98D", "Stable": "#B7A77D", "Declining": "#B97478"})
         st.plotly_chart(_plot_theme(fig), width="stretch")
     with right:
-        st.subheader("Synthetic model run status")
-        st.dataframe(metrics[["model_name", "accuracy", "weighted_f1", "validation_design"]], width="stretch", hide_index=True)
-        st.caption("Metrics are computed on generated records only. Verified research model runs: 0.")
-    st.info("Use the sidebar mode selector to return to the PostgreSQL research database. That mode never falls back to this SQLite demo store.")
+        runs = _table("model_runs")
+        selection = select_best_synthetic_model(metrics, runs, cv_results=_table("model_cv_results"))
+        st.subheader("Best performing model · synthetic evaluation only")
+        if selection is None:
+            st.info("No comparable, sufficiently supported synthetic model evaluation is available.")
+        else:
+            st.metric("Macro F1 leader", selection["model_name"], f"{selection['macro_f1']:.3f}")
+            st.caption(
+                "Selection uses PostgreSQL-stored results and is not evidence of research performance. "
+                f"Four-fold weighted-F1 standard deviation: {selection['validation_weighted_f1_std']:.3f}."
+                if selection["validation_weighted_f1_std"] is not None
+                else "Selection uses PostgreSQL-stored results and is not evidence of research performance. Fold stability is unavailable."
+            )
+            class_frame = pd.DataFrame.from_dict(selection["class_metrics"], orient="index")
+            st.dataframe(class_frame[["precision", "recall", "f1", "support"]], width="stretch")
+    st.info("Research mode reads the canonical PostgreSQL research schemas. Synthetic demo records remain isolated in PostgreSQL schema `demo`.")
 
 
 def _technology_explorer() -> None:
@@ -276,19 +287,26 @@ def _kenya() -> None:
 
 def _model_lab() -> None:
     _banner("Model Laboratory", "Actual classifiers trained on simulated records, evaluated chronologically, and stored with a synthetic-only scope.")
-    if st.button("Train and persist all four synthetic demo models"):
-        from dashboard.demo_population import train_demo_models_from_database
-
-        with sqlite3.connect(DATABASE_PATH) as connection:
-            connection.execute("PRAGMA foreign_keys=ON")
-            result = train_demo_models_from_database(connection)
-        st.cache_data.clear()
-        st.success(
-            f"Trained from SQLite feature snapshots. Best synthetic holdout model: {result['best_model']}; "
-            f"persisted predictions: {result['predictions']}; SHAP explanations: {result['explanations']}."
-        )
-        st.rerun()
     runs = _table("model_metrics")
+    selection = select_best_synthetic_model(runs, _table("model_runs"), cv_results=_table("model_cv_results"))
+    if selection is None:
+        st.info("No comparable synthetic evaluation with adequate support for all lifecycle classes is available.")
+    else:
+        st.subheader("Best model by macro F1 · synthetic only")
+        st.metric(selection["model_name"], f"{selection['macro_f1']:.3f}", "Macro F1")
+        stability_text = (
+            f"Four-fold weighted-F1 SD {selection['validation_weighted_f1_std']:.3f}"
+            if selection["validation_weighted_f1_std"] is not None
+            else "fold stability unavailable"
+        )
+        st.caption(f"Synthetic holdout only · evaluation period ended {selection['evaluation_date']} · {stability_text}")
+        st.dataframe(pd.DataFrame.from_dict(selection["class_metrics"], orient="index"), width="stretch")
+        st.markdown("#### Highest class-specific F1 across candidates")
+        st.dataframe(pd.DataFrame([
+            {"Lifecycle class": label, "Best model": selection["class_winners"][label],
+             "Best F1": f"{max(json.loads(row.class_metrics_json)[label]['f1'] for row in runs.itertuples(index=False)):.3f}"}
+            for label in ("Growing", "Stable", "Declining")
+        ]), width="stretch", hide_index=True)
     metric_columns = ["model_name", "accuracy", "precision", "recall", "weighted_f1", "macro_f1", "validation_design", "train_start", "train_end", "test_start", "test_end"]
     st.dataframe(runs[metric_columns], width="stretch", hide_index=True)
     _download(runs[metric_columns], "techpulse_synthetic_model_metrics.csv")

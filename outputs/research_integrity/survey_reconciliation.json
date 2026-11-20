@@ -1,0 +1,64 @@
+{
+  "report_type": "read_only_survey_reconciliation",
+  "source_path": "data\\developer_survey_usage.csv",
+  "source_sha256": "f323de9927400cd35a7f6a0a1acafcf0221bb4d8131c2f2e6b988bd46c101531",
+  "source_rows_read": 685,
+  "source_exact_duplicate_rows": 0,
+  "source_distinct_natural_keys": 684,
+  "validated_rows": null,
+  "validation_error": "survey contains conflicting source rows for the canonical technology/year key; resolve source categories or schema mapping before ingest; keys=[{'technology_name': 'Supabase', 'survey_year': 2024}]",
+  "exact_duplicate_rows_removed_by_validator": null,
+  "database_rows_for_source": 684,
+  "database_distinct_natural_keys": 684,
+  "source_keys_missing_from_database": [],
+  "database_keys_absent_from_source": [],
+  "conflicting_source_natural_keys": [
+    {
+      "technology_name": "Supabase",
+      "survey_year": 2024,
+      "source_rows": [
+        {
+          "technology_name": "Supabase",
+          "survey_year": 2024,
+          "technology": "Supabase",
+          "category": "Database",
+          "respondent_count": 65437,
+          "worked_with_count": 2078,
+          "want_to_work_with_count": 2930,
+          "admired_count": 1254,
+          "developer_usage_share": 0.0317557345232819,
+          "developer_interest_share": 0.0447758913153109,
+          "developer_admiration_share": 0.0191634702079863,
+          "source_type": "official_stackoverflow_developer_survey"
+        },
+        {
+          "technology_name": "Supabase",
+          "survey_year": 2024,
+          "technology": "Supabase",
+          "category": "Platform",
+          "respondent_count": 65437,
+          "worked_with_count": 1767,
+          "want_to_work_with_count": 2287,
+          "admired_count": 1109,
+          "developer_usage_share": 0.0270030716567079,
+          "developer_interest_share": 0.0349496462246129,
+          "developer_admiration_share": 0.0169475984534743,
+          "source_type": "official_stackoverflow_developer_survey"
+        }
+      ],
+      "stored_row": [
+        {
+          "technology_name": "Supabase",
+          "survey_year": 2024,
+          "respondent_count": 65437,
+          "developer_usage_share": 0.0270030716567079,
+          "developer_interest_share": 0.0349496462246129,
+          "developer_admiration_share": 0.0169475984534743
+        }
+      ]
+    }
+  ],
+  "discrepancy_explanation": "The CSV contains two distinct Supabase 2024 rows (Database and Platform) for one technology/year key, while the canonical database unique key omits category and can store only one. The stored values match the Platform row; the latest ingestion run wrote zero rows, so it does not establish which earlier input row was retained.",
+  "database_mutated": false,
+  "ingestion_runs_created": false
+}

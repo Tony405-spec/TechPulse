@@ -1,0 +1,17 @@
+{
+  "name": "TechPulse presentation app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/TechPulse",
+  "remoteUser": "vscode",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8501],
+  "portsAttributes": {
+    "8501": {
+      "label": "TechPulse Streamlit",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start-app.sh"
+}

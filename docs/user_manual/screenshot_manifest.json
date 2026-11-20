@@ -138,7 +138,7 @@
     "name": "16_data_observatory",
     "caption": "Figure 12.1. Data Observatory. A: synthetic table counts. B: source and seed audit records.",
     "notes": [
-      "The page exposes generated lineage and table counts from the isolated SQLite store."
+      "The page exposes generated lineage and table counts from the isolated PostgreSQL demo schema."
     ],
     "file": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\16_data_observatory.png",
     "annotated": "C:\\Users\\Administrator\\Downloads\\TechPulse-main (4)\\TechPulse-main\\docs\\user_manual\\screenshots\\annotated\\16_data_observatory_annotated.png"

@@ -16,6 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "migrations"
 DATA = ROOT / "data"
 OUTPUTS = ROOT / "outputs"
+DEMO_MIGRATION_PREREQUISITES = {
+    "004_demo_latest_features": "demo.feature_snapshots",
+    "005_demo_model_selection": "demo.model_metrics",
+    "006_demo_selection_stability": "demo.model_cv_results",
+}
 load_dotenv(ROOT / ".env", override=False)
 
 
@@ -36,6 +41,21 @@ def _engine():
     if url.startswith("postgresql://"):
         url = "postgresql+psycopg2://" + url.removeprefix("postgresql://")
     return create_engine(url, pool_pre_ping=True)
+
+
+def _demo_migration_ready(conn: Any, migration: str) -> bool:
+    """Wait to apply demo-schema migrations until the source import exists."""
+    prerequisite = DEMO_MIGRATION_PREREQUISITES.get(migration)
+    if prerequisite is None:
+        return True
+    from sqlalchemy import text
+
+    return bool(
+        conn.execute(
+            text("SELECT to_regclass(:relation) IS NOT NULL"),
+            {"relation": prerequisite},
+        ).scalar()
+    )
 
 
 def db_migrate() -> None:
@@ -67,6 +87,11 @@ def db_migrate() -> None:
                         f"Applied migration checksum differs for {migration}; create a new migration rather than editing history."
                     )
                 print(f"{migration} already applied")
+                continue
+            if not _demo_migration_ready(conn, migration):
+                print(
+                    f"{migration} deferred until the synthetic PostgreSQL demo tables are imported"
+                )
                 continue
             # Execute the repository-controlled file as a whole: splitting on
             # semicolons breaks quoted strings and comments.

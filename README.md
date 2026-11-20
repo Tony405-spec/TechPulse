@@ -43,7 +43,7 @@ python -m techpulse.cli ingest --source survey --from-year 2021
 
 db-migrate, db-health, and ingest require a reachable configured PostgreSQL database. They never fall back to CSV. Ingestion records raw payloads and promotes Stack Exchange monthly aggregates, global/unspecified survey reports, and company profiles into their matching canonical tables. The supplied Stack Exchange rows end in 2018, so --from-year 2021 produces no community rows. The company file does not produce adoption claims. Use --source survey or --source fortune while the Stack Exchange source is under review; --source all correctly fails the critical data gate. See the PostgreSQL/pgAdmin4 setup, ingestion notes, and lineage audit in docs/.
 
-The source register records a checksum-verified DataCamp-hosted Stack Overflow question-count download used during the local audit. That exact audit copy is not redistributed in this repository because its reuse terms were not established. The repository's existing `data/stackexchange.csv` remains unchanged; its validation identifies an impossible `ios` snapshot (0 questions and 181,334 unanswered) on 2018-02-21. These are cumulative tag-count snapshots, not daily new-question counts. `validate-data` rejects the source and canonical ingestion does not promote it. A presentation feasibility audit is documented in `docs/THREE_DAY_PRESENTATION_RESCUE.md`.
+The official DataCamp-hosted Stack Overflow question-count CSV is now identified in `docs/SOURCE_REGISTER.md` and matches `data/stackexchange (1).csv` by SHA-256. It contains two invalid zero-total snapshots on 2018-02-21: `ios` has 0 questions and 181,334 unanswered, and `amazon-mws` has 0 questions and 0 unanswered. The values are cumulative tag-count snapshots, not daily new-question counts. The raw files remain unchanged; `validate-data` rejects the source and canonical ingestion does not promote it. A presentation feasibility audit is documented in `docs/THREE_DAY_PRESENTATION_RESCUE.md`.
 
 ## Run locally
 
@@ -59,14 +59,18 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Run the tests and dashboard:
+Start the PostgreSQL dashboard:
 
-```bash
-python -m pytest tests/ -v
-python -m streamlit run dashboard/app.py
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+notepad .env  # set DATABASE_URL to your techpulse_sim PostgreSQL connection
+python -m src.db.migrate
+python -m streamlit run dashboard/app.py --server.address 127.0.0.1 --server.port 8502
 ```
 
-Fresh Streamlit sessions start in **Synthetic demonstration · separate SQLite** for a populated walkthrough. Select **Research data · PostgreSQL** explicitly for genuine research records; the modes use separate databases and never fall back into each other. Initialize or idempotently refresh the isolated seeded SQLite store with `python -m dashboard.demo_store --build`. It lives at `outputs/synthetic_demo/techpulse_demo.sqlite` and is populated with 210 technologies, 15,120 monthly community rows, 8,400 fictional discussions, 3,360 survey-like observations, 300 fictional company profiles, 2,000 adoption scenarios, 1,260 geographic scenarios (630 Kenya-labelled fictional examples), 8,820 feature snapshots, four trained synthetic model runs, 840 persisted predictions, probabilities and 1,470 SHAP explanations. All records carry `SYNTHETIC_DEMONSTRATION_NOT_RESEARCH_EVIDENCE` and must not be cited as research evidence. A controlled reset makes a backup first: `python -m dashboard.demo_store --reset-demo --confirm-reset "RESET SYNTHETIC DEMO ONLY"`.
+Create the `techpulse_sim` database in PostgreSQL/pgAdmin first and point `.env` at it. On a new empty database, run `python -m src.run_all` once to generate the simulated corpus, features, labels, and model results; this command trains models and should not be repeated just to start the presentation. The prepared local database is not included in GitHub. Fresh Streamlit sessions start in **Simulation · PostgreSQL** and read the versioned corpus and outputs from the `sim` and `ml` schemas. The UI uses familiar real technology names as display labels only. All attached histories and outputs are synthetic scenarios, not observations about the named products. It distinguishes the 60 profiles with saved held-out results from the rest of the 300-profile catalogue. Probabilities are not calibrated, and the page does not create live predictions.
+
+The other modes remain separate: **Research · PostgreSQL** is for genuine research-source readiness, and **Legacy demo · PostgreSQL** uses a separate `demo` schema when available. Do not present generated records or metrics as empirical findings. Keep `.env` local and point `DATABASE_URL` only at `techpulse_sim`. See [PostgreSQL setup](docs/POSTGRESQL_PGADMIN4.md), [simulation limits](docs/DATA_SIMULATION.md), and the [presentation run and demo guide](docs/PRESENTATION_UI_IMPLEMENTATION.md).
 
 The historical research pipeline in pipeline/run_pipeline.py still follows the older six-table contract and is not the canonical ingestion workflow. The Streamlit application now uses the PostgreSQL canonical schemas only; if PostgreSQL is unavailable, it displays an error instead of reading CSV artifacts. See [the dashboard data guide](docs/DASHBOARD_POSTGRESQL.md).
 
@@ -96,9 +100,9 @@ Detailed references: [SQL schema](docs/schema_diagram.md) · [methodology](docs/
 
 ## Presentation readiness and current evidence status
 
-The current checked state and limitations are in [the final audit](docs/FINAL_AUDIT_REPORT.md), [data lineage and quality](docs/DATA_LINEAGE_AND_QUALITY.md), [model evaluation status](docs/MODEL_EVALUATION_REPORT.md), and the [three-day rescue and implementation status](docs/THREE_DAY_PRESENTATION_RESCUE.md). Use the [presentation route](docs/PRESENTATION_DEMO_GUIDE.md) for research mode and the [final presentation runbook](docs/FINAL_PRESENTATION_RUNBOOK.md) for the explicitly synthetic walkthrough. PostgreSQL has 2 migrations and 267 technologies, but no curated community rows, Kenya observations, live observations, or valid canonical model runs/predictions. The local Stack Exchange validation is intentionally blocked by two impossible zero-total source records; synthetic model results are not research metrics.
+The current checked state and limitations are in [the final audit](docs/FINAL_AUDIT_REPORT.md), [data lineage and quality](docs/DATA_LINEAGE_AND_QUALITY.md), [model evaluation status](docs/MODEL_EVALUATION_REPORT.md), and [the v1 model diagnostics](docs/MODEL_DIAGNOSTICS.md). The genuine research mode still has no verified Kenya-specific observations or verified enterprise-adoption evidence; its blocked Stack Exchange source is not silently repaired. Separately, the dedicated `techpulse_sim` database contains the explicitly synthetic v1 experiment with saved model runs. Those simulated outputs are technical demonstrations, not research metrics. The [presentation UI implementation note](docs/PRESENTATION_UI_IMPLEMENTATION.md) gives a concise walkthrough and the limits to state aloud.
 
-To prepare the presentation in PowerShell, run `python -m techpulse.cli db-health` and then `python -m streamlit run dashboard/app.py`. See [pgAdmin 4 and database setup](docs/POSTGRESQL_PGADMIN4.md) if health reports a connection or schema issue.
+To prepare the presentation, follow the PostgreSQL dashboard steps above and use port 8502. See [pgAdmin 4 and database setup](docs/POSTGRESQL_PGADMIN4.md) if the app reports a database connection issue.
 
 Current design references: architecture, model methodology, source register, and responsible use documents in docs/.
 
@@ -120,4 +124,4 @@ Beginner, technical and five-minute presentation guides are provided in `docs/` 
 
 ## GitHub Codespaces
 
-For setup of a Codespace-local PostgreSQL database, first-run simulation, and Streamlit port forwarding, follow [the GitHub Codespaces run guide](docs/GITHUB_CODESPACES.md). The annotated presentation walkthrough is [here](docs/final_presentation/TechPulse_Demo_Walkthrough.pptx).
+Choose **Code → Codespaces → Create codespace on main**. The repository dev-container automatically provisions a private PostgreSQL service, installs Python requirements, initializes the reproducible simulation database if needed, and starts Streamlit on forwarded port 8501. For an existing Codespace, pull `main` and run **Codespaces: Rebuild Container**. No Windows PostgreSQL install, `sudo`, or manual credentials are needed. See the [Codespaces run guide](docs/GITHUB_CODESPACES.md) and the [annotated PowerPoint walkthrough](docs/final_presentation/TechPulse_Demo_Walkthrough.pptx).

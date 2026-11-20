@@ -771,3 +771,4 @@ def reset_demo_database(confirmation: str) -> Path:
 def seed_and_train_demo_database() -> dict[str, Any]:
     """Public deterministic seed entry point used after base initialization."""
     return populate_existing_demo_database()
+

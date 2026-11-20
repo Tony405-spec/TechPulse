@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from dashboard.db.connection import DatabaseUnavailable, query_frame
@@ -30,7 +31,8 @@ def check_database() -> dict[str, Any]:
         )
         found = set(zip(tables["table_schema"], tables["table_name"]))
         missing = sorted(REQUIRED - found)
-        wrong_database = health.get("database_name") != "TechPulse-Database"
+        expected_database = os.getenv("TECHPULSE_EXPECTED_DATABASE", "TechPulse-Database")
+        wrong_database = health.get("database_name") != expected_database
         return {
             "connected": not missing and not wrong_database,
             "database_name": health.get("database_name"),
@@ -43,7 +45,7 @@ def check_database() -> dict[str, Any]:
             "last_collected_at": health.get("last_collected_at"),
             "missing_relations": missing,
             "error": (
-                "Connected to an unexpected database; expected TechPulse-Database."
+                f"Connected to an unexpected database; expected {expected_database}."
                 if wrong_database
                 else (
                     None if not missing else "Required canonical relations are missing."

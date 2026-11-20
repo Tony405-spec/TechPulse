@@ -4,8 +4,8 @@ This guide refers to previous model artifacts and UI behavior. Do not present it
 
 # TechPulse Five-Minute Assessor Demonstration
 
-**Target duration:** 5 minutes
-**Launch:** `python -m streamlit run dashboard/app.py` then open `http://localhost:8501`
+**Target duration:** 5 minutes  
+**Launch:** `python -m streamlit run dashboard/app.py` then open `http://localhost:8501`  
 **Example record:** `actionscript` (saved class Declining in the current local snapshot)
 
 > Demonstrate only what is present. The dashboard displays saved results. It does not train the model or run new predictions on selection.
@@ -21,53 +21,53 @@ This guide refers to previous model artifacts and UI behavior. Do not present it
 
 ### 0:00-0:30 | Start Here
 
-**Navigate:** Start Here is the landing page.
-**Say:** “TechPulse is an academic research prototype for exploring technology trajectories using community activity and saved model outputs. I will show how to inspect the evidence and where the current limitations appear.”
-**Point out:** Purpose, Development Data badge, and artifact warnings.
+**Navigate:** Start Here is the landing page.  
+**Say:** “TechPulse is an academic research prototype for exploring technology trajectories using community activity and saved model outputs. I will show how to inspect the evidence and where the current limitations appear.”  
+**Point out:** Purpose, Development Data badge, and artifact warnings.  
 **Transition:** “I will find one technology and see what historical activity is actually available.”
 
 ### 0:30-1:15 | Technology Explorer
 
 ![Technology Explorer page](../outputs/live_data_screenshots/02-technology-explorer.png)
 
-**Click and do:** Open **Technology Explorer**. In **Search technology names**, enter `actionscript` and press Enter. Choose `actionscript` under **Choose a technology** if it is not already selected.
-**Say:** “This page retrieves the saved technology row. The historical line shows monthly questions for this tag in the local community source; it is not total technology usage or evidence of cause.”
+**Click and do:** Open **Technology Explorer**. In **Search technology names**, enter `actionscript` and press Enter. Choose `actionscript` under **Choose a technology** if it is not already selected.  
+**Say:** “This page retrieves the saved technology row. The historical line shows monthly questions for this tag in the local community source; it is not total technology usage or evidence of cause.”  
 **Point out:** Search, saved class, available signals, and chart period. Do not describe the saved target label as the model's output.
 
 ### 1:15-1:55 | Community Health
 
-**Click and do:** Open **Community Health**. Select `actionscript` under **Choose a technology tag**.
-**Say:** “This view summarizes the source-file question volume and unanswered share. It describes one community source only. Missing survey data is called out rather than filled with invented numbers.”
-**Point out:** Observed questions, source records, unanswered share, and monthly time axis.
+**Click and do:** Open **Community Health**. Select `actionscript` under **Choose a technology tag**.  
+**Say:** “This view summarizes the source-file question volume and unanswered share. It describes one community source only. Missing survey data is called out rather than filled with invented numbers.”  
+**Point out:** Observed questions, source records, unanswered share, and monthly time axis.  
 **Transition:** “Next I will inspect the model's saved row and explain the risk formula.”
 
 ### 1:55-2:45 | Prediction Explorer
 
 ![Prediction Explorer page](../outputs/live_data_screenshots/05-prediction-explorer.png)
 
-**Click and do:** Open **Prediction Explorer**. Search for `actionscript`; select it.
-**Say:** “The saved class for ActionScript in this snapshot is Declining. I can inspect the saved probability scores and input signals. This is retrieval of a pipeline result, not a new prediction.”
-**Explain:** The maximum class score is the saved confidence indicator. The risk indicator is `(1 - P(Growing)) × 100`. A value near 97.5 is not a 97.5% chance of failure; it is the complement of the Growing score.
+**Click and do:** Open **Prediction Explorer**. Search for `actionscript`; select it.  
+**Say:** “The saved class for ActionScript in this snapshot is Declining. I can inspect the saved probability scores and input signals. This is retrieval of a pipeline result, not a new prediction.”  
+**Explain:** The maximum class score is the saved confidence indicator. The risk indicator is `(1 - P(Growing)) × 100`. A value near 97.5 is not a 97.5% chance of failure; it is the complement of the Growing score.  
 **Point out:** Class, score chart, risk indicator, and SHAP attribution if present. SHAP is model attribution, not causation.
 
 ### 2:45-3:20 | Technology Rankings
 
-**Click and do:** Open **Technology Rankings**. Leave all filters at their defaults, then point to the chart and table. Optionally enter `actionscript` in **Search technologies**.
-**Say:** “The filters and download control operate on saved rows. The ranking orders a derived indicator when class probabilities are present. It is not a measure of technology quality or enterprise adoption.”
+**Click and do:** Open **Technology Rankings**. Leave all filters at their defaults, then point to the chart and table. Optionally enter `actionscript` in **Search technologies**.  
+**Say:** “The filters and download control operate on saved rows. The ranking orders a derived indicator when class probabilities are present. It is not a measure of technology quality or enterprise adoption.”  
 **Point out:** Category, class, search, sort, and **Download visible rows as CSV**.
 
 ### 3:20-4:10 | Model Performance & Validation
 
 ![Model Performance and Validation page](../outputs/live_data_screenshots/06-model-performance.png)
 
-**Click and do:** Open **Model Performance & Validation**. Read the red audit warning before the table.
-**Say:** “The stored CSV reports 1.0000 metrics for four candidates. But this checkout has no run-level evaluation summary, no baseline row, and its label summary does not match the current 53-row feature matrix. These recorded numbers are not independently verifiable as current-run performance, so I do not claim the system is reliable.”
-**Point out:** Missing run summary, missing baseline, label-support counts and metric explanations.
+**Click and do:** Open **Model Performance & Validation**. Read the red audit warning before the table.  
+**Say:** “The stored CSV reports 1.0000 metrics for four candidates. But this checkout has no run-level evaluation summary, no baseline row, and its label summary does not match the current 53-row feature matrix. These recorded numbers are not independently verifiable as current-run performance, so I do not claim the system is reliable.”  
+**Point out:** Missing run summary, missing baseline, label-support counts and metric explanations.  
 **Technical note:** Source code uses a stratified random 80/20 split, not a time-forward validation.
 
 ### 4:10-4:40 | Methodology & Data
 
-**Click and do:** Open **Methodology & Data**. Show the six-table contract and expand one SQL query if time allows.
+**Click and do:** Open **Methodology & Data**. Show the six-table contract and expand one SQL query if time allows.  
 **Say:** “The local fallback has observed community rows and company profiles, but stack relations, metadata and mappings may be deterministic proxies. The SQL files also need schema reconciliation before execution against the warehouse.”
 
 ### 4:40-5:00 | Close

@@ -1,8 +1,10 @@
 # TechPulse final implementation and research credibility report
 
-**Verified:** 2026-11-17
-**Repository:** `C:\Users\Administrator\Downloads\TechPulse-main (4)\TechPulse-main`
+**Verified:** 2026-11-17  
+**Repository:** `C:\Users\Administrator\Downloads\TechPulse-main (4)\TechPulse-main`  
 **Approved title retained:** *Predicting Developer Technology Decline Using Community Signals and Enterprise Adoption Patterns: A Machine Learning Approach*
+
+> **Status update (2026-11-19):** The authoritative current architecture, database state, synthetic model values, full test outcome, startup steps and limitations are in [the PostgreSQL rebuild verification report](POSTGRESQL_REBUILD_VERIFICATION.md). This report's earlier sections describe the 2026-11-17 state; references there to a separate SQLite runtime are historical and are superseded by the PostgreSQL demo schema migration.
 
 ## Executive finding
 
@@ -140,25 +142,25 @@ Open the URL Streamlit prints (normally `http://localhost:8501`). If port 8501 i
 
 ## Likely examiner questions and defensible answers
 
-**Q: Did you build the intended predictive model?**
+**Q: Did you build the intended predictive model?**  
 A: The application and modelling components exist, but no defensible research run was produced because the canonical community observations, aligned features, and approved non-circular labels are absent. I report this as a feasibility/evidence limitation rather than substitute demo metrics.
 
-**Q: Why not train on the available survey and company records?**
+**Q: Why not train on the available survey and company records?**  
 A: Survey rows are global/unspecified aggregate usage, interest, and admiration measures and are not aligned to the historical community periods. Company rows are profiles, not technology adoption observations. They cannot support the approved predictors/target without inventing evidence.
 
-**Q: What does the 685-versus-684 difference mean?**
+**Q: What does the 685-versus-684 difference mean?**  
 A: The CSV has 685 rows and 684 distinct technology/year keys. Supabase 2024 has separate Database and Platform records but the canonical key omits category. The database matches Platform. The latest successful ingestion wrote zero, so I can explain the collision but cannot prove which earlier input was applied.
 
-**Q: Why is Stack Exchange blocked if the file came from a public source?**
+**Q: Why is Stack Exchange blocked if the file came from a public source?**  
 A: Two upstream rows have impossible zero cumulative question totals, including an unanswered count greater than zero questions. The source remains intact; ingestion rejects the invalid records instead of fabricating corrections.
 
-**Q: Are the dashboard’s counts evidence of technology health?**
+**Q: Are the dashboard’s counts evidence of technology health?**  
 A: No. They describe source coverage. Missing observations are not treated as a zero score or as Stable. The profile separates stored labels, successful model predictions, and explanation rows.
 
-**Q: What is the main methodological risk?**
+**Q: What is the main methodological risk?**  
 A: The written target uses Growth Momentum Index, which is also a proposed feature, creating potential circularity. The implementation’s legacy future-window ratio labels also differ from the SRS rule. Both require supervisor approval before a research run.
 
-**Q: What is the project's defensible contribution today?**
+**Q: What is the project's defensible contribution today?**  
 A: A working evidence-backed dashboard, canonical data/provenance workflow, validation gates for impossible or ambiguous records, reproducible source reconciliation, and a transparent account of what the current data can and cannot support. This is not evidence that the prediction hypothesis is confirmed.
 
 ## Supervisor questions to send
@@ -252,7 +254,7 @@ python -m techpulse.cli db-health
 python -m streamlit run dashboard/app.py --server.port 8501
 ```
 
-If 8501 is already in use, open the current app or start a second instance with `--server.port 8502`. For the isolated synthetic walkthrough, select **Synthetic demonstration · separate SQLite** in the sidebar. Do not run `dashboard.demo_store --build --force` during the defence; the already seeded store was verified and does not need rebuilding. Do not run migrations or ingestion commands during the presentation.
+If 8501 is already in use, open the current app or start a second instance with `--server.port 8502`. For the isolated synthetic walkthrough, select **Synthetic demonstration · PostgreSQL** in the sidebar. Do not run `dashboard.demo_store --build --force` during the defence; the already seeded store was verified and does not need rebuilding. Do not run migrations or ingestion commands during the presentation.
 
 The earlier eight-minute demonstration script and examiner questions remain applicable. Start in Research mode, show data readiness and limits, and explicitly say that the empirical prediction experiment could not be run with the validated sources currently present. Do not present synthetic results as thesis findings.
 
@@ -299,7 +301,7 @@ Logistic Regression predicted only Stable on this holdout. The demo model labora
 From PowerShell in the project directory, start the ready synthetic demonstration with:
 
 ```powershell
-python -m dashboard.demo_store --build
+python -m dashboard.postgres_demo_migration --source outputs/synthetic_demo/techpulse_demo.sqlite
 python -m streamlit run dashboard/app.py --server.port 8501
 ```
 
