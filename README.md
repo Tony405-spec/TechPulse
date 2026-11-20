@@ -117,3 +117,7 @@ Copy `.env.example` to `.env` for optional API credentials and settings. Public 
 ## Dashboard guides and evidence
 
 Beginner, technical and five-minute presentation guides are provided in `docs/` in Markdown and PDF formats. Browser screenshots for the nine dashboard pages are indexed in `outputs/live_data_screenshots/index_live_data.md`. The live-data test report is `outputs/live_data_test_report.md`.
+
+## GitHub Codespaces
+
+For setup of a Codespace-local PostgreSQL database, first-run simulation, and Streamlit port forwarding, follow [the GitHub Codespaces run guide](docs/GITHUB_CODESPACES.md). The annotated presentation walkthrough is [here](docs/final_presentation/TechPulse_Demo_Walkthrough.pptx).
