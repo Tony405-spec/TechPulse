@@ -138,7 +138,13 @@ def _make_pipeline(name: str, columns: list[str], params: dict[str, Any] | None 
     ], remainder="drop", verbose_feature_names_out=False)
     params = params or {}
     if name == "logistic_regression":
-        model = LogisticRegression(max_iter=1500, class_weight="balanced", solver="lbfgs", multi_class="auto", random_state=42, **params)
+        model = LogisticRegression(
+            max_iter=1500,
+            class_weight="balanced",
+            solver="lbfgs",
+            random_state=42,
+            **params,
+        )
     elif name == "knn":
         model = PriorAdjustedKNN(**params)
     elif name == "random_forest":
